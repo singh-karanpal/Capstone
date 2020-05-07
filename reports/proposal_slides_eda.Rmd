@@ -1,0 +1,162 @@
+---
+title: "BC Stats Proposal"
+subtitle: "Text Analysis for Open Ended Survey Questions"
+author: "Sukriti"
+date: "07/05/2020"
+output:
+  ioslides_presentation:
+    widescreen: true
+    smaller: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+```{r load_packages, warning=FALSE}
+library(vegawidget)
+library(reticulate)
+use_python('/usr/local/bin/python3')
+```
+
+```{python libraries_import, include=FALSE}
+import pandas as pd
+import numpy as np
+import altair as alt
+```
+
+
+## Getting Familiar with the Data
+
+Survey data comprises of responses to open ended questions over four years, 2013, 2015, 2018, and 2020 across 26 Ministries
+
+- Our first question includes labeled data from 2013, 2018, 2020 and has ~32,000 respondents
+- Our second question includes labeled data from 2018 and has around ~6,000 respondents
+
+## Getting Familiar with the Data
+
+Responses to open-ended questions are captured in the following data table format
+
+|Comments*|CPD|CB|EWC|...|
+|-----|------|-----|------|----|
+|Better health and social benefits should be provided|0|1|0|...|
+
+<br>
+<font size="3"> 
+where
+
+- CPD: Career & Personal Development
+- CB: Compensation & Benefits
+- EWC: Engagement & Workplace Culture
+
+</font>
+
+<font size="3"> *this is a fake comment for understanding the data </font>
+
+## Getting Familiar with the Data
+
+**Q1**: ***What one thing would you like your organization to focus on to improve your work environment?***
+
+Labels comprise of 13 themes and 63 fine-grained sub-themes
+
+```{python}
+#reading in the train data for themes
+data_train_q1 = pd.read_csv('../data/y_train.csv')
+
+#reading in theme codes to names csv
+code_names = pd.read_csv('../data/theme_to_codes.csv')
+
+# wrangling train data for counts per theme
+theme_data = data_train_q1.iloc[:, list(range(12))+[-1]]
+theme_table = pd.DataFrame(np.sum(theme_data, axis=0)).reset_index()
+theme_table.rename(columns={'index':'theme_codes', 0:'count'}, inplace=True)
+
+theme_table_final = pd.merge(theme_table, code_names)
+
+theme_chart_q1 = alt.Chart(theme_table_final, width=500, height=200, title='Number of comments for themes in training data').mark_bar().encode(
+    x=alt.X('theme_names:N', sort='-y', title = 'themes'),
+    y=alt.Y('count:Q')
+).configure_axisX(
+    labelAngle = -45
+).to_json()
+```
+
+```{r}
+as_vegaspec(py$theme_chart_q1)
+```
+
+
+- Label cardinality for themes: ~1.4 
+
+## Getting Familiar with the Data
+
+```{python}
+data_train_num_q1 = pd.read_csv('../data/y_train_num.csv')
+codes = pd.read_csv('../data/theme_code_names.csv')
+subtheme_y_data = data_train_num_q1.iloc[:, 12:99]
+subtheme_y_data = subtheme_y_data.fillna(0)
+subtheme_count = pd.DataFrame(np.sum(subtheme_y_data, axis=0)).reset_index()
+subtheme_count.rename(columns={'index':'subtheme_code', 0:'count'}, inplace=True)
+subtheme_count['theme_code'] = subtheme_count['subtheme_code'].str.split('.').str[0]
+subtheme_count['theme_code'] = pd.to_numeric(subtheme_count['theme_code'])
+```
+
+```{python}
+final_train_subtheme_table = pd.merge(subtheme_count, codes)
+facet_chart = alt.Chart(final_train_subtheme_table, title = 'Comments per sub-themes in training dataset', height=75, width=100).mark_bar().encode(
+    x=alt.X('subtheme_code:N', 
+            title=None,
+            sort=alt.EncodingSortField(field='count')),
+    y=alt.Y('count:Q')
+).facet(
+    facet = 'theme_name:O',
+    columns = 4
+).resolve_scale(
+    x='independent'
+).to_json()
+```
+
+```{r}
+library(vegawidget)
+as_vegaspec(py$facet_chart)
+```
+
+- Label cardinality for subthemes: ~1.6 
+
+## Getting Familiar with the Data
+
+**Q2**: ***Have you seen any improvements in your work environment and if so, what are the improvements?***
+
+Labels comprise of 6 themes and 16 fine-grained sub-themes
+
+```{python}
+# reading in training data  
+y_train_q2 = pd.read_csv('../data/y_train_q2.csv')
+
+# wrangling training data to get count of comments per label
+q2_class_df = pd.DataFrame(np.sum(y_train_q2)).reset_index()
+q2_class_df = q2_class_df.rename(columns={'index':'themes', 0:'count'})
+
+theme_count_q2 = alt.Chart(q2_class_df, width=500, title='Number of comments for themes in training data').mark_bar().encode(
+    x=alt.X('themes:N', sort='-y', title = 'themes'),
+    y=alt.Y('count:Q')
+).configure_axisX(
+    labelAngle = -45
+).to_json()
+```
+
+
+```{r}
+as_vegaspec(py$theme_count_q2)
+```
+
+- Label cardinality: ~1.6
+
+## Challenges
+
+- Achieving desired accuracy with Multi-label classification model having high number of labels 
+- Class Imbalance in the data
+  - skeweness in number of comments per label
+- Low label cardinality indicating sparsity in training data
+  - ~2 labels per comment from ~60 labels
