@@ -26,7 +26,7 @@
 - [Scikit-Multilearn, User Guide](http://scikit.ml/userguide.html)
 - [Scikit-Multilearn, Classifier Chains](http://scikit.ml/api/0.1.0/api/skmultilearn.problem_transform.cc.html#skmultilearn.problem_transform.ClassifierChain) using `skmultilearn.problem_transform.ClassifierChain()`
 - [Scikit-Multilearn, MEKA wrapper](http://scikit.ml/meka.html#) using `from skmultilearn.ext import Meka`
-- [MEKA, Classifier Chain](http://waikato.github.io/meka/meka.classifiers.multilabel.CC/) using `meka.classifiers.multilabel.CC`
+- [MEKA, Classifier Chain](http://waikato.github.io/meka/meka.classifiers.multilabel.CC/)
 
 ### Other Resources
 - [Seminar Series](https://github.ubc.ca/MDS-2019-20/DSCI_591_capstone-proj_students/blob/master/seminar_series.md)
