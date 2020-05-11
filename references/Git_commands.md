@@ -1,4 +1,5 @@
 # Git commands
+*Compiled by Victor Cuspinera*
 
 ### Setting up
 | Description | Command |
