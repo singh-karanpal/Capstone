@@ -12,7 +12,7 @@
 ### Our project
 - [Main Repo](https://github.com/aaronquinton/mds-capstone-bcstats/blob/master/reports/BCStats_Final_Report.pdf)
 - [Proposal Presentation](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/reports/BCStats_Proposal.pdf)
-- [Proposal Report]() <<< soon available >>>
+- [Proposal Report](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/reports/BCStats_Proposal_Report.pdf)
 
 ### Project of last year (2019)
 - [Main Repo](https://github.com/aaronquinton/mds-capstone-bcstats)
