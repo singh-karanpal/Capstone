@@ -37,6 +37,19 @@
 | delete a local branch | `git branch -d <branch_name>` |
 | push changes to a remote branch | `git push origin <branch_name>` |
 
+#### Updating a branch from the master [(go to original)](https://gist.github.com/santisbon/a1a60db1fb8eecd1beeacd986ae5d3ca)
+
+Steps:
+1. update your local master branch
+    - `git checkout master`
+2. Fetch the remote, bringing the branches and their commits from the remote repository.
+    - `git fetch -p origin`
+3. Merge the changes from origin/master into your local master
+    - `git merge origin/master`
+4. Check out the branch you want to merge into
+    - git checkout <feature-branch>
+5. Merge your updated master branch into your feature branch 
+    - `git merge master`
 
 ### What happens when my feature branch falls behind master?
 ##### Material from [DSCI 524 - Collaborative Software Development, lecture 1](https://github.ubc.ca/MDS-2019-20/DSCI_524_collab-sw-dev_students/blob/master/lectures/01_lecture-intro-more-git.md)
@@ -61,3 +74,4 @@ To catch up a branch that has fallen behind master we do the following:
 - [Jenny Bryan. Happy Git and GitHub for the useR, Chapters 21 Git commands and 22 Branches.](https://happygitwithr.com/git-commands.html)
 - [git-scm.com. Chapter 2.5 Git Basics - Working with Remotes](https://git-scm.com/book/en/v2/Git-Basics-Working-with-Remotes)
 - [UBC-MDS (2020). DSCI 524-Collaborative Software Development, lecture 1](https://github.ubc.ca/MDS-2019-20/DSCI_524_collab-sw-dev_students/blob/master/lectures/01_lecture-intro-more-git.md)
+- [santisbon (2018). Updating a feature branch](https://gist.github.com/santisbon/a1a60db1fb8eecd1beeacd986ae5d3ca)
