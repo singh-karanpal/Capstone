@@ -12,7 +12,7 @@
 ### Our project
 - [Main Repo](https://github.com/aaronquinton/mds-capstone-bcstats/blob/master/reports/BCStats_Final_Report.pdf)
 - [Proposal Presentation](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/reports/BCStats_Proposal.pdf)
-- [Proposal Report]() <<< soon available >>>
+- [Proposal Report](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/reports/BCStats_Proposal_Report.pdf)
 
 ### Project of last year (2019)
 - [Main Repo](https://github.com/aaronquinton/mds-capstone-bcstats)
@@ -29,6 +29,7 @@
     - [Scikit-Multilearn, Classifier Chains](http://scikit.ml/api/0.1.0/api/skmultilearn.problem_transform.cc.html#skmultilearn.problem_transform.ClassifierChain) using `skmultilearn.problem_transform.ClassifierChain()`
     - [Scikit-Multilearn, MEKA wrapper](http://scikit.ml/meka.html#) wrapper `from skmultilearn.ext import Meka`
     - [MEKA, Classifier Chain](http://waikato.github.io/meka/meka.classifiers.multilabel.CC/)
+    - [HMC (hierarchical Multi-Label model)](http://proceedings.mlr.press/v80/wehrmann18a.html) shared by Nasim Taba
 
 ### Work Environment Survey (WES)
 - [General information](https://www2.gov.bc.ca/gov/content/data/statistics/government/employee-research/wes/) (official site)
