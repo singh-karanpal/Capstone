@@ -88,6 +88,7 @@ Use automated multi-label theme classification of comments to themes and sub-the
 <font size="3">Have you seen any improvements in your work environment and if so, what are the improvements?</font></span></b>  
 
 - <span style="color:#005c99">Identify labels</span> for theme classification and compare with existing labels.
+- <span style="color:#005c99">Build a model</span> for predicting label(s) for <span style="color:#005c99">themes</span>.
 - Create <span style="color:#005c99">visualizations for executives</span> to explore the results.
 
 ## Existing Solution for Question 1 | Last year's Capstone
@@ -162,6 +163,7 @@ theme_data = data_train_q1.iloc[:, list(range(12))+[-1]]
 theme_table = pd.DataFrame(np.sum(theme_data, axis=0)).reset_index()
 theme_table.rename(columns={'index':'theme_codes', 0:'count'}, inplace=True)
 
+theme_table['theme_codes'].replace({'FEW':'FWE'}, inplace=True)
 theme_table_final = pd.merge(theme_table, code_names)
 
 theme_chart_q1 = alt.Chart(theme_table_final, width=600, height=300, title='Number of comments for themes in training data').mark_bar().encode(
