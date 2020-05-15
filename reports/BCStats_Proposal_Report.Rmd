@@ -3,7 +3,7 @@ title: "BC Stats Capstone Proposal Report"
 subtitle: "Text Analytics: Quantifying the Responses to Open-Ended Survey Questions"
 author: 
 - "Team Members: Carlina Kim, Karanpal Singh, Sukriti Trehan, Victor Cuspinera"
-- "Partner: BC-Stats | Mentor: Varada Kolhatkar"
+- "Partner: BC Stats | Mentor: Varada Kolhatkar"
 date: '2020-05-15'
 output: pdf_document
 ---
@@ -55,7 +55,7 @@ Figure 1: Results of Base Model from [Final Report of BC Stats Capstone 2019 (Qu
 
 These precision and recall results did not meet BC-Stat’s required standards for a deployable model and thus, our aim is to improve these results for predicting labels for the main themes for Question 1.
 
-We have around 32,000 labelled observations for the first question and around 6,000 labelled observations for the second question which can be used for addressing our label prediction objectives^[Labelled data availability: 2013, 2018, 2020 for question 1, and 2018 for question 2.]. Further, we have an additional 9,000 unlabelled comments for the second question. 
+We have around 32,000 labelled observations for the first question and around 6,000 labelled observations for the second question which can be used for addressing our label prediction objectives.^[Labelled data availability: 2013, 2018, 2020 for question 1, and 2018 for question 2.] Further, we have an additional 9,000 unlabelled comments for the second question. 
 
 ***Question 1:***
 
@@ -67,13 +67,13 @@ This year, we propose using [TF-IDF](https://en.wikipedia.org/wiki/Tf–idf) rep
 
 ***Question 2:***
 
-The BC Stats team has encoded the comments for this question into 16 sub-themes but as mentioned, the labels are not sufficiently reliable. Our first approach will be to identify labels using unsupervised learning and manually compare them with the existing labels. Clustering techniques like PCA and Topic Modelling will be implemented for this task. Once the labels are reliable and correctly identified, a multi-label classifier can be trained on this data for automated labelling of comments. These themes may or may not be similar to Question 1. 
+The BC Stats team has encoded the comments for this question into 16 sub-themes but as mentioned, the labels are not sufficiently reliable. Our first approach will be to identify labels using unsupervised learning and manually compare them with the existing labels. Document clustering techniques using topic modelling as well as using document similarity will be implemented for this task. Once the labels are reliable and correctly identified, a multi-label classifier can be trained on this data for automated labelling of comments. These themes may or may not be similar to Question 1. 
 
 We expect the final data products to be a data pipeline with the documentation for our models, and a dashboard app that displays the trends across ministries for both qualitative questions.
 
 ![](figures/Dash_app_sketch.png){width=90%}
 
-Figure 1: Potential application sketch^[This figure is just for illustrative purposes, the final version of the app could differ from the sketch.]
+Figure 1: Potential application sketch.^[This figure is just for illustrative purposes, the final version of the app could differ from the sketch.]
 
 <br>
 
