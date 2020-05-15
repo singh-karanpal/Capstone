@@ -1,4 +1,4 @@
-# Git commands
+# Git Commands
 *Compiled by Victor Cuspinera*
 
 ### Setting up
@@ -37,9 +37,8 @@
 | delete a local branch | `git branch -d <branch_name>` |
 | push changes to a remote branch | `git push origin <branch_name>` |
 
-#### Updating a branch from the master [(go to original)](https://gist.github.com/santisbon/a1a60db1fb8eecd1beeacd986ae5d3ca)
+#### Steps for updating a branch from the master [(go to original source)](https://gist.github.com/santisbon/a1a60db1fb8eecd1beeacd986ae5d3ca)
 
-Steps:
 1. update your local master branch
     - `git checkout master`
 2. Fetch the remote, bringing the branches and their commits from the remote repository.
@@ -47,7 +46,7 @@ Steps:
 3. Merge the changes from origin/master into your local master
     - `git merge origin/master`
 4. Check out the branch you want to merge into
-    - git checkout <feature-branch>
+    - `git checkout <feature-branch>`
 5. Merge your updated master branch into your feature branch 
     - `git merge master`
 

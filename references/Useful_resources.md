@@ -23,13 +23,17 @@
 ### Models
 - [BERT](https://ai.googleblog.com/2018/11/open-sourcing-bert-state-of-art-pre.html) by Google AI
 - Multi-label classification:
-    - [Definition in Wikipedia](https://en.wikipedia.org/wiki/Multi-label_classification) by Wikipedia
+    - [Multi-label classification (definition)](https://en.wikipedia.org/wiki/Multi-label_classification) by Wikipedia
+    - [TF-IDF (definition)](https://en.wikipedia.org/wiki/Tf–idf) by Wikipedia
     - [Classifier Chains and Binary Relevance](https://www.analyticsvidhya.com/blog/2017/08/introduction-to-multi-label-classification/)
+    - [Binary relevance efficacy for multilabel classification.](https://link.springer.com/article/10.1007/s13748-012-0030-x), 2012 paper
+    - [Classifier Chains for Multi-label Classification.](https://link.springer.com/chapter/10.1007/978-3-642-04174-7_17), 2009 paper.
     - [Scikit-Multilearn, User Guide](http://scikit.ml/userguide.html)
     - [Scikit-Multilearn, Classifier Chains](http://scikit.ml/api/0.1.0/api/skmultilearn.problem_transform.cc.html#skmultilearn.problem_transform.ClassifierChain) using `skmultilearn.problem_transform.ClassifierChain()`
     - [Scikit-Multilearn, MEKA wrapper](http://scikit.ml/meka.html#) wrapper `from skmultilearn.ext import Meka`
     - [MEKA, Classifier Chain](http://waikato.github.io/meka/meka.classifiers.multilabel.CC/)
-    - [HMC (hierarchical Multi-Label model)](http://proceedings.mlr.press/v80/wehrmann18a.html) shared by Nasim Taba
+    - [HMC (hierarchical Multi-Label model)](http://proceedings.mlr.press/v80/wehrmann18a.html) shared by Nasim Taba.
+    - [Decision Tree Hierachical Multi-Classifier](https://github.com/davidwarshaw/hmc) in Python.
 
 ### Work Environment Survey (WES)
 - [General information](https://www2.gov.bc.ca/gov/content/data/statistics/government/employee-research/wes/) (official site)
@@ -39,5 +43,5 @@
 ### Other Resources
 - [Seminar Series](https://github.ubc.ca/MDS-2019-20/DSCI_591_capstone-proj_students/blob/master/seminar_series.md)
 - [Working with Bigger Data](https://ttimbers.github.io/starting_to_work_with_bigger_data/presentation/starting_to_work_with_big_data.html#/) by Tiffany Timbers
-- [MDS Required PAckages](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/references/MDS_Required_Packages.md) compiled by Anny Chih
+- [MDS Required Packages](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/references/MDS_Required_Packages.md) compiled by Anny Chih
 - [Git commands](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/references/Git_commands.md) compiled by Victor Cuspinera
