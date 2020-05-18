@@ -32,8 +32,12 @@
     - [Scikit-Multilearn, Classifier Chains](http://scikit.ml/api/0.1.0/api/skmultilearn.problem_transform.cc.html#skmultilearn.problem_transform.ClassifierChain) using `skmultilearn.problem_transform.ClassifierChain()`
     - [Scikit-Multilearn, MEKA wrapper](http://scikit.ml/meka.html#) wrapper `from skmultilearn.ext import Meka`
     - [MEKA, Classifier Chain](http://waikato.github.io/meka/meka.classifiers.multilabel.CC/)
-    - [HMC (hierarchical Multi-Label model)](http://proceedings.mlr.press/v80/wehrmann18a.html) shared by Nasim Taba.
-    - [Decision Tree Hierachical Multi-Classifier](https://github.com/davidwarshaw/hmc) in Python.
+    - [HMC (hierarchical Multi-Label model)](http://proceedings.mlr.press/v80/wehrmann18a.html) shared by Nasim Taba
+    - [Decision Tree Hierachical Multi-Classifier](https://github.com/davidwarshaw/hmc) in Python
+- Spacy:
+    - [spaCy glossary](https://github.com/explosion/spaCy/blob/master/spacy/glossary.py)
+    - [Universal part-of-speech (POS) tags](https://universaldependencies.org/u/pos/)
+    - [*What do spaCy's part-of-speech and dependency tags mean?*](https://stackoverflow.com/questions/40288323/what-do-spacys-part-of-speech-and-dependency-tags-mean) at StackOverflow
 
 ### Work Environment Survey (WES)
 - [General information](https://www2.gov.bc.ca/gov/content/data/statistics/government/employee-research/wes/) (official site)
