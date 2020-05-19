@@ -1,4 +1,3 @@
-library("shiny")
 library("shinydashboard")
 library("wordcloud")
 library("SnowballC")
@@ -157,7 +156,7 @@ server <- function(input, output, comments) {
   
   # loading data
   comments <-
-    read_excel('../../../591_capstone_2020_bc_stats_mds/data/interim/bcstats.xlsx')
+    read_excel('../../data/interim/bcstats.xlsx')
   only_comments <- comments %>% select(Comment)
   
   # Updating Data Stats
