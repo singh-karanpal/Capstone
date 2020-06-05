@@ -1,7 +1,9 @@
 # author: Carlina Kim, Karanpal Singh, Sukriti Trehan, Victor Cuspinera
 # date: 2020-06-05
 
-'''This script will download data from any URL and saves it in directory specified. There are 2 parameters URL and Output Path where you want to write this data.
+'''This script will download data from any URL and saves it in directory
+specified. There are 2 parameters URL and Output Path where you want to
+write this data.
 Usage: get_data.py --url=<url> --file_location=<file_location>
 '''
 
