@@ -8,7 +8,7 @@ There are 2 parameters Input and Output Path where you want to write this data.
 Usage: merge_split_data.py --input_dir=<input_dir_path> --output_dir=<destination_dir_path>
 
 Example:
-    python src/data/merge_split_data.py --input_dir=data/raw/ output_dir=data/interim/
+    python src/data/merge_split_data.py --input_dir=data/raw/ --output_dir=data/interim/
 
 Options:
 --input_dir=<input_dir_path> Directory name for the excel files
