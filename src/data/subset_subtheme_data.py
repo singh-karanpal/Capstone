@@ -6,9 +6,6 @@ import numpy as np
 import os
 import pickle
 
-with open('data/interim/subthemes/subtheme_dict.pickle', 'rb') as handle:
-    subtheme_dict = pickle.load(handle)
-    
 def subset_data(label_name, X_train, y_train, X_valid, y_valid):
     """
     Subsets training and validation data for the provided label of question 1 for 
@@ -22,13 +19,20 @@ def subset_data(label_name, X_train, y_train, X_valid, y_valid):
         training dataframe containing raw comments
     y_train: (Pandas dataframe)
         training dataframe containing labels values
+    X_valid: (Pandas dataframe)
+        validation dataframe containing raw comments
+    y_valid: (Pandas dataframe)
+        validation dataframe containing labels values
         
     Returns
     -------
     None
     """
     x = str(label_name)
-    dir_name = os.mkdir('data/interim/subthemes/' + x)
+    dir_name = os.mkdir('../data/interim/subthemes/' + x)
+    
+    with open('../data/interim/subthemes/subtheme_dict.pickle', 'rb') as handle:
+        subtheme_dict = pickle.load(handle)
     
     train_subset = pd.concat([X_train, y_train[subtheme_dict[x]]], axis=1)
     train_subset['remove_or_not'] = np.sum(train_subset.iloc[:,1:], axis=1)
@@ -36,10 +40,10 @@ def subset_data(label_name, X_train, y_train, X_valid, y_valid):
     train_subset.drop(columns='remove_or_not', inplace=True)
     
     X_train_subset = train_subset['Comment']
-    X_train_subset.to_excel('data/interim/subthemes/' + x + '/X_train_subset.xlsx', index=False)
+    X_train_subset.to_excel('../data/interim/subthemes/' + x + '/X_train_subset.xlsx', index=False)
     
     Y_train_subset = train_subset.iloc[:, 1:]
-    Y_train_subset.to_excel('data/interim/subthemes/' + x + '/Y_train_subset.xlsx', index=False)
+    Y_train_subset.to_excel('../data/interim/subthemes/' + x + '/Y_train_subset.xlsx', index=False)
     
     valid_subset = pd.concat([X_valid, y_valid[subtheme_dict[x]]], axis=1)
     valid_subset['remove_or_not'] = np.sum(valid_subset.iloc[:,1:], axis=1)
@@ -47,7 +51,7 @@ def subset_data(label_name, X_train, y_train, X_valid, y_valid):
     valid_subset.drop(columns='remove_or_not', inplace=True)
     
     X_valid_subset = valid_subset['Comment']
-    X_valid_subset.to_excel('data/interim/subthemes/' + x + '/X_valid_subset.xlsx', index=False)
+    X_valid_subset.to_excel('../data/interim/subthemes/' + x + '/X_valid_subset.xlsx', index=False)
     
     Y_valid_subset = valid_subset.iloc[:, 1:]
-    Y_valid_subset.to_excel('data/interim/subthemes/' + x + '/Y_valid_subset.xlsx', index=False)
+    Y_valid_subset.to_excel('../data/interim/subthemes/' + x + '/Y_valid_subset.xlsx', index=False)
