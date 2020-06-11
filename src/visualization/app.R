@@ -1,3 +1,4 @@
+library("shiny")
 library("shinydashboard")
 library("wordcloud")
 library("SnowballC")
@@ -37,7 +38,7 @@ ui <- dashboardPage(
       tabName = 'q2',
       icon = icon('chart-bar')
     )
-  )),
+  ), collapsed = TRUE),
   
   
   #body content
@@ -48,6 +49,15 @@ ui <- dashboardPage(
     # 1st tab
     tabItem(
       tabName = 'q1',
+      
+      fluidRow(
+        # ministry selector
+        box(title = 'Select Ministries', selectizeInput(
+          'ministry_names', label = NULL, choices = NULL, multiple = TRUE,
+          options = list(create = TRUE),
+        ),width = 12)
+         ),
+      
       fluidRow(
         #Total Records
         valueBoxOutput('total_records', width = 3)  %>% withSpinner(color =
@@ -150,65 +160,84 @@ ui <- dashboardPage(
   ))
 )
 
-server <- function(input, output, comments) {
+server <- function(input, output, comments, session) {
   # setting seed
   set.seed(1234)
   
   # loading data
   comments <-
-    read_excel('../../data/interim/bcstats.xlsx')
+    read_excel('../../../591_capstone_2020_bc_stats_mds/data/interim/dashboard/bcstatsQ1.xlsx')
   only_comments <- comments %>% select(Comment)
   
-  # Updating Data Stats
-  # Total Records
-  output$total_records <- renderValueBox({
-    valueBox(
-      nrow(only_comments),
-      "Total Respondents",
-      icon = icon("poll"),
-      color = "purple"
-    )
-  })
+  # updating selector with ministry names
+  ministries <- comments %>% select(ORGANIZATION) %>% filter(ORGANIZATION != 'NA') %>% unique()
+  updateSelectizeInput(session, 'ministry_names', choices = ministries$ORGANIZATION, server = TRUE)
   
-  smry <- comments %>% group_by(Year) %>% summarise(count = n())
-  
-  # 2013 Records
-  output$records_2k13 <- renderValueBox({
-    valueBox(smry$count[1],
-             "2013",
-             icon = icon("users"),
-             color = "orange")
-  })
-  
-  # 2018 Records
-  output$records_2k18 <- renderValueBox({
-    valueBox(smry$count[2],
-             "2018",
-             icon = icon("users"),
-             color = "yellow")
-  })
-  
-  # 2020 Records
-  output$records_2k20 <- renderValueBox({
-    valueBox(smry$count[3],
-             "2020",
-             icon = icon("users"),
-             color = "aqua")
-  })
-  
-  
-  # Text Mining
-  single_tokens <- only_comments %>% unnest_tokens(word, Comment)
-  
-  bing_word_counts <- single_tokens %>%
-    inner_join(get_sentiments("bing")) %>%
-    count(word, sentiment, sort = TRUE) %>%
-    ungroup()
-  
-  
-  # Word Cloud Plot
-  output$plot_wc <- renderPlot({
+  # updating dashboard according to ministries
+  observe({
     
+    user_filter <- input$ministry_names
+
+    if(length(user_filter) != 0){
+      only_comments <- comments %>% filter(ORGANIZATION %in% user_filter) %>% select(Comment)
+      smry <- comments %>% filter(ORGANIZATION %in% user_filter) %>% group_by(Year) %>% summarise(count = n())
+      
+    }
+    else{
+      only_comments <- comments %>% select(Comment)
+      smry <- comments %>% group_by(Year) %>% summarise(count = n())
+    }
+    
+    #Updating Data Stats
+    #Total Records
+    output$total_records <- renderValueBox({
+      valueBox(
+        nrow(only_comments),
+        "Total Respondents",
+        icon = icon("poll"),
+        color = "purple"
+      )
+    })
+    
+    #smry <- comments %>% group_by(Year) %>% summarise(count = n())
+    
+    # 2013 Records
+    output$records_2k13 <- renderValueBox({
+      valueBox(smry$count[1],
+               "2013",
+               icon = icon("users"),
+               color = "orange")
+    })
+    
+    # 2018 Records
+    output$records_2k18 <- renderValueBox({
+      valueBox(smry$count[2],
+               "2018",
+               icon = icon("users"),
+               color = "yellow")
+    })
+    
+    # 2020 Records
+    output$records_2k20 <- renderValueBox({
+      valueBox(smry$count[3],
+               "2020",
+               icon = icon("users"),
+               color = "aqua")
+    })
+    
+    
+    # Text Mining
+    single_tokens <- only_comments %>% unnest_tokens(word, Comment)
+    
+    bing_word_counts <- single_tokens %>%
+      inner_join(get_sentiments("bing")) %>%
+      count(word, sentiment, sort = TRUE) %>%
+      ungroup()
+    
+    
+    # Word Cloud Plot
+    output$plot_wc <- renderPlot({
+      
     # VERSION - Tidy
     plot <- single_tokens %>%
       anti_join(stop_words) %>%
@@ -223,9 +252,9 @@ server <- function(input, output, comments) {
           colors = brewer.pal(8, "Dark2")
         )
       )
+      
+    })
     
-  })
-  
   # New Plot - Polarity
   output$plot_pn <- renderPlot({
     bing_word_counts %>%
@@ -242,9 +271,7 @@ server <- function(input, output, comments) {
       theme_minimal()
   })
   
-  
   # New Plot - Markov Chain Text Processing
-  
   bigrams <-
     only_comments %>% mutate(line = row_number()) %>% unnest_tokens(bigrams, Comment, token = 'ngrams', n =
                                                                       2)
@@ -283,114 +310,9 @@ server <- function(input, output, comments) {
   })
   
   
-  # Entity Analysis - Option Checking
-  observeEvent(input$checkGroup_ea, {
-    len <- length(input$checkGroup_ea)
-    val <- input$checkGroup_ea
-    print(len)
-    print('Val')
-    print(val)
+  
+  }) # updating dashboard code ends here
     
-    print('Token')
-    token1 <- input$text_word1
-    token2 <- input$text_word2
-    search_word <- paste(token1, token2)
-    result <-
-      comments[comments$Comment %like% search_word, ] %>% select(Comment, Year)
-    
-    # function for issue plotting over years
-    issue_plot <- function(result, token1, token2) {
-      agg <- result %>% group_by(Year) %>% summarise(count = n())
-      
-      cw1 <- capitalize(token1)
-      cw2 <- capitalize(token2)
-      
-      title <-
-        bquote(paste(bold(.(cw1)) ~ bold(.(cw2)) ~ "Concern Over Years"))
-      
-      ggplot(agg, aes(x = Year, y = count)) +
-        geom_bar(stat = 'identity' , fill = "steelblue") +
-        geom_text(
-          aes(label = count),
-          vjust = 1.6,
-          color = "white",
-          size = 5
-        ) +
-        ggtitle(label = title) +
-        ylab(label = 'Responses') +
-        theme_minimal()
-    }
-    
-    # function for sentiment highlight
-    plot_sentiment <- function(result) {
-      df <- result
-      
-      feedbacks <-
-        df %>% select(Comment) %>% mutate(id = row_number())
-      group_df <-
-        feedbacks %>% get_sentences(feedbacks$Comment) %>% select(Comment, id)
-      
-      sent_df <-
-        sentiment(df$Comment) %>% select(element_id, sentiment)
-      
-      highlight_df <-
-        cbind(group_df, sent_df) %>% select(sentiment, Comment, id)
-      
-      highlight_df %>% mutate(review = get_sentences(Comment)) %$% sentiment_by(review, id) %>% highlight(file = 'highlight.html', open = FALSE)
-    }
-    
-    # Plotting Issues & Highlights
-    if (len == 2) {
-      # issues
-      output$plot_issue <- renderPlot({
-        issue_plot(result, token1, token2)
-        
-      })
-      
-      # sentiment
-      plot_sentiment(result)
-      
-      getPage <- function() {
-        return(includeHTML("highlight.html"))
-      }
-      
-      output$sentiment <- renderUI({
-        #getPage()
-        tags$iframe(
-          srcdoc = paste(readLines('highlight.html'), collapse = '\n'),
-          width = "100%",
-          height = "600px",
-          frameborder = "0"
-        )
-      })
-      
-    }
-    
-    else if (len == 1 & val == 1) {
-      output$plot_issue <- renderPlot({
-        issue_plot(result, token1, token2)
-        
-      })
-    }
-    else if (len == 1 & val == 2) {
-      plot_sentiment(result)
-      
-      getPage <- function() {
-        return(includeHTML("highlight.html"))
-      }
-      
-      output$sentiment <- renderUI({
-        #getPage()
-        tags$iframe(
-          srcdoc = paste(readLines('highlight.html'), collapse = '\n'),
-          width = "100%",
-          height = "600px",
-          frameborder = "0"
-        )
-      })
-    }
-    
-  })
 }
 
 shinyApp(ui, server)
