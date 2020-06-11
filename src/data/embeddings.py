@@ -175,7 +175,7 @@ class Embeddings:
         np.save(self.root + 'y_train', self.y_train)
         np.save(self.root + 'y_valid', self.y_valid)
         if include_test:
-            np.save(self.root + 'y_test_', self.y_test)
+            np.save(self.root + 'y_test', self.y_test)
 
         return
 
