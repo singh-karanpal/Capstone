@@ -161,13 +161,22 @@ class Embeddings:
             encoded_docs_test = self.vect.texts_to_sequences(self.X_test)
             padded_docs_test = pad_sequences(encoded_docs_test, maxlen=self.vocab_size, padding='post')
 
-        # Saving the embedding matrix and padding datafiles
+        # Saving the embedding matrix
         print('Save: saving files in ', self.root, 'directory.')
         np.save(self.root + 'embedding_matrix_' + model, embedding_matrix)
+
+        # Saving the padding X's datafiles
         np.save(self.root + 'X_train_' + model, padded_docs_train)
         np.save(self.root + 'X_valid_' + model, padded_docs_valid)
         if include_test:
             np.save(self.root + 'X_test_' + model, padded_docs_test)
+
+        # Saving the padding y's datafiles
+        np.save(self.root + 'y_train', self.y_train)
+        np.save(self.root + 'y_valid', self.y_valid)
+        if include_test:
+            np.save(self.root + 'y_test_', self.y_test)
+
         return
 
 
