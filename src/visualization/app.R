@@ -153,8 +153,100 @@ ui <- dashboardPage(
     # 2nd tab
     tabItem(tabName = 'q2',
             fluidRow(
-              h2(
-                'Have you seen any improvements in your work environment and if so, what are the improvements?'
+              # ministry selector
+              box(title = 'Select Ministries', selectizeInput(
+                'ministry_names_q2', label = NULL, choices = NULL, multiple = TRUE,
+                options = list(create = TRUE),
+              ),width = 12)
+            ),
+            
+            fluidRow(
+              #Total Records
+              valueBoxOutput('total_records_q2', width = 3)  %>% withSpinner(color =
+                                                                            "skyblue"),
+              # 2013
+              valueBoxOutput('records_2k13_q2', width = 3),
+              
+              # 2018
+              valueBoxOutput('records_2k18_q2', width = 3),
+              
+              # 2020
+              valueBoxOutput('records_2k20_q2', width = 3)
+            ),
+            
+            fluidRow(
+              box(
+                title = 'Employee Concerns',
+                plotOutput('plot_wc_q2') %>% withSpinner(color = "skyblue")
+              ),
+              box(
+                title = 'Polarity',
+                plotOutput('plot_pn_q2') %>% withSpinner(color = "skyblue")
+              )
+            ),
+            
+            fluidRow(
+              box(
+                title = 'Markov Chain Text Processing',
+                plotOutput('plot_mc_q2') %>% withSpinner(color = "skyblue"),
+                width = 8,
+                height = 550
+              ),
+              box(
+                title = 'Markov Threshold',
+                sliderInput("slider_mc_q2", "Minimum Occurrences:", 1, 600, 100),
+                box(
+                  title = 'Entity Analysis',
+                  collapsible = TRUE,
+                  collapsed = TRUE,
+                  status = 'primary',
+                  solidHeader = TRUE,
+                  textInput(
+                    "text_word1_q2",
+                    label = h5("From Token"),
+                    value = '',
+                    width = '50%'
+                  ),
+                  textInput(
+                    "text_word2_q2",
+                    label = h5("To Token"),
+                    value = '',
+                    width = '50%'
+                  ),
+                  checkboxGroupInput(
+                    "checkGroup_ea_q2",
+                    label = h3("Mining Options"),
+                    choices = list(
+                      "Issues Over Time" = 1,
+                      "Sentiment Highlights" = 2
+                    ),
+                    selected = ''
+                  ),
+                  width = 12
+                )
+                ,
+                width = 4
+              )
+            ),
+            
+            
+            fluidRow(
+              class = "flex-nowrap",
+              
+              box(
+                title = 'Issues Over Years',
+                plotOutput('plot_issue_q2') %>% withSpinner(color = "skyblue"),
+                width = 4,
+                collapsible = TRUE,
+                collapsed = TRUE
+              ),
+              
+              box(
+                title = 'Sentiment Analysis',
+                htmlOutput('sentiment_q2'),
+                width = 8,
+                collapsible = TRUE,
+                collapsed = TRUE
               )
             ))
   ))
@@ -164,14 +256,24 @@ server <- function(input, output, comments, session) {
   # setting seed
   set.seed(1234)
   
-  # loading data
-  comments <-
-    read_excel('../../../591_capstone_2020_bc_stats_mds/data/interim/dashboard/bcstatsQ1.xlsx')
+  # loading raw data
+  data_df <- read_excel('../../../591_capstone_2020_bc_stats_mds/data/interim/dashboard/bcstatsQ1.xlsx')
+  
+  # creating new objects for transformations
+  comments <- data_df
   only_comments <- comments %>% select(Comment)
   
   # updating selector with ministry names
   ministries <- comments %>% select(ORGANIZATION) %>% filter(ORGANIZATION != 'NA') %>% unique()
   updateSelectizeInput(session, 'ministry_names', choices = ministries$ORGANIZATION, server = TRUE)
+  
+  ## checking which tab is active
+  observe({
+    tabs <- input$tabName
+    
+    print('Selected Tab')
+    print(tabs)
+  })
   
   # updating dashboard according to ministries
   observe({
@@ -179,11 +281,14 @@ server <- function(input, output, comments, session) {
     user_filter <- input$ministry_names
 
     if(length(user_filter) != 0){
+      
+      comments <- data_df %>% filter(ORGANIZATION %in% user_filter)
       only_comments <- comments %>% filter(ORGANIZATION %in% user_filter) %>% select(Comment)
       smry <- comments %>% filter(ORGANIZATION %in% user_filter) %>% group_by(Year) %>% summarise(count = n())
       
     }
     else{
+      comments <- data_df
       only_comments <- comments %>% select(Comment)
       smry <- comments %>% group_by(Year) %>% summarise(count = n())
     }
@@ -199,7 +304,6 @@ server <- function(input, output, comments, session) {
       )
     })
     
-    #smry <- comments %>% group_by(Year) %>% summarise(count = n())
     
     # 2013 Records
     output$records_2k13 <- renderValueBox({
@@ -309,10 +413,115 @@ server <- function(input, output, comments, session) {
       theme_void()
   })
   
+  # Entity Analysis - Option Checking		
+  observeEvent(input$checkGroup_ea, {	
+  len <- length(input$checkGroup_ea)		
+  val <- input$checkGroup_ea	
   
+  print('Token')		
+  token1 <- input$text_word1		
+  token2 <- input$text_word2		
+  search_word <- paste(token1, token2)		
+  result <-	comments[comments$Comment %like% search_word,] %>% select(Comment, Year)		
+  
+  # function for issue plotting over years		
+  issue_plot <- function(result, token1, token2) {		
+    agg <- result %>% group_by(Year) %>% summarise(count = n()) %>% mutate(per = round(count/sum(count),2))		
+    
+    cw1 <- capitalize(token1)		
+    cw2 <- capitalize(token2)		
+    
+    title <-		
+      bquote(paste(bold(.(cw1)) ~ bold(.(cw2)) ~ "Concern Over Years"))		
+    
+    ggplot(agg, aes(x = as.factor(Year), y = per)) +		
+      geom_bar(stat = 'identity' , fill = "steelblue") +		
+      geom_text(		
+        aes(label = per),		
+        vjust = 1.6,		
+        color = "white",		
+        size = 5		
+      ) +		
+      ggtitle(label = title) +		
+      ylab(label = 'Responses') +		
+      theme_minimal()		
+  }		
+  
+  # function for sentiment highlight		
+  plot_sentiment <- function(result) {		
+    df <- result		
+    
+    feedbacks <-		
+      df %>% select(Comment) %>% mutate(id = row_number())		
+    group_df <-		
+      feedbacks %>% get_sentences(feedbacks$Comment) %>% select(Comment, id)		
+    
+    sent_df <-		
+      sentiment(df$Comment) %>% select(element_id, sentiment)		
+    
+    highlight_df <-		
+      cbind(group_df, sent_df) %>% select(sentiment, Comment, id)		
+    
+    highlight_df %>% mutate(review = get_sentences(Comment)) %$% sentiment_by(review, id) %>% highlight(file = 'highlight.html', open = FALSE)		
+  }		
+  
+  # Plotting Issues & Highlights		
+  if (len == 2) {		
+    # issues		
+    output$plot_issue <- renderPlot({		
+      issue_plot(result, token1, token2)		
+      
+    })		
+    
+    # sentiment		
+    plot_sentiment(result)		
+    
+    getPage <- function() {		
+      return(includeHTML("highlight.html"))		
+    }		
+    
+    output$sentiment <- renderUI({		
+      #getPage()		
+      tags$iframe(		
+        srcdoc = paste(readLines('highlight.html'), collapse = '\n'),		
+        width = "100%",		
+        height = "600px",		
+        frameborder = "0"		
+      )		
+    })
+  }
+  
+  else if (len == 1 & val == 1) {
+    output$plot_issue <- renderPlot({
+      issue_plot(result, token1, token2)
+      
+    })
+  }
+  
+  else if (len == 1 & val == 2) {
+    plot_sentiment(result)
+    
+    getPage <- function() {
+      return(includeHTML("highlight.html"))
+    }
+    
+    output$sentiment <- renderUI({
+      #getPage()
+      tags$iframe(
+        srcdoc = paste(readLines('highlight.html'), collapse = '\n'),
+        width = "100%",
+        height = "600px",
+        frameborder = "0"
+      )
+    })
+  }
+  
+  
+    
+  
+  })
   
   }) # updating dashboard code ends here
-    
+  
 }
-
 shinyApp(ui, server)
