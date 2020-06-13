@@ -6,6 +6,10 @@ get the embedding matrix and padded dataset for train, validation and
 test data.
 
 Usage: src/data/embeddings.py --model=<model> --level=<level> --label_name=<label_name> --include_test=<include_test>
+
+Example:
+    python src/data/embeddings.py --model='fasttext' --level='theme' --label_name='' --include_test='False'
+    python src/data/embeddings.py --model='fasttext' --level='subtheme' --label_name='SP' --include_test='False'
 '''
 
 import pandas as pd
@@ -59,19 +63,23 @@ class Embeddings:
             'SP', 'RE', 'Sup', 'SW', 'TEPE', 'VMG', 'OTH']
             
         if level == "theme":
-            root = 'data/interim/question1_models/'
+            self.root = 'data/interim/question1_models/'
+            self.root_q2 = 'data/interim/question2_models/'
             exten = '.xlsx'
         else:
-            root = 'data/interim/subthemes/' + label_name + '/'
+            self.root = 'data/interim/subthemes/' + label_name + '/'
             exten = '_subset.xlsx'
 
-        X_train = pd.read_excel(root + 'X_train' + exten)['Comment'].tolist()
-        X_valid = pd.read_excel(root + 'X_valid' + exten)['Comment'].tolist()
-        self.y_train = pd.read_excel(root + 'y_train' + exten)
-        self.y_valid = pd.read_excel(root + 'y_valid' + exten)
+        X_train = pd.read_excel(self.root + 'X_train' + exten)['Comment'].tolist()
+        X_valid = pd.read_excel(self.root + 'X_valid' + exten)['Comment'].tolist()
+        if level == "theme":
+            data_q2 = pd.read_excel(self.root_q2 + 'comments_q2' + exten)['Comment'].tolist()
+
+        self.y_train = pd.read_excel(self.root + 'y_train' + exten)
+        self.y_valid = pd.read_excel(self.root + 'y_valid' + exten)
         if include_test:
-            X_test = pd.read_excel(root + 'X_test' + exten)['Comment'].tolist()
-            self.y_test = pd.read_excel(root + 'y_test' + exten)
+            X_test = pd.read_excel(self.root + 'X_test' + exten)['Comment'].tolist()
+            self.y_test = pd.read_excel(self.root + 'y_test' + exten)
         print('\nLoading: files were sucessfuly loaded.')
 
         # Preprocess the data
@@ -83,6 +91,8 @@ class Embeddings:
         print('Preprocess: this step would take time, please be patient.')
         self.X_train = Preprocessing().general(X_train)
         self.X_valid = Preprocessing().general(X_valid)
+        if level == "theme":
+            self.data_q2 = Preprocessing().general(data_q2)
         if include_test:
             self.X_test = Preprocessing().general(X_test)
 
@@ -91,9 +101,6 @@ class Embeddings:
         self.vect=Tokenizer()
         self.vect.fit_on_texts(X_train)
         self.vocab_size = len(self.vect.word_index) + 1
-
-        # Passing the root to save info in the same folder
-        self.root = root
         return
 
 
@@ -157,25 +164,33 @@ class Embeddings:
         padded_docs_train = pad_sequences(encoded_docs_train, maxlen=self.vocab_size, padding='post')
         encoded_docs_valid = self.vect.texts_to_sequences(self.X_valid)
         padded_docs_valid = pad_sequences(encoded_docs_valid, maxlen=self.vocab_size, padding='post')
+        if level == "theme":
+            encoded_question2 = self.vect.texts_to_sequences(self.data_q2)
+            padded_question2 = pad_sequences(encoded_question2, maxlen=self.vocab_size, padding='post')
         if include_test:
             encoded_docs_test = self.vect.texts_to_sequences(self.X_test)
             padded_docs_test = pad_sequences(encoded_docs_test, maxlen=self.vocab_size, padding='post')
 
         # Saving the embedding matrix
-        print('Save: saving files in ', self.root, 'directory.')
-        np.save(self.root + 'embedding_matrix_' + model, embedding_matrix)
+        print('Save: saving files in ', self.root, ' directory.')
+        np.save(self.root + 'embedding_matrix', embedding_matrix)#+ model, embedding_matrix)
 
         # Saving the padding X's datafiles
-        np.save(self.root + 'X_train_' + model, padded_docs_train)
-        np.save(self.root + 'X_valid_' + model, padded_docs_valid)
+        np.save(self.root + 'X_train_padded', padded_docs_train)# + model, padded_docs_train)
+        np.save(self.root + 'X_valid_padded', padded_docs_valid)# + model, padded_docs_valid)
+        encoded_question2
         if include_test:
-            np.save(self.root + 'X_test_' + model, padded_docs_test)
+            np.save(self.root + 'X_test_padded', padded_docs_test)# + model, padded_docs_test)
 
         # Saving the padding y's datafiles
         np.save(self.root + 'y_train', self.y_train)
         np.save(self.root + 'y_valid', self.y_valid)
         if include_test:
             np.save(self.root + 'y_test', self.y_test)
+
+        # Saving the padding for question 2
+        if level == "theme":
+            np.save(self.root_q2 + 'comments_q2_padded', padded_question2)# + model, padded_question2)
 
         return
 
