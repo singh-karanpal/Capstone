@@ -148,7 +148,7 @@ ui <- dashboardPage(
         ),
         box(
           title = 'Markov Threshold',
-          sliderInput("slider_mc", "Minimum Occurrences:", 1, 600, 100),
+          sliderInput("slider_mc", "Minimum Occurrences:", 1, 600, 60),
           box(
             title = 'Entity Analysis',
             collapsible = TRUE,
@@ -256,7 +256,7 @@ ui <- dashboardPage(
         ),
         box(
           title = 'Markov Threshold',
-          sliderInput("slider_mc_q2", "Minimum Occurrences:", 1, 600, 100),
+          sliderInput("slider_mc_q2", "Minimum Occurrences:", 1, 600, 25),
           box(
             title = 'Entity Analysis',
             collapsible = TRUE,
