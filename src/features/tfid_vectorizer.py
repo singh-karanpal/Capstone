@@ -23,6 +23,7 @@ import numpy as np
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from src.data.preprocess import Preprocessing 
+import scipy.sparse
 
 from docopt import docopt
 
@@ -60,8 +61,8 @@ def main(input_dir, output_dir):
     
     #Saving matrixes 
 
-    np.save(output_dir + '/tfid_X_train', X_train)
-    np.save(output_dir + '/tfid_X_valid', X_valid)
+    scipy.sparse.save_npz(output_dir + '/tfid_X_train', X_train)
+    scipy.sparse.save_npz(output_dir + '/tfid_X_valid', X_valid)
     
 if __name__ == "__main__":
     main(opt["--input_dir"], opt["--output_dir"])
