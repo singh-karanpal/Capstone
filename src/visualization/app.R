@@ -20,6 +20,7 @@ library("stringr")
 library("data.table")
 library("Hmisc")
 library("sentimentr")
+library("shinyBS")
 
 # function for issue plotting over years
 issue_plot <- function(result, token1, token2) {
@@ -67,6 +68,7 @@ plot_sentiment <- function(result, file_name) {
 
 # Dashboard Code
 ui <- dashboardPage(
+  
   # header
   dashboardHeader(title = 'BC Stats - Text Analytics', titleWidth = '15%'),
   
@@ -86,22 +88,31 @@ ui <- dashboardPage(
         'Comparison',
         tabName = 'comparison',
         icon = icon('project-diagram')
+      ),
+      menuItem(
+        'Data Dictionary',
+        tabName = 'data_dictionary',
+        icon = icon('book-open')
       )
     ),
     collapsed = TRUE
   ),
   
   
+  
   #body content
   dashboardBody(tags$script(HTML(
     "$('body').addClass('fixed');"
   )),
+
   tabItems(
+    
     # 1st tab
     tabItem(
       tabName = 'q1',
       
-      fluidRow(# ministry selector
+      # ministry selector
+      fluidRow(
         box(
           title = 'Select Ministries',
           selectizeInput(
@@ -311,6 +322,23 @@ ui <- dashboardPage(
           collapsed = TRUE
         )
       )
+    ),
+    
+    # comparison tab
+    tabItem(
+      tabName = 'comparison'
+    ),
+    
+    # data dictionary tab
+    tabItem(
+      tabName = 'data_dictionary',
+      fluidRow(box(title = 'Metadata', 
+                   includeMarkdown('data_dictionary.md'), 
+                   width = 12, 
+                   status = 'info', 
+                   solidHeader = TRUE, 
+                   footer = 'Note: Themes and Sub-Themes are subject to change with new data. '))
+      
     )
   ))
 )
