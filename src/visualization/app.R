@@ -20,11 +20,13 @@ library("stringr")
 library("data.table")
 library("Hmisc")
 library("sentimentr")
+library("shinyBS")
+library("rlang")
 
 # function for issue plotting over years
 issue_plot <- function(result, token1, token2) {
   agg <-
-    result %>% group_by(Year) %>% summarise(count = n()) %>% 
+    result %>% group_by(Year) %>% summarise(count = n()) %>%
     mutate(per = paste(round(count / sum(count), 2) * 100, '%'))
   
   cw1 <- capitalize(token1)
@@ -60,8 +62,69 @@ plot_sentiment <- function(result, file_name) {
   highlight_df <-
     cbind(group_df, sent_df) %>% select(sentiment, Comment, id)
   
-  highlight_df %>% mutate(review = get_sentences(Comment)) %$% sentiment_by(review, id) %>% 
+  highlight_df %>% mutate(review = get_sentences(Comment)) %$% sentiment_by(review, id) %>%
     highlight(file = file_name, open = FALSE)
+}
+
+# function for comparison plots for Themes
+high_bar <- function(value, total_comments) {
+  value * 100 / total_comments
+}
+
+label_bar <- function(datatable, total_comments, title) {
+  ggplot(data = datatable, aes(
+    x = key,
+    y = high_bar(value, total_comments),
+    fill = key
+  )) +
+    geom_bar(
+      stat = "identity",
+      show.legend = FALSE,
+      fill = "skyblue4",
+      color = "black",
+      width = 0.8
+    ) + # WE COULD ADD HERE: aes(alpha=high_bar(value, total_comments))
+    geom_text(aes(
+      label = round(high_bar(value, total_comments), 1),
+      y = high_bar(value, total_comments) + 1
+    ),
+    color = "gray40") +
+    labs(title = title, x = 'Themes', y = 'Percentage of comments (%)') +
+    theme_bw()
+}
+
+# function for trend lines
+plot_data <- function(data_t) {
+  data_t %>% ggplot(aes(
+    x = Year,
+    y = comments_per,
+    group = as.factor(Question)
+  )) +
+    geom_line(aes(color = as.factor(Question))) +
+    geom_point(aes(color = as.factor(Question))) +
+    labs(color = 'Question') +
+    theme_minimal()
+}
+
+
+plot_trend <- function(data, sel_column) {
+  datatable_num <- data %>%
+    group_by(Year, Question) %>%
+    summarise(comments = sum(!!sel_column)) %>%
+    rename(Year_1 = Year,
+           Question_1 = Question)
+  
+  datatable_den <- data %>%
+    group_by(Year, Question) %>%
+    summarise(counts = n())
+  
+  datatable <- cbind(datatable_den, datatable_num)
+  
+  datatable <- datatable %>%
+    select(Year, Question, counts, comments) %>%
+    mutate(comments_per = round((comments / counts) * 100), 2)
+  
+  plot_data(datatable)
 }
 
 
@@ -86,23 +149,29 @@ ui <- dashboardPage(
         'Comparison',
         tabName = 'comparison',
         icon = icon('project-diagram')
+      ),
+      menuItem(
+        'Data Dictionary',
+        tabName = 'data_dictionary',
+        icon = icon('book-open')
       )
     ),
     collapsed = TRUE
   ),
   
   
+  
   #body content
-  dashboardBody(tags$script(HTML(
-    "$('body').addClass('fixed');"
-  )),
-  tabItems(
-    # 1st tab
-    tabItem(
-      tabName = 'q1',
-      
-      fluidRow(# ministry selector
-        box(
+  dashboardBody(
+    tags$script(HTML("$('body').addClass('fixed');")),
+    
+    tabItems(
+      # 1st tab
+      tabItem(
+        tabName = 'q1',
+        
+        # ministry selector
+        fluidRow(box(
           title = 'Select Ministries',
           selectizeInput(
             'ministry_names',
@@ -113,107 +182,215 @@ ui <- dashboardPage(
           ),
           width = 12
         )),
-      
-      fluidRow(
-        #Total Records
-        valueBoxOutput('total_records', width = 3)  %>% withSpinner(color =
-                                                                      "skyblue"),
-        # 2013
-        valueBoxOutput('records_2k13', width = 3),
         
-        # 2018
-        valueBoxOutput('records_2k18', width = 3),
-        
-        # 2020
-        valueBoxOutput('records_2k20', width = 3)
-      ),
-      
-      fluidRow(
-        box(
-          title = 'Employee Concerns',
-          plotOutput('plot_wc') %>% withSpinner(color = "skyblue")
+        fluidRow(
+          #Total Records
+          valueBoxOutput('total_records', width = 3)  %>% withSpinner(color =
+                                                                        "skyblue"),
+          # 2013
+          valueBoxOutput('records_2k13', width = 3),
+          
+          # 2018
+          valueBoxOutput('records_2k18', width = 3),
+          
+          # 2020
+          valueBoxOutput('records_2k20', width = 3)
         ),
-        box(
-          title = 'Polarity',
-          plotOutput('plot_pn') %>% withSpinner(color = "skyblue")
+        
+        fluidRow(
+          box(
+            title = 'Employee Concerns',
+            plotOutput('plot_wc') %>% withSpinner(color = "skyblue")
+          ),
+          box(
+            title = 'Polarity',
+            plotOutput('plot_pn') %>% withSpinner(color = "skyblue")
+          )
+        ),
+        
+        fluidRow(
+          box(
+            title = 'Markov Chain Text Processing',
+            plotOutput('plot_mc') %>% withSpinner(color = "skyblue"),
+            width = 8,
+            height = 550
+          ),
+          box(
+            title = 'Markov Threshold',
+            sliderInput("slider_mc", "Minimum Occurrences:", 1, 600, 60),
+            box(
+              title = 'Entity Analysis',
+              collapsible = TRUE,
+              collapsed = TRUE,
+              status = 'primary',
+              solidHeader = TRUE,
+              textInput(
+                "text_word1",
+                label = h5("From Token"),
+                value = '',
+                width = '50%'
+              ),
+              textInput(
+                "text_word2",
+                label = h5("To Token"),
+                value = '',
+                width = '50%'
+              ),
+              checkboxGroupInput(
+                "checkGroup_ea",
+                label = h3("Mining Options"),
+                choices = list(
+                  "Issues Over Time" = 1,
+                  "Sentiment Highlights" = 2
+                ),
+                selected = ''
+              ),
+              width = 12
+            )
+            ,
+            width = 4
+          )
+        ),
+        
+        
+        fluidRow(
+          class = "flex-nowrap",
+          
+          box(
+            title = 'Issues Over Years',
+            plotOutput('plot_issue') %>% withSpinner(color = "skyblue"),
+            width = 4,
+            collapsible = TRUE,
+            collapsed = TRUE
+          ),
+          
+          box(
+            title = 'Sentiment Analysis',
+            htmlOutput('sentiment'),
+            width = 8,
+            collapsible = TRUE,
+            collapsed = TRUE
+          )
         )
       ),
       
-      fluidRow(
-        box(
-          title = 'Markov Chain Text Processing',
-          plotOutput('plot_mc') %>% withSpinner(color = "skyblue"),
-          width = 8,
-          height = 550
-        ),
-        box(
-          title = 'Markov Threshold',
-          sliderInput("slider_mc", "Minimum Occurrences:", 1, 600, 60),
+      
+      # 2nd tab
+      tabItem(
+        tabName = 'q2',
+        fluidRow(# ministry selector
           box(
-            title = 'Entity Analysis',
-            collapsible = TRUE,
-            collapsed = TRUE,
-            status = 'primary',
-            solidHeader = TRUE,
-            textInput(
-              "text_word1",
-              label = h5("From Token"),
-              value = '',
-              width = '50%'
-            ),
-            textInput(
-              "text_word2",
-              label = h5("To Token"),
-              value = '',
-              width = '50%'
-            ),
-            checkboxGroupInput(
-              "checkGroup_ea",
-              label = h3("Mining Options"),
-              choices = list(
-                "Issues Over Time" = 1,
-                "Sentiment Highlights" = 2
-              ),
-              selected = ''
+            title = 'Select Ministries',
+            selectizeInput(
+              'ministry_names_q2',
+              label = NULL,
+              choices = NULL,
+              multiple = TRUE,
+              options = list(create = TRUE),
             ),
             width = 12
+          )),
+        
+        fluidRow(
+          #Total Records
+          valueBoxOutput('total_records_q2', width = 3)  %>% withSpinner(color =
+                                                                           "skyblue"),
+          # 2013
+          valueBoxOutput('records_2k13_q2', width = 3),
+          
+          # 2018
+          valueBoxOutput('records_2k18_q2', width = 3),
+          
+          # 2020
+          valueBoxOutput('records_2k20_q2', width = 3)
+        ),
+        
+        fluidRow(
+          box(
+            title = 'Employee Concerns',
+            plotOutput('plot_wc_q2') %>% withSpinner(color = "skyblue")
+          ),
+          box(
+            title = 'Polarity',
+            plotOutput('plot_pn_q2') %>% withSpinner(color = "skyblue")
           )
-          ,
-          width = 4
+        ),
+        
+        fluidRow(
+          box(
+            title = 'Markov Chain Text Processing',
+            plotOutput('plot_mc_q2') %>% withSpinner(color = "skyblue"),
+            width = 8,
+            height = 550
+          ),
+          box(
+            title = 'Markov Threshold',
+            sliderInput("slider_mc_q2", "Minimum Occurrences:", 1, 600, 25),
+            box(
+              title = 'Entity Analysis',
+              collapsible = TRUE,
+              collapsed = TRUE,
+              status = 'primary',
+              solidHeader = TRUE,
+              textInput(
+                "text_word1_q2",
+                label = h5("From Token"),
+                value = '',
+                width = '50%'
+              ),
+              textInput(
+                "text_word2_q2",
+                label = h5("To Token"),
+                value = '',
+                width = '50%'
+              ),
+              checkboxGroupInput(
+                "checkGroup_ea_q2",
+                label = h3("Mining Options"),
+                choices = list(
+                  "Issues Over Time" = 1,
+                  "Sentiment Highlights" = 2
+                ),
+                selected = ''
+              ),
+              width = 12
+            )
+            ,
+            width = 4
+          )
+        ),
+        
+        
+        fluidRow(
+          class = "flex-nowrap",
+          
+          box(
+            title = 'Issues Over Years',
+            plotOutput('plot_issue_q2') %>% withSpinner(color = "skyblue"),
+            width = 4,
+            collapsible = TRUE,
+            collapsed = TRUE
+          ),
+          
+          box(
+            title = 'Sentiment Analysis',
+            htmlOutput('sentiment_q2'),
+            width = 8,
+            collapsible = TRUE,
+            collapsed = TRUE
+          )
         )
       ),
       
-      
-      fluidRow(
-        class = "flex-nowrap",
+      # comparison tab
+      tabItem(
+        tabName = 'comparison',
         
-        box(
-          title = 'Issues Over Years',
-          plotOutput('plot_issue') %>% withSpinner(color = "skyblue"),
-          width = 4,
-          collapsible = TRUE,
-          collapsed = TRUE
-        ),
-        
-        box(
-          title = 'Sentiment Analysis',
-          htmlOutput('sentiment'),
-          width = 8,
-          collapsible = TRUE,
-          collapsed = TRUE
-        )
-      )
-    ),
-    
-    
-    # 2nd tab
-    tabItem(
-      tabName = 'q2',
-      fluidRow(# ministry selector
-        box(
+        # ministry selector
+        fluidRow(box(
           title = 'Select Ministries',
           selectizeInput(
-            'ministry_names_q2',
+            'ministry_names_comparison',
             label = NULL,
             choices = NULL,
             multiple = TRUE,
@@ -221,110 +398,85 @@ ui <- dashboardPage(
           ),
           width = 12
         )),
-      
-      fluidRow(
-        #Total Records
-        valueBoxOutput('total_records_q2', width = 3)  %>% withSpinner(color =
-                                                                         "skyblue"),
-        # 2013
-        valueBoxOutput('records_2k13_q2', width = 3),
         
-        # 2018
-        valueBoxOutput('records_2k18_q2', width = 3),
-        
-        # 2020
-        valueBoxOutput('records_2k20_q2', width = 3)
-      ),
-      
-      fluidRow(
-        box(
-          title = 'Employee Concerns',
-          plotOutput('plot_wc_q2') %>% withSpinner(color = "skyblue")
-        ),
-        box(
-          title = 'Polarity',
-          plotOutput('plot_pn_q2') %>% withSpinner(color = "skyblue")
-        )
-      ),
-      
-      fluidRow(
-        box(
-          title = 'Markov Chain Text Processing',
-          plotOutput('plot_mc_q2') %>% withSpinner(color = "skyblue"),
-          width = 8,
-          height = 550
-        ),
-        box(
-          title = 'Markov Threshold',
-          sliderInput("slider_mc_q2", "Minimum Occurrences:", 1, 600, 25),
+        fluidRow(
           box(
-            title = 'Entity Analysis',
-            collapsible = TRUE,
-            collapsed = TRUE,
-            status = 'primary',
-            solidHeader = TRUE,
-            textInput(
-              "text_word1_q2",
-              label = h5("From Token"),
-              value = '',
-              width = '50%'
-            ),
-            textInput(
-              "text_word2_q2",
-              label = h5("To Token"),
-              value = '',
-              width = '50%'
-            ),
-            checkboxGroupInput(
-              "checkGroup_ea_q2",
-              label = h3("Mining Options"),
-              choices = list(
-                "Issues Over Time" = 1,
-                "Sentiment Highlights" = 2
-              ),
-              selected = ''
-            ),
-            width = 12
+            title = 'Pick Year',
+            width = 2,
+            selectizeInput(
+              'pick_year',
+              label = NULL,
+              choices = NULL,
+              multiple = TRUE,
+              options = list(create = TRUE),
+            )
+          ),
+          box(
+            title = 'Themes Q1',
+            width = 5,
+            plotOutput('plot_themes_q1') %>% withSpinner(color = "skyblue")
+          ),
+          box(
+            title = 'Themes Q2',
+            width = 5,
+            plotOutput('plot_themes_q2') %>% withSpinner(color = "skyblue")
           )
-          ,
-          width = 4
-        )
-      ),
-      
-      
-      fluidRow(
-        class = "flex-nowrap",
-        
-        box(
-          title = 'Issues Over Years',
-          plotOutput('plot_issue_q2') %>% withSpinner(color = "skyblue"),
-          width = 4,
-          collapsible = TRUE,
-          collapsed = TRUE
         ),
         
-        box(
-          title = 'Sentiment Analysis',
-          htmlOutput('sentiment_q2'),
-          width = 8,
-          collapsible = TRUE,
-          collapsed = TRUE
+        fluidRow(
+          box(
+            title = 'Pick Label',
+            width = 2,
+            selectizeInput(
+              'pick_label',
+              label = NULL,
+              choices = NULL,
+              multiple = FALSE,
+              options = list(create = TRUE),
+              
+            )
+          ),
+          box(
+            title = 'Trend',
+            width = 10,
+            footer = 'NOTE: Labels used in graphs for question 2 are predictions from Bi-GRU.',
+            plotOutput('plot_trend') %>% withSpinner(color = "skyblue")
+          )
         )
-      )
+        
+      ),
+      
+      # data dictionary tab
+      tabItem(tabName = 'data_dictionary',
+              fluidRow(
+                box(
+                  title = 'Metadata',
+                  includeMarkdown('data_dictionary.md'),
+                  width = 12,
+                  status = 'info',
+                  solidHeader = TRUE,
+                  footer = 'Note: Themes and Sub-Themes are subject to change with new data. '
+                )
+              ))
     )
-  ))
+  )
 )
 
 server <- function(input, output, comments, session) {
   # setting seed
   set.seed(1234)
   
-  # loading raw data
+  # loading raw data for Concerns
   data_df_q1 <-
     read_excel('../../data/interim/question1_models/ministries_Q1.xlsx')
-  # loading raw data
+  
+  # loading raw data for Appreciations
   data_df_q2 <-
     read_excel('../../data/interim/question2_models/ministries_Q2.xlsx')
+  
+  # loading data for Comparison
+  data_df_comp <-
+    read_excel('../../data/interim/question2_models/ministries_Q2_pred.xlsx')
   
   
   ## checking which tab is active
@@ -355,8 +507,8 @@ server <- function(input, output, comments, session) {
           only_comments <-
             comments %>% filter(Ministry %in% user_filter) %>% select(Comment)
           smry <-
-            comments %>% filter(Ministry %in% user_filter) %>% group_by(Year) %>% 
-              summarise(count = n())
+            comments %>% filter(Ministry %in% user_filter) %>% group_by(Year) %>%
+            summarise(count = n())
           
         }
         else{
@@ -441,7 +593,7 @@ server <- function(input, output, comments, session) {
             mutate(word = reorder(word, n)) %>%
             ggplot(aes(word, n, fill = sentiment)) +
             geom_col(show.legend = FALSE) +
-            facet_wrap( ~ sentiment, scales = "free_y") +
+            facet_wrap(~ sentiment, scales = "free_y") +
             labs(y = "Contribution to sentiment",
                  x = NULL) +
             coord_flip() +
@@ -450,8 +602,8 @@ server <- function(input, output, comments, session) {
         
         # New Plot - Markov Chain Text Processing
         bigrams <-
-          only_comments %>% mutate(line = row_number()) %>% 
-            unnest_tokens(bigrams, Comment, token = 'ngrams', n = 2)
+          only_comments %>% mutate(line = row_number()) %>%
+          unnest_tokens(bigrams, Comment, token = 'ngrams', n = 2)
         
         bigrams_separated <- bigrams %>%
           separate(bigrams, c("word1", "word2"), sep = " ")
@@ -498,7 +650,7 @@ server <- function(input, output, comments, session) {
           token2 <- input$text_word2
           search_word <- paste(token1, token2)
           result <-
-            comments[comments$Comment %like% search_word, ] %>% select(Comment, Year)
+            comments[comments$Comment %like% search_word,] %>% select(Comment, Year)
           
           # Plotting Issues & Highlights
           if (len == 2) {
@@ -665,7 +817,7 @@ server <- function(input, output, comments, session) {
             mutate(word = reorder(word, n)) %>%
             ggplot(aes(word, n, fill = sentiment)) +
             geom_col(show.legend = FALSE) +
-            facet_wrap( ~ sentiment, scales = "free_y") +
+            facet_wrap(~ sentiment, scales = "free_y") +
             labs(y = "Contribution to sentiment",
                  x = NULL) +
             coord_flip() +
@@ -674,7 +826,7 @@ server <- function(input, output, comments, session) {
         
         # New Plot - Markov Chain Text Processing
         bigrams <-
-          only_comments %>% mutate(line = row_number()) %>% 
+          only_comments %>% mutate(line = row_number()) %>%
           unnest_tokens(bigrams, Comment, token = 'ngrams', n = 2)
         
         bigrams_separated <- bigrams %>%
@@ -722,7 +874,7 @@ server <- function(input, output, comments, session) {
           token2 <- input$text_word2_q2
           search_word <- paste(token1, token2)
           result <-
-            comments[comments$Comment %like% search_word, ] %>% select(Comment, Year)
+            comments[comments$Comment %like% search_word,] %>% select(Comment, Year)
           
           # Plotting Issues & Highlights
           if (len == 2) {
@@ -777,8 +929,185 @@ server <- function(input, output, comments, session) {
           
         })
         
-      }) # updating dashboard code ends here
+      }) # updating dashboard code ends here for second tab
     }
+    
+    else if (input$tab == 'comparison') {
+      # creating new objects for transformations
+      comments_q1 <- data_df_q1
+      
+      comments_q2 <- data_df_comp
+      
+      
+      # updating selector with ministry names
+      ministries <-
+        comments_q1 %>% select(Ministry) %>% filter(Ministry != 'NA') %>% unique()
+      updateSelectizeInput(
+        session,
+        'ministry_names_comparison',
+        choices = sort(ministries$Ministry),
+        server = TRUE
+      )
+      
+      
+      # prepare data for trends
+      trends_df <- data_df_comp
+      
+      ### Data Preparation Question 1
+      q1_subset <- data_df_q1[, c(1:14, 78:80)]
+      q1_subset['Question'] = 1
+      
+      ### Question 2 cleaning and data formatting
+      # comments with atleast one assigned labels
+      rows_to_keep <- rowSums(trends_df[, c(6:17)]) != 0
+      
+      # filtering data
+      trends_df <- trends_df[rows_to_keep, ]
+      trends_df['Question'] = 2
+      trend_data <-
+        rbind(trends_df, q1_subset) # creating a unified dataframe
+      
+      
+      
+      
+      # observing events as per selected ministry for comparison
+      observe({
+        user_filter_comparison <- input$ministry_names_comparison
+        
+        # updating data
+        if (length(user_filter_comparison) != 0) {
+          # for question1
+          comments_q1 <-
+            data_df_q1 %>% filter(Ministry %in% user_filter_comparison)
+          
+          # for question 2
+          comments_q2 <-
+            data_df_comp %>% filter(Ministry %in% user_filter_comparison)
+          
+          # for trend line plot
+          comments_trends <-
+            trend_data %>% filter(Ministry %in% user_filter_comparison)
+          
+        }
+        else{
+          # for question 1
+          comments_q1 <- data_df_q1
+          
+          # for question 2
+          comments_q2 <- data_df_comp
+          
+          # for trend
+          comments_trends <- trend_data
+        }
+        
+        
+        # get unique years and update the filter
+        years <-
+          comments_q1 %>% select(Year)  %>% unique()
+        
+        updateSelectizeInput(session,
+                             'pick_year',
+                             choices = sort(years$Year),
+                             server = TRUE)
+        
+        # get unique labels and update the filter
+        labels <- colnames(comments_q1)
+        
+        updateSelectizeInput(
+          session,
+          'pick_label',
+          choices = labels[3:14],
+          selected = labels[3],
+          server = TRUE
+        )
+        
+        
+        # observing year for updating themes plots
+        observe({
+          user_filter_year <- input$pick_year
+          
+          # updating data
+          if (length(user_filter_year) != 0) {
+            # question 1
+            comments_q1_year <-
+              comments_q1 %>% filter(Year %in% user_filter_year)
+            
+            # question 2
+            comments_q2_year <-
+              comments_q2 %>% filter(Year %in% user_filter_year)
+            
+          }
+          else{
+            # for question 1
+            comments_q1_year <- comments_q1
+            
+            # for question 3
+            comments_q2_year <- comments_q2
+          }
+          
+          ### Question 1 cleaning and data formatting
+          sumdata_q1 <-
+            data.frame(value = apply(comments_q1_year[, c(3:14)], 2, sum))
+          sumdata_q1$key = rownames(sumdata_q1)
+          
+          
+          # plots by Theme
+          total_comments_q1 <- dim(comments_q1_year)[1]
+          
+          output$plot_themes_q1 <- renderPlot({
+            label_bar(sumdata_q1, total_comments_q1, title = "Theme distribution across comments conveying concerns")
+          })
+          
+          
+          ### Question 2 cleaning and data formatting
+          # comments with atleast one assigned labels
+          rows_to_keep <- rowSums(comments_q2_year[, c(6:17)]) != 0
+          
+          # filtering data
+          data_df_q2 <- comments_q2_year[rows_to_keep, ]
+          
+          # transforming data for graph, by theme
+          sumdata_q2 <-
+            data.frame(value = apply(data_df_q2[, c(6:17)], 2, sum))
+          sumdata_q2$key = rownames(sumdata_q2)
+          
+          total_comments_q2 <- dim(data_df_q2)[1]
+          
+          output$plot_themes_q2 <- renderPlot({
+            label_bar(
+              datatable = sumdata_q2,
+              total_comments = total_comments_q2,
+              title = "Theme distribution across comments conveying improvements"
+            )
+          })
+          
+          
+        })
+        
+        # observing Labels filter to have refreshed trend plot
+        observe({
+          user_filter_label <- input$pick_label
+          
+          # updating data
+          if (user_filter_label != '') {
+            if (length(user_filter_label) != 0) {
+              # trends
+              selected_columns <-
+                comments_trends %>% select(Year, Question, user_filter_label)
+              
+              output$plot_trend <- renderPlot({
+                plot_trend(selected_columns, sym(user_filter_label))
+              })
+            }
+            
+          } # trend plot updating code
+          
+        })
+        
+      }) # observing end for comparison
+      
+    }
+    
   })
   
   
