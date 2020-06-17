@@ -9,7 +9,7 @@ Usage: src/data/embeddings.py --model=<model> --level=<level> --label_name=<labe
 
 Example:
     python src/data/embeddings.py --model='fasttext' --level='theme' --label_name='' --include_test='False'
-    python src/data/embeddings.py --model='fasttext' --level='subtheme' --label_name='SP' --include_test='False'
+    python src/data/embeddings.py --model='fasttext' --level='subtheme' --label_name='SP' --include_test='True'
 '''
 
 import pandas as pd
@@ -70,16 +70,17 @@ class Embeddings:
             self.root = 'data/interim/subthemes/' + label_name + '/'
             exten = '_subset.xlsx'
 
-        X_train = pd.read_excel(self.root + 'X_train' + exten)['Comment'].tolist()
-        X_valid = pd.read_excel(self.root + 'X_valid' + exten)['Comment'].tolist()
-        if level == "theme":
-            data_q2 = pd.read_excel(self.root_q2 + 'comments_q2' + exten)['Comment'].tolist()
-
+        self.X_train = pd.read_excel(self.root + 'X_train' + exten)['Comment'].tolist()
+        self.X_valid = pd.read_excel(self.root + 'X_valid' + exten)['Comment'].tolist()
         self.y_train = pd.read_excel(self.root + 'y_train' + exten)
         self.y_valid = pd.read_excel(self.root + 'y_valid' + exten)
+
         if include_test:
-            X_test = pd.read_excel(self.root + 'X_test' + exten)['Comment'].tolist()
+            self.X_test = pd.read_excel(self.root + 'X_test' + exten)['Comment'].tolist()
             self.y_test = pd.read_excel(self.root + 'y_test' + exten)
+
+        if level == "theme":
+            self.data_q2 = pd.read_excel(self.root_q2 + 'comments_q2' + exten)['Comment'].tolist()
         print('\nLoading: files were sucessfuly loaded.')
 
         # Preprocess the data
@@ -88,18 +89,18 @@ class Embeddings:
         sys.path.append('src/data/')
         from preprocess import Preprocessing
 
-        print('Preprocess: this step would take time, please be patient.')
-        self.X_train = Preprocessing().general(X_train)
-        self.X_valid = Preprocessing().general(X_valid)
+        print('Preprocess: this step could take time, please be patient.')
+        self.X_train = Preprocessing().general(self.X_train)
+        self.X_valid = Preprocessing().general(self.X_valid)
         if level == "theme":
-            self.data_q2 = Preprocessing().general(data_q2)
+            self.data_q2 = Preprocessing().general(self.data_q2)
         if include_test:
-            self.X_test = Preprocessing().general(X_test)
+            self.X_test = Preprocessing().general(self.X_test)
 
         # Get parameters
-        self.max_len = max(len(comment.split()) for comment in X_train)
+        self.max_len = max(len(comment.split()) for comment in self.X_train)
         self.vect=Tokenizer()
-        self.vect.fit_on_texts(X_train)
+        self.vect.fit_on_texts(self.X_train)
         self.vocab_size = len(self.vect.word_index) + 1
         return
 
@@ -161,26 +162,26 @@ class Embeddings:
         # Padding data
         print('Padding: now is time for padding the embedding matrices.')
         encoded_docs_train = self.vect.texts_to_sequences(self.X_train)
-        padded_docs_train = pad_sequences(encoded_docs_train, maxlen=self.vocab_size, padding='post')
+        padded_docs_train = pad_sequences(encoded_docs_train, maxlen=self.max_len, padding='post')
         encoded_docs_valid = self.vect.texts_to_sequences(self.X_valid)
-        padded_docs_valid = pad_sequences(encoded_docs_valid, maxlen=self.vocab_size, padding='post')
+        padded_docs_valid = pad_sequences(encoded_docs_valid, maxlen=self.max_len, padding='post')
         if level == "theme":
             encoded_question2 = self.vect.texts_to_sequences(self.data_q2)
-            padded_question2 = pad_sequences(encoded_question2, maxlen=self.vocab_size, padding='post')
+            padded_question2 = pad_sequences(encoded_question2, maxlen=self.max_len, padding='post')
         if include_test:
             encoded_docs_test = self.vect.texts_to_sequences(self.X_test)
-            padded_docs_test = pad_sequences(encoded_docs_test, maxlen=self.vocab_size, padding='post')
+            padded_docs_test = pad_sequences(encoded_docs_test, maxlen=self.max_len, padding='post')
 
         # Saving the embedding matrix
         print('Save: saving files in ', self.root, ' directory.')
-        np.save(self.root + 'embedding_matrix', embedding_matrix)#+ model, embedding_matrix)
+        np.save(self.root + 'embedding_matrix', embedding_matrix)
 
         # Saving the padding X's datafiles
-        np.save(self.root + 'X_train_padded', padded_docs_train)# + model, padded_docs_train)
-        np.save(self.root + 'X_valid_padded', padded_docs_valid)# + model, padded_docs_valid)
-        encoded_question2
+        np.save(self.root + 'X_train_padded', padded_docs_train)
+        np.save(self.root + 'X_valid_padded', padded_docs_valid)
+        
         if include_test:
-            np.save(self.root + 'X_test_padded', padded_docs_test)# + model, padded_docs_test)
+            np.save(self.root + 'X_test_padded', padded_docs_test)
 
         # Saving the padding y's datafiles
         np.save(self.root + 'y_train', self.y_train)
@@ -190,7 +191,7 @@ class Embeddings:
 
         # Saving the padding for question 2
         if level == "theme":
-            np.save(self.root_q2 + 'comments_q2_padded', padded_question2)# + model, padded_question2)
+            np.save(self.root_q2 + 'comments_q2_padded', padded_question2)
 
         return
 
