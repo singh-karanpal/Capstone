@@ -98,11 +98,11 @@ plot_data <- function(data_t) {
   data_t %>% ggplot(aes(
     x = Year,
     y = comments_per,
-    group = as.factor(Question)
+    group = as.factor(Type)
   )) +
-    geom_line(aes(color = as.factor(Question))) +
-    geom_point(aes(color = as.factor(Question))) +
-    labs(color = 'Question') +
+    geom_line(aes(color = as.factor(Type))) +
+    geom_point(aes(color = as.factor(Type))) +
+    labs(color = 'Type', x = 'Years', y = 'Percentage of comments (%)') +
     theme_minimal()
 }
 
@@ -122,7 +122,8 @@ plot_trend <- function(data, sel_column) {
   
   datatable <- datatable %>%
     select(Year, Question, counts, comments) %>%
-    mutate(comments_per = round((comments / counts) * 100), 2)
+    mutate(comments_per = round((comments / counts) * 100), 2) %>%
+    mutate(Type = ifelse(Question == 1, 'Concerns', 'Appreciations'))
   
   plot_data(datatable)
 }
@@ -169,6 +170,7 @@ ui <- dashboardPage(
       # 1st tab
       tabItem(
         tabName = 'q1',
+        titlePanel(title = 'Concerns'),
         
         # ministry selector
         fluidRow(box(
@@ -278,6 +280,7 @@ ui <- dashboardPage(
       # 2nd tab
       tabItem(
         tabName = 'q2',
+        titlePanel(title = 'Appreciations'),
         fluidRow(# ministry selector
           box(
             title = 'Select Ministries',
@@ -385,6 +388,7 @@ ui <- dashboardPage(
       # comparison tab
       tabItem(
         tabName = 'comparison',
+        titlePanel(title = 'Comparison'),
         
         # ministry selector
         fluidRow(box(
@@ -401,6 +405,16 @@ ui <- dashboardPage(
         
         fluidRow(
           box(
+            title = 'Themes - Concerns',
+            width = 5,
+            plotOutput('plot_themes_q1') %>% withSpinner(color = "skyblue")
+          ),
+          box(
+            title = 'Themes - Appreciations',
+            width = 5,
+            plotOutput('plot_themes_q2') %>% withSpinner(color = "skyblue")
+          ),
+          box(
             title = 'Pick Year',
             width = 2,
             selectizeInput(
@@ -410,20 +424,17 @@ ui <- dashboardPage(
               multiple = TRUE,
               options = list(create = TRUE),
             )
-          ),
-          box(
-            title = 'Themes Q1',
-            width = 5,
-            plotOutput('plot_themes_q1') %>% withSpinner(color = "skyblue")
-          ),
-          box(
-            title = 'Themes Q2',
-            width = 5,
-            plotOutput('plot_themes_q2') %>% withSpinner(color = "skyblue")
           )
         ),
         
         fluidRow(
+          
+          box(
+            title = 'Trend',
+            width = 10,
+            footer = 'NOTE: Labels used in graphs for question 2 are predictions from Bi-GRU.',
+            plotOutput('plot_trend') %>% withSpinner(color = "skyblue")
+          ),
           box(
             title = 'Pick Label',
             width = 2,
@@ -435,12 +446,6 @@ ui <- dashboardPage(
               options = list(create = TRUE),
               
             )
-          ),
-          box(
-            title = 'Trend',
-            width = 10,
-            footer = 'NOTE: Labels used in graphs for question 2 are predictions from Bi-GRU.',
-            plotOutput('plot_trend') %>% withSpinner(color = "skyblue")
           )
         )
         
