@@ -6,70 +6,57 @@ import numpy as np
 import os
 import pickle
 
-def subset_data(label_name, X_train, y_train, X_valid, y_valid, X_test, y_test):
+def subset_data(label_name, X, y, dataset_type = "train"):
     """
-    Subsets training, validation and test data for the provided label of question 1 for 
+    Subsets a dataser for the provided label of question 1 for 
     subtheme classification and saves these datasets.
     
     Parameters
     ----------
     label_name: (str)
         name of the label/main theme for which data has to be subsetted
-    X_train: (Pandas dataframe)
-        training dataframe containing raw comments
-    y_train: (Pandas dataframe)
-        training dataframe containing labels values
-    X_valid: (Pandas dataframe)
-        validation dataframe containing raw comments
-    y_valid: (Pandas dataframe)
-        validation dataframe containing labels values
-    X_test: (Pandas dataframe)
-        test dataframe containing raw comments
-    y_test: (Pandas dataframe)
-        test dataframe containing labels values
+    X: (Pandas dataframe)
+        dataframe containing raw comments
+    y: (Pandas dataframe)
+        dataframe containing labels values
+    dataset_type: (str)
+        select among train/validation/test datasets
         
     Returns
     -------
     None
+
+    Example:
+    --------
+    from subset_subtheme_data import subset_data
+    # Simple example
+    subset_data('OTH', X_train, y_train, 'train')
+    # Example for all labels
+    themes = ['CPD', 'CB', 'EWC', 'Exec', 'FWE', 'SP', 
+              'RE', 'Sup', 'SW', 'TEPE', 'VMG', 'OTH']
+    for t in themes:
+        subset_data(t, X_train, y_train, 'train')
+        subset_data(t, X_valid, y_valid, 'valid')
+        subset_data(t, X_test, y_test, 'test')
     """
-    x = str(label_name)
-    dir_name = os.mkdir('../data/interim/subthemes/' + x)
+    label = str(label_name)
+    try:
+        dir_name = os.mkdir('../data/interim/subthemes/' + label)
+    except:
+        pass
     
     with open('../data/interim/subthemes/subtheme_dict.pickle', 'rb') as handle:
         subtheme_dict = pickle.load(handle)
     
-    # train dataset
-    train_subset = pd.concat([X_train, y_train[subtheme_dict[x]]], axis=1)
-    train_subset['remove_or_not'] = np.sum(train_subset.iloc[:,1:], axis=1)
-    train_subset = train_subset[train_subset['remove_or_not'] != 0]
-    train_subset.drop(columns='remove_or_not', inplace=True)
+    # dataset
+    subset = pd.concat([X, y[subtheme_dict[label]]], axis=1)
+    subset['remove_or_not'] = np.sum(subset.iloc[:,1:], axis=1)
+    subset = subset[subset['remove_or_not'] != 0]
+    subset.drop(columns='remove_or_not', inplace=True)
     
-    X_train_subset = train_subset['Comment']
-    X_train_subset.to_excel('../data/interim/subthemes/' + x + '/X_train_subset.xlsx', index=False)
+    X_subset = subset['Comment']
+    X_subset.to_excel('../data/interim/subthemes/' + label + '/X_' + dataset_type + '_subset.xlsx', index=False)
     
-    Y_train_subset = train_subset.iloc[:, 1:]
-    Y_train_subset.to_excel('../data/interim/subthemes/' + x + '/y_train_subset.xlsx', index=False)
+    y_subset = subset.iloc[:, 1:]
+    y_subset.to_excel('../data/interim/subthemes/' + label + '/y_' + dataset_type + '_subset.xlsx', index=False)
     
-    # validation dataset
-    valid_subset = pd.concat([X_valid, y_valid[subtheme_dict[x]]], axis=1)
-    valid_subset['remove_or_not'] = np.sum(valid_subset.iloc[:,1:], axis=1)
-    valid_subset = valid_subset[valid_subset['remove_or_not'] != 0]
-    valid_subset.drop(columns='remove_or_not', inplace=True)
-    
-    X_valid_subset = valid_subset['Comment']
-    X_valid_subset.to_excel('../data/interim/subthemes/' + x + '/X_valid_subset.xlsx', index=False)
-    
-    Y_valid_subset = valid_subset.iloc[:, 1:]
-    Y_valid_subset.to_excel('../data/interim/subthemes/' + x + '/y_valid_subset.xlsx', index=False)
-
-    # test dataset
-    test_subset = pd.concat([X_test, y_test[subtheme_dict[x]]], axis=1)
-    test_subset['remove_or_not'] = np.sum(test_subset.iloc[:,1:], axis=1)
-    test_subset = test_subset[test_subset['remove_or_not'] != 0]
-    test_subset.drop(columns='remove_or_not', inplace=True)
-    
-    X_test_subset = test_subset['Comment']
-    X_test_subset.to_excel('../data/interim/subthemes/' + x + '/X_test_subset.xlsx', index=False)
-    
-    Y_test_subset = test_subset.iloc[:, 1:]
-    Y_test_subset.to_excel('../data/interim/subthemes/' + x + '/y_test_subset.xlsx', index=False)
