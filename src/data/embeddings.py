@@ -9,7 +9,7 @@ Usage: src/data/embeddings.py --model=<model> --level=<level> --label_name=<labe
 
 Example:
     python src/data/embeddings.py --model='fasttext' --level='theme' --label_name='' --include_test='False'
-    python src/data/embeddings.py --model='fasttext' --level='subtheme' --label_name='SP' --include_test='False'
+    python src/data/embeddings.py --model='fasttext' --level='subtheme' --label_name='SP' --include_test='True'
 '''
 
 import pandas as pd
@@ -179,7 +179,7 @@ class Embeddings:
         # Saving the padding X's datafiles
         np.save(self.root + 'X_train_padded', padded_docs_train)
         np.save(self.root + 'X_valid_padded', padded_docs_valid)
-        encoded_question2
+        
         if include_test:
             np.save(self.root + 'X_test_padded', padded_docs_test)
 
