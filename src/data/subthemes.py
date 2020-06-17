@@ -53,10 +53,7 @@ def main(input_dir, model, include_test):
     # import embeddings
     for t in themes:
         print("\nCreating embeddings and padded datasets for sub-theme: " + t)
-        # emb = Embeddings()
-        # emb.make_embeddings(model='fasttext', level='subtheme', label_name=t, include_test=include_test)
         os.system("python src/data/embeddings.py --model='fasttext' --level='subtheme' --label_name=" + t + " --include_test='True'")
-        # Embeddings(model='fasttext', level='subtheme', label_name=t, include_test='True')
     print('Thanks for your patience, the embedding process for all sub-themes has finished!\n')
 
 if __name__ == "__main__":
