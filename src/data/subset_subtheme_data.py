@@ -41,11 +41,11 @@ def subset_data(label_name, X, y, dataset_type = "train"):
     """
     label = str(label_name)
     try:
-        dir_name = os.mkdir('../data/interim/subthemes/' + label)
+        dir_name = os.mkdir('data/interim/subthemes/' + label)
     except:
         pass
     
-    with open('../data/interim/subthemes/subtheme_dict.pickle', 'rb') as handle:
+    with open('data/interim/subthemes/subtheme_dict.pickle', 'rb') as handle:
         subtheme_dict = pickle.load(handle)
     
     # dataset
@@ -55,8 +55,8 @@ def subset_data(label_name, X, y, dataset_type = "train"):
     subset.drop(columns='remove_or_not', inplace=True)
     
     X_subset = subset['Comment']
-    X_subset.to_excel('../data/interim/subthemes/' + label + '/X_' + dataset_type + '_subset.xlsx', index=False)
+    X_subset.to_excel('data/interim/subthemes/' + label + '/X_' + dataset_type + '_subset.xlsx', index=False)
     
     y_subset = subset.iloc[:, 1:]
-    y_subset.to_excel('../data/interim/subthemes/' + label + '/y_' + dataset_type + '_subset.xlsx', index=False)
+    y_subset.to_excel('data/interim/subthemes/' + label + '/y_' + dataset_type + '_subset.xlsx', index=False)
     
