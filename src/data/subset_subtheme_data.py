@@ -8,8 +8,8 @@ import pickle
 
 def subset_data(label_name, X_train, y_train, X_valid, y_valid, X_test, y_test):
     """
-    Subsets training and validation data for the provided label of question 1 for 
-    subtheme classification and saves these datasets
+    Subsets training, validation and test data for the provided label of question 1 for 
+    subtheme classification and saves these datasets.
     
     Parameters
     ----------
