@@ -33,9 +33,9 @@ import altair as alt
 ## Introduction | The Survey
 
 <div class= "columns-2">
-
-<img src="figures/WES_report2018.png" width="350"/>
-
+<center>
+<img src="figures/WES_report2018.png" width="340"/>
+</center>
 <br>  
 
 **Work Environment Survey (WES)**  
@@ -49,7 +49,8 @@ import altair as alt
 </div>
 
 
-## Data | Open-ended Question Responses
+## Data | Open-ended Questions
+
 **Question 1**
 
 - <b> <span style="color:#005c99">
@@ -71,32 +72,37 @@ Example: *"Now we have more efficient vending machines."*
 <font size="3"> *Note: these examples are fake comments for privacy reasons. </font>
 
 
-## Data Example of Question 1
-<font size="5"> <b><span style="color:#005c99">
+## Example of Data: Question 1
+<font size="3.5"> <b> 
+<span style="color:#005c99">
 What one thing would you like your organization to focus on to improve your work environment? </span> </b> </font>
 
 
 |Comments*|CPD|CB|EWC|...|CB_Improve_benefits|CB_Increase_salary|
 |:----|:---:|:---:|:---:|:---:|:---:|:---:|
 |Better health and social benefits should be provided|0|1|0|...|1|0|
-<br>
-<font size="5">**Theme**: CB = Compensation and Benefits</font>
-
-<font size="5">**Sub-theme**: CB_Improve_benefits = Improve benefits</font>
 
 <br>
+<font size="4"><span style="color:#005c99">**Theme**: CB = Compensation and Benefits</span></font>
 
-Question 1: <span style="color:#005c99">+31,000 </span>labelled comments for 2013, 2018, 2020, <span style="color:#005c99">+12,000 </span>additional comments from 2015
+<font size="4"><span style="color:#005c99">**Subtheme**: CB_Improve_benefits = Improve benefits</span></font>
 <br>
 <br>
-Question 2: <span style="color:#005c99">+6,000 </span>labelled comments for 2018, <span style="color:#005c99">+9,000 </span>additional comments from 2015, 2020
 
-<br>
+**Question 1:** 
+
+  - comments encoded into <span style="color:#005c99">12 themes </span>and <span style="color:#005c99">63 subthemes</span>
+  - <span style="color:#005c99">+31,000 </span>labelled comments for 2013, 2018, 2020, <span style="color:#005c99">+12,000 </span>additional comments from 2015
+
+**Question 2:**
+
+  - themes also encoded, but not as reliable as Question 1's
+  - <span style="color:#005c99">+6,000 </span>labelled comments for 2018, <span style="color:#005c99">+9,000 </span>additional comments from 2015, 2020
 
 <font size="3"> *Note: this is a fake comment as an example of the data. </font>
 
 
-## Objectives 
+## Our Objectives 
 <br>
 **<font size="5"># 1) Build a model to automate multi-label text classification that: </font> **
 
@@ -106,16 +112,14 @@ Question 2: <span style="color:#005c99">+6,000 </span>labelled comments for 2018
 
 <br>
 
-**<font size="5"># 2) Visualizations on discovery of text analysis:</font>**
+**<font size="5"># 2) Build an app for visualizations on text data:</font>**
 
-- mapping words for both questions to <span style="color:#005c99"> identify common texts</span> 
+- identify and compare <span style="color:#005c99"> common words </span> used for each question
 
-- identify potential<span style="color:#005c99"> needs & resolutions</span> using sentimental analysis
-
-- identify <span style="color:#005c99">theme trends</span> across <span style="color:#005c99">ministries</span> over given years 
+- identify <span style="color:#005c99"> trends on concerns (Q1) </span>and <span style="color:#005c99">appreciations (Q2)  </span> for BC ministries over the given years 
 
 
-## Challenges with data| Sparsity
+## Challenges with data| 1) Sparsity
 
 <div class= "columns-2">
 
@@ -129,24 +133,23 @@ Question 2: <span style="color:#005c99">+6,000 </span>labelled comments for 2018
 
 <font size="4"> 
 
-- Label cardinality for **themes: ~1.4** and for **subthemes: ~1.6**</font>
+- Average number of labels per comment: **Themes = ~1.4**  ,  **Subthemes = ~1.6**</font>
 
 
-## Challenges with data| Class Imbalance
+## Challenges with data| 2) Class Imbalance
 <center>
   <img src="./figures/class_imbalance_Q1.png"/>
 </center>
 
-**<span style="color:#005c99">Imbalanced data in each theme</span>**
-
 
 ## Text classification methodology
+
 <center>
-  <img src="./figures/flowchart.png" width='75%'/>
+  <img src="./figures/flowchart.png" width='80%'/>
 </center>
 
 
-## Data Split & Preprocessing
+## Data Split & Preprocess
 <center>
   <img src="./figures/preprocessing.png" width='40%'/>
 </center>
@@ -157,13 +160,13 @@ Question 2: <span style="color:#005c99">+6,000 </span>labelled comments for 2018
 
 <br>
 
-- remove<span style="color:#005c99"> sensitive information </span> using <span style="color:#005c99">Named Entity Recognition (NER) </span>to remove person, organization, location, and geopolitical entity from data
-- all social media handles to "social media" instead of "Facebook", "Instagram", "Twitter"
-- removed punctuation and lowercase for <span style="color:#005c99"> tokenization</span>
+- removed<span style="color:#005c99"> sensitive information </span> using <span style="color:#005c99">Named Entity Recognition (NER) </span>to remove person, organization, location, and geopolitical entity
+- changed social media handles from "Facebook", "Instagram", "Twitter" to "social media" 
+- removed punctuation and lowercase for tokenization
 
 <br>
 <font size="4">Example comment to get flagged: 
-<b>"George and I love when the deparment gives us new coupons!"</b></font>
+<b>"George and I love when the department gives us new coupons!"</b></font>
                 
 
 ## Baseline Model: Classifier Chains
@@ -172,19 +175,13 @@ Question 2: <span style="color:#005c99">+6,000 </span>labelled comments for 2018
 </center>
 <br>
 
-- <span style="color:#005c99"> **TF-IDF Vectorizer**</span> uses weights instead of token counts (CountVectorizer)
+<span style="color:#005c99"> **TF-IDF Vectorizer**</span> uses weights instead of token counts (CountVectorizer).
 
-- <span style="color:#005c99"> **Classifier Chains** </span> preserves order and occurence of labels
-    - multiple scikit-learn base classifiers tried (RandomForest, GaussianNB, etc) 
-    - best result with <span style="color:#005c99">LinearSVC </span> 
-<br>
+<span style="color:#005c99"> **Classifier Chains** </span> is a multi-label classification method which <span style="color:#005c99">preserves order and occurence of labels.</span> 
 
-<center>
-  <img src="./figures/cc_train.png" width='70%'/>
-</center>
-<br>
+- ran multiple scikit-learn base classifiers (RandomForest, GaussianNB, etc) 
+- best result with <span style="color:#005c99">**LinearSVC**</span>
 
-<font size="3">*Source: [Multi-Label Classification: Classifier Chains, by Analytics Vidhya](https://www.analyticsvidhya.com/blog/2017/08/introduction-to-multi-label-classification/)*</font>
 
 
 ## Advanced Model: Pre-Trained Embeddings 
@@ -196,18 +193,17 @@ Question 2: <span style="color:#005c99">+6,000 </span>labelled comments for 2018
 #### <span style="color:#005c99">**Fasttext, Glove, Universal Sentence Encoder**</span>
 
 <div class= "columns-2">
-<center><img src="./figures/embeddings.png" width='50%'/>
+<br>
+<center><img src="./figures/embeddings.png" width='44%'/>
 </center>
 
 <br>
 
 - explored several embeddings on various models
 
-- built embedding matrix & maximized vocab coverage for each embedding
+- built embedding matrix & transformed comments to padded sequenced data to fit into embedding size 
 
-- transformed comments to padded data to fit into embedding size
-
-- removed sensitive data using embeddings to upload into public cloud services for our advanced models 
+- used these saved embeddings on public cloud services as data contains sensitive information
 
 
 ##  How we measured success| Precision & Recall
@@ -225,54 +221,39 @@ Question 2: <span style="color:#005c99">+6,000 </span>labelled comments for 2018
 <font size="3">*Source: [Precision and Recall](https://en.wikipedia.org/wiki/Precision_and_recall)*</font>
 
 
-## Precision Recall Curve for Q1 Themes
+## Precision Recall Curve for Q1 Theme Models
+
+<center>
+<img src="./figures/precision_recall_models.png" width='90%'/>
+</center>
+
+
+## Advanced Model: Fasttext + BiGRU
+
 <center>
 <img src="./figures/precision_recall_auc.png" width='90%'/>
 </center>
 
 
-## Our advanced model: Fasttext + BiGru
-<center>
-<img src="./figures/Theme.png" width='45%'/>
-</center>
-<br>
-<br>
-
-```{r include=FALSE}
-df <- data.frame(Threshold = c(0.3, 0.4, 0.5, 0.6, 0.7),
-           Accuracy = c(0.513, 0.531, 0.534, 0.534, 0.526),
-           Precision = c(0.714, 0.751, 0.781, 0.811, 0.836), 
-           Recall = c(0.744, 0.709, 0.674, 0.638, 0.599),
-           F1 = c(0.7287, 0.7293, 0.7234, 0.6979, 0.6726))
-kable(df) %>%
-  kable_styling(bootstrap_options = c("striped", "hover")) %>%
-  row_spec(2, bold = T, color = "white", background = "#D7261E")
-
-```
-
-<center>
-<img src="./figures/threshold_advanced.png" width='85%'/>
-</center>
-
-
-## Model Results for Theme Labelling 
+## Results for Theme Labelling Models
 
 | Model        | Accuracy      | Precision  | Recall  |F1  |
 |:---------------|:-------------:|:------:|:------:|:------:|
-| TFID + LinearSVC       | 0.50 | 0.79 |   0.63 | 0.70
-| Fasttext + BiGru       | 0.54  |   0.75 |   0.71 | 0.73
+| TF-IDF + LinearSVC       | 0.50 | 0.79 |   0.63 | 0.70
+| Fasttext + BiGRU       | 0.53  |   0.75 |   0.71 | 0.73
 
 
 <br>
 <br>
 
-<b>2019 Capstone team's results</b>
+####<b>Last year's capstone team's results of models:</b>
 
+<br>
 
-| Model        | Accuracy      | Precision  | Recall  |
-|:---------------|:-------------:|:------:|:------:|
-| Bag of Words + LinearSVC    | 0.45 | 0.74 |   0.64  
-| Fasttext + BiGru       | 0.53  |   0.83 |   0.66 
+| Model        | Accuracy      | Precision  | Recall  |F1  |
+|:---------------|:-------------:|:------:|:------:|:------:|
+| Bag of Words + LinearSVC    | 0.45 | 0.74 |   0.64  | 0.69
+| Ensemble Model       | 0.53  |   0.83 |   0.66 | 0.74
 
 
 <br>
@@ -280,40 +261,28 @@ kable(df) %>%
 <font size="3">*Source: [BC Stats Capstone 2019-Final Report, by A. Quinton, A. Pearson, F. Nie](https://github.com/aaronquinton/mds-capstone-bcstats/blob/master/reports/BCStats_Final_Report.pdf)*</font>
 
 
-## Results for Fasttext + BiGru | Predicting each theme 
+## Label Wise Results for Fasttext + BiGRU | Predicting each theme 
 
 <div class= "columns-2">
 
-| Theme        | Accuracy      | Precision  | Recall  |
-|:---------------|:-------------:|:------:|:------:|
-| CPD       | 0.94 | 0.77 |   0.79 |
-| CB        |0.97     |   0.90 |   0.90 |
-| EWC       | 0.94      |    0.69 |   0.56|
-| Exec      | 0.92 | 0.64 |   0.71 |
-| FEW       | 0.97 | 0.73 |   0.77 |
-| SP        | 0.95 | 0.76 |   0.75 |
-|
+<center>
+<img src="./figures/best_worst_label_metric.png" width='110%'/>
+</center>
+<br> 
 
+- <font size="4">Themes with high F1 scores (CB) can be encoded <span style="color:#005c99">**automatically using the model**</span>, while themes with low score (OTH) should be <span style="color:#005c99">**manually verified**</span> by BC Stats </font>
 <br>
 
-| Theme        | Accuracy      | Precision  | Recall  |
-|---------------|:-------------:|------:|------:|
-| RE        | 0.94 | 0.69 |  0.51 |
-| Sup       | 0.92 | 0.66 |   0.57 |
-| SW        | 0.92| 0.74 |   0.65 |
-| TEPE      | 0.95 | 0.92 |   0.85 |
-| VMG       | 0.90 | 0.62 |   0.66 |
-| OTH       | 0.96 | 0.43 |   0.29 |
-|    
+- <font size="4">Recommendation to use a <span style="color:#005c99">**combination of machine learning and manual encoding.**</span></font>
 
 </div>
 
 
-## Labelling Subthemes
+## Building Subtheme Models | Hierarchical approach
 
 <center>
 
-<img src="figures/Subtheme.png" width="60%"/>
+<img src="figures/Subtheme.png" width="50%"/>
 
 </center>
 
@@ -323,16 +292,34 @@ kable(df) %>%
 
 
 ## Precision Recall Plot for Subtheme Models
-
 <center>
-<img src="figures/subtheme_plot.png" width="100%"/>
+<img src="figures/precision_recall_subthemes.png" width="70%"/>
 </center>
 
-## Question 2: Predicting Themes
+- <font size="4">The minimum desirable of both precision and recall values shared by BC Stats for labelling subthemes was 0.5. </font>
+- <font size="4">**All subtheme models surpassed this threshold.**</font>
+
+
+## Comparing Question 2 to Question 1
+
 <center>
 <img src="figures/frequency_words.png" width="60%"/>
 </center>
-<center><font size="3"><span style="color:#005c99">**Results using sample data of Question 2 manually encoded by BC Stats (at 0.4 threshold):**</span></font> </center>
+
+- <font size="4">Observed a <span style="color:#005c99">**linear trend**</span> in frequency of common words between Question 1 and Question 2.</font>
+
+- <font size="4">Validated <span style="color:#005c99">**using the themes from Question 1 **</span> to label comments from Question 2.</font>
+
+
+## Question 2: Predicting Themes
+
+<center>
+<img src="figures/Question2.png" width="65%"/>
+</center>
+
+<br>
+
+<center><font size="4"><span style="color:#005c99">**Results of our model predicting on sample data of Question 2 manually encoded by BC Stats (at 0.4 threshold):**</span></font> </center>
 
 ```{r include= FALSE}
 q2 <- data.frame(Accuracy = 0.46,
@@ -343,6 +330,7 @@ kable(q2) %>%
   kable_styling(bootstrap_options = c("striped", "hover")) 
 
 ```
+<br>
 
 <center>
 <img src="figures/q2_results.png" width="70%"/>
@@ -360,7 +348,7 @@ kable(q2) %>%
 ## Methodologies that did not work
 
 - <span style="color:#005c99"> **overfitting**</span> in **CNNs** and **multi-channel CNNs**
-- <span style="color:#005c99">**USE**</span> and <span style="color:#005c99">**BERT** </span>embeddings
+- <span style="color:#005c99">**Universal Sentence Encoder**</span> and <span style="color:#005c99">**BERT** </span>embeddings
 - <span style="color:#005c99">**Topic modelling** </span> for Question 2 (too much overlap in words, ambiguity)
 
 <center>
@@ -370,15 +358,18 @@ kable(q2) %>%
 
 ## Recommendations
 
-- observed better results with more **more data** 
+- observe better results with more **more data** 
 
-- Try **BERT** (could not get embeddings due to sentitive data not being able to upload to cloud platforms)
+- use embeddings and padded data on **public cloud services** (Google Gollab, AWS) to apply complex machine learning algorithms on sensitive data
 
-- using embeddings and padded training & validation data on **public cloud services** (Google Gollab, AWS) which can pave way for applying more complex machine learning algorithms on sensitive data
+- **BERT** 
 
-- Topic modelling for Question 2 can be tried out after removing commonly repeated words
+- **Topic modelling** for Question 2 after removing commonly repeated words
 
 
-## Thank you!
+## Thank you! Questions?
 
+<center>
+<img src="./figures/BC-Stats_meeting.png" width='60%'/>
+</center>
 
