@@ -44,7 +44,7 @@ import altair as alt
   
   - measures the health of work environments and identifies areas for improvement
   
-  - ~80 multiple choice questions (5 point scale) and 2 open-ended questions
+  - ~80 quantitative questions (5 point scale) and 2 open-ended qualitative questions
   
 </div>
 
@@ -104,7 +104,7 @@ What one thing would you like your organization to focus on to improve your work
 
 ## Our Objectives 
 <br>
-**<font size="5"># 1) Build a model to automate multi-label text classification that: </font> **
+**<font size="5"> 1) Build a model to automate multi-label text classification that: </font> **
 
 - predicts label(s) for Question 1 and 2's main <span style="color:#005c99">themes</span>
 
@@ -112,7 +112,7 @@ What one thing would you like your organization to focus on to improve your work
 
 <br>
 
-**<font size="5"># 2) Build an app for visualizations on text data:</font>**
+**<font size="5"> 2) Build an app for visualizations on text data:</font>**
 
 - identify and compare <span style="color:#005c99"> common words </span> used for each question
 
@@ -161,9 +161,9 @@ What one thing would you like your organization to focus on to improve your work
 <br>
 
 - removed<span style="color:#005c99"> sensitive information </span> using <span style="color:#005c99">Named Entity Recognition (NER) </span>to remove person, organization, location, and geopolitical entity
-- changed social media handles from "Facebook", "Instagram", "Twitter" to "social media" 
-- removed punctuation and lowercase for tokenization
 
+<br>
+<br>
 <br>
 <font size="4">Example comment to get flagged: 
 <b>"George and I love when the department gives us new coupons!"</b></font>
@@ -231,7 +231,7 @@ What one thing would you like your organization to focus on to improve your work
 ## Advanced Model: Fasttext + BiGRU
 
 <center>
-<img src="./figures/precision_recall_auc.png" width='90%'/>
+<img src="./figures/precision_recall_auc.png" width='85%'/>
 </center>
 
 
@@ -246,7 +246,7 @@ What one thing would you like your organization to focus on to improve your work
 <br>
 <br>
 
-####<b>Last year's capstone team's results of models:</b>
+#### <b>Last year's capstone team's results of models:</b>
 
 <br>
 
@@ -271,9 +271,13 @@ What one thing would you like your organization to focus on to improve your work
 <br> 
 
 - <font size="4">Themes with high F1 scores (CB) can be encoded <span style="color:#005c99">**automatically using the model**</span>, while themes with low score (OTH) should be <span style="color:#005c99">**manually verified**</span> by BC Stats </font>
-<br>
 
 - <font size="4">Recommendation to use a <span style="color:#005c99">**combination of machine learning and manual encoding.**</span></font>
+
+- <font size="4">Rest of the themes have the following ranges:</font>
+    - <font size="4"><span style="color:#005c99">**Precision: 0.69-0.92**</span></font> 
+    - <font size="4"><span style="color:#005c99">**Recall: 0.51-0.85**</span></font>
+
 
 </div>
 
