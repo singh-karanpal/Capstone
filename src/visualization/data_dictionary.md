@@ -17,7 +17,7 @@ This document will help you understand the context of the dashboard and data bei
 
 <br>
 
-#### Question 1
+#### Concerns
 #### What one thing would you like your organization to focus on to improve your work environment?
 
 
@@ -25,7 +25,7 @@ This is asking for feedback from employees filling out the WES Survey regarding 
 
 <br>
 
-#### Question 2
+#### Appreciations
 #### Have you seen any improvements in your work enviroment and if so, what are the improvements?
 
 This is asking for feedback from employees filling out the WES Survey regarding changes they are `appreciating` about their respective workplace. The corresponding data analysis can be found under tab `Appreciations` of the dashboard.
