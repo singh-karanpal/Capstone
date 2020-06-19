@@ -669,13 +669,15 @@ server <- function(input, output, comments, session) {
             plot_sentiment(result, 'highlight.html')
             
             getPage <- function() {
-              return(includeHTML("highlight.html"))
+              #return(includeHTML("highlight.html"))
+              return(includeHTML("dummy.html")) # for dummy data
             }
             
             output$sentiment <- renderUI({
               #getPage()
               tags$iframe(
-                srcdoc = paste(readLines('highlight.html'), collapse = '\n'),
+                #srcdoc = paste(readLines('highlight.html'), collapse = '\n'),
+                srcdoc = paste(readLines('dummy.html'), collapse = '\n'),
                 width = "100%",
                 height = "600px",
                 frameborder = "0"
@@ -694,13 +696,15 @@ server <- function(input, output, comments, session) {
             plot_sentiment(result, 'highlight.html')
             
             getPage <- function() {
-              return(includeHTML("highlight.html"))
+              #return(includeHTML("highlight.html"))
+              return(includeHTML("dummy.html"))
             }
             
             output$sentiment <- renderUI({
               #getPage()
               tags$iframe(
-                srcdoc = paste(readLines('highlight.html'), collapse = '\n'),
+                #srcdoc = paste(readLines('highlight.html'), collapse = '\n'),
+                srcdoc = paste(readLines('dummy.html'), collapse = '\n'),
                 width = "100%",
                 height = "600px",
                 frameborder = "0"
@@ -893,13 +897,15 @@ server <- function(input, output, comments, session) {
             plot_sentiment(result, 'highlight_q2.html')
             
             getPage <- function() {
-              return(includeHTML("highlight_q2.html"))
+              #return(includeHTML("highlight_q2.html"))
+              return(includeHTML("dummy.html"))
             }
             
             output$sentiment_q2 <- renderUI({
               #getPage()
               tags$iframe(
-                srcdoc = paste(readLines('highlight_q2.html'), collapse = '\n'),
+                #srcdoc = paste(readLines('highlight_q2.html'), collapse = '\n'),
+                srcdoc = paste(readLines('dummy.html'), collapse = '\n'),
                 width = "100%",
                 height = "600px",
                 frameborder = "0"
@@ -918,13 +924,15 @@ server <- function(input, output, comments, session) {
             plot_sentiment(result, 'highlight_q2.html')
             
             getPage <- function() {
-              return(includeHTML("highlight_q2.html"))
+              #return(includeHTML("highlight_q2.html"))
+              return(includeHTML("dummy.html"))
             }
             
             output$sentiment_q2 <- renderUI({
               #getPage()
               tags$iframe(
-                srcdoc = paste(readLines('highlight_q2.html'), collapse = '\n'),
+                #srcdoc = paste(readLines('highlight_q2.html'), collapse = '\n'),
+                srcdoc = paste(readLines('dummy.html'), collapse = '\n'),
                 width = "100%",
                 height = "600px",
                 frameborder = "0"
