@@ -98,16 +98,17 @@ def main(input_dir, output_dir):
         else:
             class_name = 'Theme'
         
+        #All rounded to 3 decimal place
         case = {'Class': class_name,
-            'Train Accuracy': train,
-            'Validation Accuracy': valid,
-            'Test Accuracy': test,
-            'Valid Recall': recall,
-            'Valid Precision': precision,
-            'Valid F1': f1,
-            'Test Recall': recall_test,
-            'Test Precision': precision_test,
-            'Test F1': f1_test}
+            'Train Accuracy': round(train, 3),
+            'Validation Accuracy': round(valid, 3),
+            'Test Accuracy': round(test, 3),
+            'Valid Recall': round(recall,3),
+            'Valid Precision': round(precision, 3),
+            'Valid F1': round(f1, 3) ,
+            'Test Recall': round(recall_test, 3),
+            'Test Precision': round(precision_test, 3),
+            'Test F1': round(f1_test, 3)}
     
         results_dict.append(case)
     
