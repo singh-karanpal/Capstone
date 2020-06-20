@@ -621,7 +621,7 @@ server <- function(input, output, comments, session) {
                         # for question 1
                         comments_q1_year <- comments_q1
                         
-                        # for question 3
+                        # for question 2
                         comments_q2_year <- comments_q2
                     }
                     

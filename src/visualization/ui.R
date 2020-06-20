@@ -11,8 +11,7 @@ library("shinycssloaders")
 library("shinyBS")
 library("tidyverse")
 
-# Define UI for application that creates and handles UI elements of dashboard
-# Dashboard Code
+# UI for Dashboard Code that creates and handles UI elements of dashboard
 ui <- dashboardPage(
     # header
     dashboardHeader(title = 'BC Stats - Text Analytics', titleWidth = '15%'),
