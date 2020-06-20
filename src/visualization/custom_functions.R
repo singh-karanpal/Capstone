@@ -2,7 +2,7 @@
 # published on: 20 June 2020
 
 # Custom Functions are the functions written for dashboard in such a way
-# that team is not voiding any DRY principle. These functions are imported 
+# that team is not voiding the DRY principle. These functions are imported 
 # in the server logic of the dashboard.
 
 #' function for issue plotting over years
@@ -14,7 +14,6 @@
 #' @return plot generated for given tokens from Entity Analysis
 #' @export
 #'
-#' @examples
 issue_plot <- function(result, token1, token2) {
   agg <-
     result %>% group_by(Year) %>% summarise(count = n()) %>%
@@ -46,7 +45,6 @@ issue_plot <- function(result, token1, token2) {
 #' @return create html file with highlighted feedbacks with red and green colors
 #' @export
 #'
-#' @examples
 plot_sentiment <- function(result, file_name) {
   df <- result
   
@@ -72,7 +70,6 @@ plot_sentiment <- function(result, file_name) {
 #' @return percentage value for labels
 #' @export
 #'
-#' @examples
 high_bar <- function(value, total_comments) {
   value * 100 / total_comments
 }
@@ -86,7 +83,6 @@ high_bar <- function(value, total_comments) {
 #' @return plots for Concerns/Appreciations
 #' @export
 #'
-#' @examples
 label_bar <- function(datatable, total_comments, title) {
   ggplot(data = datatable, aes(
     x = key,
@@ -116,7 +112,6 @@ label_bar <- function(datatable, total_comments, title) {
 #' @return plot with trend lines for Concerns/Appreciations for a selected label
 #' @export
 #'
-#' @examples
 plot_data <- function(data_t) {
   data_t %>% ggplot(aes(
     x = Year,
@@ -138,7 +133,6 @@ plot_data <- function(data_t) {
 #' @return plot with a trend line for selected label
 #' @export
 #'
-#' @examples
 plot_trend <- function(data, sel_column) {
   datatable_num <- data %>%
     group_by(Year, Question) %>%
