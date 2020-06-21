@@ -54,11 +54,12 @@ ready:
 	python src/data/merge_split_data.py --input_dir=data/raw/ --output_dir=data/interim/
 	python src/data/ministries_data.py --input_dir=data/ --output_dir=data/interim/
 	python src/data/embeddings.py --model='fasttext' --level='theme' --label_name='' --include_test='True'
-	python src/data/subthemes.py --input_dir='data/interim/' --model='fasttext' --include_test='True'
+	python src/data/subthemes.py --input_dir='data/interim/question1_models/advance/' --model='fasttext' --include_test='True'
 
 ## Delete all compiled Python files
 clean:
-	rm -r data/interim/question1_models/*
+	rm -r data/interim/question1_models/basic/*
+	rm -r data/interim/question1_models/advance/*
 	rm -r data/interim/question2_models/*
 	find data/interim/subthemes/. -mindepth 1 ! -name *.pickle -delete
 
