@@ -1,13 +1,11 @@
 .PHONY: clean data lint requirements sync_data_to_s3 sync_data_from_s3
 
-# Make file for Group409: Bike Sharing Machine Learning Model
-# Aman Kumar Garg, Victor Cuspinera-Contreras, Yingping Qian
-# January 30, 2020
+# Make file for BC Stats Capstone project 2020
+# author: Carlina Kim, Karanpal Singh, Sukriti Trehan, Victor Cuspinera
+# date: 2020-06-05
 # 
-# This driver script completes the explanatory data analysis and
-# fitting machine learning model for bike sharing dataset. It will 
-# creats 5 figures and 1 tables used in the report and generates 
-# html and md versions of the report. This script takes no arguments. 
+# This driver script split the data, create the embedding matrix and padded 
+# files, run the models, and clean the repo. This script takes no arguments. 
 # 
 # usage: make all
 #						to run all the analysis
