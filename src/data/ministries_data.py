@@ -63,7 +63,7 @@ def main(input_dir, output_dir):
     print("Merging question 1 and ministries' data.")
 
     # loading data
-    data_q1 = pd.read_excel(input_dir + "/interim/question1_models/labeled_data.xlsx")   ## change your path for data
+    data_q1 = pd.read_excel(input_dir + "/interim/question1_models/advance/labeled_data.xlsx")   ## change your path for data
 
     #remove - in Telkey
     data_q1['Telkey']= data_q1['Telkey'].astype(str)
@@ -86,7 +86,7 @@ def main(input_dir, output_dir):
 
     ## Saving Excel files
     print("Saving merged datasets.\n")
-    ministries_Q1.to_excel(output_dir + "/question1_models/ministries_Q1.xlsx", index=False)
+    ministries_Q1.to_excel(output_dir + "/question1_models/advance/ministries_Q1.xlsx", index=False)
     ministries_Q2.to_excel(output_dir + "/question2_models/ministries_Q2.xlsx", index=False)
     
 if __name__ == "__main__":

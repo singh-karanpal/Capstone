@@ -63,7 +63,7 @@ class Embeddings:
             'SP', 'RE', 'Sup', 'SW', 'TEPE', 'VMG', 'OTH']
             
         if level == "theme":
-            self.root = 'data/interim/question1_models/'
+            self.root = 'data/interim/question1_models/advance/'
             self.root_q2 = 'data/interim/question2_models/'
             exten = '.xlsx'
         else:

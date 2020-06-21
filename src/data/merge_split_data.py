@@ -95,22 +95,22 @@ def main(input_dir, output_dir):
 
     
     # Writing split files to output directory for question 1
-    data_all.to_excel(output_dir + '/question1_models/labeled_data.xlsx', index=False)
+    data_all.to_excel(output_dir + '/question1_models/advance/labeled_data.xlsx', index=False)
     
-    X_train.to_excel(output_dir + '/question1_models/X_train.xlsx', index=False)
-    y_train.to_excel(output_dir + '/question1_models/y_train.xlsx', index=False)
+    X_train.to_excel(output_dir + '/question1_models/advance/X_train.xlsx', index=False)
+    y_train.to_excel(output_dir + '/question1_models/advance/y_train.xlsx', index=False)
     
-    X_valid.to_excel(output_dir + '/question1_models/X_valid.xlsx', index=False)
-    y_valid.to_excel(output_dir + '/question1_models/y_valid.xlsx', index=False)
+    X_valid.to_excel(output_dir + '/question1_models/advance/X_valid.xlsx', index=False)
+    y_valid.to_excel(output_dir + '/question1_models/advance/y_valid.xlsx', index=False)
     
-    X_test.to_excel(output_dir + '/question1_models/X_test.xlsx', index=False)
-    y_test.to_excel(output_dir + '/question1_models/y_test.xlsx', index=False)
+    X_test.to_excel(output_dir + '/question1_models/advance/X_test.xlsx', index=False)
+    y_test.to_excel(output_dir + '/question1_models/advance/y_test.xlsx', index=False)
     
     # Concatenating unlabled data for question 1 for app
     frames_unlabeled = [data_all[['Telkey', 'Comment', 'Year']], data_2015]
     comments_q1 = pd.concat(frames_unlabeled)
     
-    comments_q1.to_excel(output_dir + '/question1_models/comments_q1.xlsx', index=False)
+    comments_q1.to_excel(output_dir + '/question1_models/advance/comments_q1.xlsx', index=False)
     
     ## Reading data for question 2 (all years)
     

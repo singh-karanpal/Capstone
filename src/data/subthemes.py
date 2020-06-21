@@ -8,7 +8,7 @@ test data.
 Usage: src/data/subthemes.py --input_dir=<input_dir_path> --model=<model> --include_test=<include_test>
 
 Example:
-    python src/data/subthemes.py --input_dir='data/interim/' --model='fasttext' --include_test='True'
+    python src/data/subthemes.py --input_dir='data/interim/question1_models/advance/' --model='fasttext' --include_test='True'
 '''
 
 import pandas as pd
@@ -27,15 +27,15 @@ def main(input_dir, model, include_test):
     
     # load data
     print('Subset: The first step is to load datasets and subsetting the data.')
-    X_train = pd.read_excel(input_dir + 'question1_models/X_train.xlsx')
-    X_valid = pd.read_excel(input_dir + 'question1_models/X_valid.xlsx')
+    X_train = pd.read_excel(input_dir + 'X_train.xlsx')
+    X_valid = pd.read_excel(input_dir + 'X_valid.xlsx')
 
-    y_train = pd.read_excel(input_dir + 'question1_models/y_train.xlsx')
-    y_valid = pd.read_excel(input_dir + 'question1_models/y_valid.xlsx')
+    y_train = pd.read_excel(input_dir + 'y_train.xlsx')
+    y_valid = pd.read_excel(input_dir + 'y_valid.xlsx')
 
     if include_test == True:
-        X_test = pd.read_excel(input_dir + 'question1_models/X_test.xlsx')
-        y_test = pd.read_excel(input_dir + 'question1_models/y_test.xlsx')
+        X_test = pd.read_excel(input_dir + 'X_test.xlsx')
+        y_test = pd.read_excel(input_dir + 'y_test.xlsx')
     
     # save the subsetting datasets
     print('Save: saving subsetting files for Sub-themes.')
