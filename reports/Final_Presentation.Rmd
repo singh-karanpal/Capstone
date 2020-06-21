@@ -209,15 +209,15 @@ What one thing would you like your organization to focus on to improve your work
 - <font size="3">**GRUs:** similar to LSTMs, major difference is they have 2 gates (reset gate and update gate) instead of four (forget, input, update, output)</font>
 - <font size="3">**Bidirectional GRUs**: Uses sentence sequences from both left-to-right and right-to-left </font>
 
-<span style="color:#005c99">**Multichannel CNNs:**</span>
+<span style="color:#005c99">**Multichannel CNNs**</span>
 
 - <font size="3"> Multiple versions of standard CNN models with different kernel sizes.</font>
 - <font size="3"> Specifically, we have defined a model with 3 input channels for kernel sizes 4, 6 and 8</font>
-- <font size="3">n - number of words , k - dimension of the word embedding</font>
 
 <center>
   <img src="./figures/multichannel_cnn.png" width='55%'/>
 </center>
+- <font size="3"> &nbsp; &nbsp; &nbsp; n - number of words , k - dimension of the word embedding</font>
 
 
 ##  How we measured success| Precision & Recall
@@ -261,7 +261,6 @@ What one thing would you like your organization to focus on to improve your work
 
 <img src="./figures/advanced_model_results.png" width='105%'/>
 
-<br>
 
 </div>
 
@@ -273,18 +272,17 @@ What one thing would you like your organization to focus on to improve your work
 <div class= "columns-2">
 
 
-<img src="./figures/best_worst_label_metric.png" width='110%'/>
+<img src="./figures/best_worst_label_metric.png" width='100%'/>
 
 <br> 
 
-- <font size="4">Themes with high F1 scores (CB) can be encoded <span style="color:#005c99">**automatically using the model**</span>, while themes with lower scores (OTH) can be <span style="color:#005c99">**manually verified**</span> by BC Stats. </font>
+- <font size="4"> &nbsp; Themes with high F1 scores (CB) can be encoded <span style="color:#005c99">**automatically using the model**</span>, while themes with lower scores (OTH) can be <span style="color:#005c99">**manually verified**</span> by BC Stats. </font>
 
-- <font size="4">Recommendation to use a <span style="color:#005c99">**combination of machine learning and manual encoding.**</span></font>
+- <font size="4"> &nbsp; Recommendation to use a <span style="color:#005c99">**combination of machine learning and manual encoding.**</span></font>
 
-- <font size="4">Rest of the themes have the following ranges:</font>
-    - <font size="4"><span style="color:#005c99">**Precision: 0.69-0.92**</span></font> 
-    - <font size="4"><span style="color:#005c99">**Recall: 0.51-0.85**</span></font>
-
+- <font size="4">&nbsp; Rest of the themes have the following ranges:</font>
+  - <font size="4"><span style="color:#005c99">&nbsp; **Precision: 0.69-0.92**</span></font> 
+  - <font size="4"><span style="color:#005c99">&nbsp; **Recall: 0.51-0.85**</span></font>
 
 </div>
 
@@ -345,7 +343,7 @@ What one thing would you like your organization to focus on to improve your work
 
 ## Methodologies that did not work
 
-- <span style="color:#005c99"> **overfitting**</span> in **CNNs** and **multi-channel CNNs**
+- <span style="color:#005c99"> **Overfitting**</span> in **CNNs** and **multi-channel CNNs**
 - <span style="color:#005c99">**Universal Sentence Encoder**</span> embeddings 
 - <span style="color:#005c99">**Topic modelling** </span> for Question 2 (too much overlap in words, ambiguity)
 
