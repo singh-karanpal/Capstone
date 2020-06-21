@@ -20,6 +20,8 @@
 | update the local repo from the repo in GitHub|`git pull`|
 
 ### Remote for collaborative working
+| Description | Command |
+|---------|-------------|
 | add a remote |`git remote add upstream <original_repo_URL>`|
 | retrieves the data locally (does not change the state of repo/files)|`git fetch upstream`|
 | incorporate the data into your repo|`git merge upstream/master`|
@@ -37,7 +39,8 @@
 | delete a local branch | `git branch -d <branch_name>` |
 | push changes to a remote branch | `git push origin <branch_name>` |
 
-#### Steps for updating a branch from the master [(go to original source)](https://gist.github.com/santisbon/a1a60db1fb8eecd1beeacd986ae5d3ca)
+### Steps for updating a branch from the master  
+[(go to original source)](https://gist.github.com/santisbon/a1a60db1fb8eecd1beeacd986ae5d3ca)
 
 1. update your local master branch
     - `git checkout master`
