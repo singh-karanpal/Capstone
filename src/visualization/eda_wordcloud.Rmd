@@ -7,35 +7,45 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+# load libraries
+library(tm)
+library(wordcloud)
+library(dplyr)
+library(tidytext)
+library(igraph)
+library(ggraph)
+library(reticulate)
 ```
 
-These two wordcloud plots consider comments from Nasim, avoiding some of the most frequent words that could be in any comment. In this case, we specific remove the words: "not", "work", "staff", "would", "should", "make", "job", "all", "other", "which", "employee".
+These two wordcloud plots avoid `stopwords`. Additionally, in by-word analysis it avoids the word `staff` and for bigrams it avoids `would like`.
+
+Warning comment: this file take a while to `knit` becasue it uses the preprocess.py **python** script and after transfroms the results to **R**, to follow with the process.
 
 ## By Word
 
 ### Wordcloud - question 1
 ```{r loading, include=FALSE}
-# load libraries
-library(tm)
-library(wordcloud)
-
 # read data
-wordcloud_q1_pp <- readr::read_csv(file = "../../data/wordcloud_q1_pp.csv")  # preprocessed train comments
-wordcloud_q2_pp <- readr::read_csv(file = "../../data/wordcloud_q2_pp.csv")
+wordcloud_q1 <- readxl::read_excel("../../data/interim/question1_models/ministries_Q1.xlsx")
+wordcloud_q2 <- readxl::read_excel("../../data/interim/question2_models/ministries_Q2.xlsx")
 ```
 
 
 ```{r wordcloud, echo=FALSE, fig.width=5, fig.height=5, warning=FALSE}
+# wordcloud code
+only_comments <- wordcloud_q1 %>% select(Comment)
 
-docs <- Corpus(VectorSource(wordcloud_q1_pp$Comment))  # Create a corpus
+single_tokens <-
+          only_comments %>% unnest_tokens(word, Comment)
 
-dtm <- TermDocumentMatrix(docs)
-matrix <- as.matrix(dtm)
-words <- rowSums(matrix)
-df <- data.frame(freq=words)
+words_df_q1 <- single_tokens %>%
+          filter(word != "staff") %>% 
+          count(word) %>%
+          anti_join(stop_words, by = "word")
 
 set.seed(42) # for reproducibility
-wordcloud(words = rownames(df), freq = df$freq, min.freq = 1,
+wordcloud(words = words_df_q1$word, freq = words_df_q1$n, min.freq = 1,
           max.words=100, random.order=FALSE, rot.per=0.35,
           colors=brewer.pal(8, "Dark2"))
 ```
@@ -43,43 +53,65 @@ wordcloud(words = rownames(df), freq = df$freq, min.freq = 1,
 
 ### Wordcloud - question 2 (Unsupervised dataset: 2015, 2018, 2020)
 ```{r wordcloud question 2, fig.width=5, fig.height=5,echo=FALSE, warning=FALSE}
-
 # wordcloud code
-docs_q2 <- Corpus(VectorSource(wordcloud_q2_pp$Comment))  # Create a corpus
+only_comments <- wordcloud_q2 %>% select(Comment)# %>% anti_join(stop_words)
 
-dtm_q2 <- TermDocumentMatrix(docs_q2)
-matrix_q2 <- as.matrix(dtm_q2)
-words_q2 <- rowSums(matrix_q2)
-df_q2 <- data.frame(freq=words_q2)
+single_tokens <-
+          only_comments %>% unnest_tokens(word, Comment)
+
+words_df_q2 <- single_tokens %>% 
+          filter(word != "staff") %>% 
+          count(word) %>% 
+          anti_join(stop_words, by = "word") 
 
 set.seed(42) # for reproducibility
-wordcloud(words = rownames(df_q2), freq = df_q2$freq, min.freq = 1,
+wordcloud(words = words_df_q2$word, freq = words_df_q2$n, min.freq = 1,
           max.words=100, random.order=FALSE, rot.per=0.35,
           colors=brewer.pal(8, "Dark2"))
 ```
 
 
 ## n-grams^[Note: For the bigram's wordcloud we use the preprocessed comments, but we didn't remove any additional words.]
-### Wordcloud of biagrams - question 1
-```{r call data for question 1,  include=FALSE}
-#fig.width=6, fig.height=6,
-library(dplyr)
-library(tidytext)
-library(igraph)
-library(ggraph)
 
-set.seed(42)
+```{python preprocess, echo=FALSE}
+import sys
+sys.path.append('../../src/data/')
+from preprocess import Preprocessing
 
-# # uncomment and run the next code only once to have the right format:
-train_X_q1_pp <- readr::read_csv(file = "../../data/X_train_pp.csv")  # preprocessed train comments
-train_X_q1_pp <- tibble::rowid_to_column(train_X_q1_pp, "ID")
+comment_q1_py = r["wordcloud_q1['Comment']"]
+comment_q2_py = r["wordcloud_q2['Comment']"]
+
+pp_q1_py = Preprocessing().general(comment_q1_py['Comment'])
+pp_q2_py = Preprocessing().general(comment_q2_py['Comment'])
 ```
+
+```{python, include=FALSE}
+# # To run in python we could use:
+# pp_q1_py
+```
+
+```{r, include=FALSE}
+# # To run in R we can use:
+# py$pp_q1_py
+
+# pass the preprocessed data from python to R, for both questions
+pp_q1_r <- data.frame(Comment = py$pp_q1_py)
+df_q1 <- tibble::rowid_to_column(pp_q1_r, "ID")
+
+pp_q2_r <- data.frame(Comment = py$pp_q2_py)
+df_q2 <- tibble::rowid_to_column(pp_q2_r, "ID")
+
+```
+
+
+### Wordcloud of biagrams - question 1
+
 
 ```{r bigrams question 1, fig.width=5, fig.height=5, echo=FALSE, warning=FALSE}
 # making the bigrams
-bigrams_q1 <- train_X_q1_pp %>% 
+bigrams_q1 <- df_q1 %>% 
   unnest_tokens(bigram, Comment, token ="ngrams", n=2) %>% 
-  # filter(bigram != "would like") %>% 
+  filter(bigram != "would like") %>%
   count(bigram, sort = TRUE)
 
 # wordcloud code
@@ -89,16 +121,11 @@ wordcloud(bigrams_q1$bigram, bigrams_q1$n, max.words=75,random.order = F, colors
 ```
 
 ### Wordcloud of biagrams - question 2
-```{r call data for question 2, include=FALSE}
-set.seed(42)
-unsupervised_q2 <- readr::read_csv(file = "../../data/unsuperv_q2_pp.csv")
-unsupervised_q2 <- tibble::rowid_to_column(unsupervised_q2, "ID")
-```
 
 
 ```{r bigrams question 2, fig.width=5, fig.height=5, echo=FALSE, warning=FALSE}
 # making the bigrams
-bigrams_q2 <- data.frame(unsupervised_q2) %>%
+bigrams_q2 <- df_q2 %>%
   unnest_tokens(bigram, Comment, token ="ngrams", n=2) %>% 
   count(bigram, sort = TRUE)
 

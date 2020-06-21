@@ -157,7 +157,7 @@ def main(input_dir, output_dir):
     y_test_2.to_excel(output_dir + '/question2_models/y_test_2.xlsx', index=False)
     
     # Concatenating unlabled data for question 2 for app
-    frames_q2 = [data_2018_2[['Telkey', 'Comment']], data_2015_2[['Telkey', 'Comment']], data_2020_2[['Telkey', 'Comment']]]
+    frames_q2 = [data_2015_2[['Telkey', 'Comment', 'Year']], data_2018_2[['Telkey', 'Comment', 'Year']], data_2020_2[['Telkey', 'Comment', 'Year']]]
     comments_q2 = pd.concat(frames_q2)
     
     comments_q2.to_excel(output_dir + '/question2_models/comments_q2.xlsx', index=False)
