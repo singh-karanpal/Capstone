@@ -6,8 +6,8 @@ BC Stats Capstone project 2020
 [![License:
 MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**Authors**: Carlina Kim, Karanpal Singh, Sukriti Trehan, Victor Cuspinera
-**Mentor**: Varada Kolhatkar
+**Authors**: Carlina Kim, Karanpal Singh, Sukriti Trehan, Victor Cuspinera  
+**Mentor**: Varada Kolhatkar  
 **Partner**: [BC Stats](https://www2.gov.bc.ca/gov/content/data/about-data-management/bc-stats)
 
 ## About
@@ -16,9 +16,17 @@ BC-Stats conducts the Work Environment Survey (WES) on BC Public Service’s min
 ## Report
 The final report is available [here]().
 
+## Dependencies
+- Python XXXXX and Python packages:
+   - pandas==ZZZZZ
+   - numpy== ZZZZ
+
+- R version XXXXX and R packages:
+   - tidyverse==ZZZZZ
+
 ## Usage
 
-### Recommended
+### Running recipe (recommended)
 To replicate the analysis, clone this GitHub repository, install the [dependencies](#dependencies) listed below, follow the next steps:
 
 1. Add a copy of the sensitive data in the `data/raw` folder, and download the Fasttext pre-trained embeddings file `crawl-300d-2M.vec.zip` in `data/fasttext`
@@ -29,7 +37,8 @@ make ready
 ```
 
 3. Upload the embedding matrix and padded datasets to [Google Drive](https://www.google.ca/drive/) with termination `.npy`. This files contain a vectorial representation of the words from the preprocesed comments, so they don't show any sensitive information.
- **Warning:** don't upload any other file because it may contain sensitive information.
+
+**Warning:** don't upload any other file, it may contain sensitive information.
 
 4. Open and run the models in [Google Colab](https://colab.research.google.com/)
 
@@ -41,9 +50,11 @@ make results
 This process could take couple hours.
 
 
-### Running all from one command
+### Running all model from one command (not recommended)
 
-An alternative would is to run the following command at the command line/terminal from the root directory of this project. However, this process would run the models in your computer instead of the cloud, it will only use **1 epoc** so won't return as good results, it will take several hours, and your computer may crash in the process:
+An alternative for the previous steps is to run the following command at the command line/terminal from the root directory of this project.
+
+**Warning:** This process would run the models in your computer instead of the cloud, only uses **1 epoc** so won't return as good results, take several hours, and your computer may crash in the process:
 ```
 make all
 ```
