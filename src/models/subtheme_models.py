@@ -16,16 +16,8 @@ from docopt import docopt
 import pandas as pd
 import numpy as np
 import pickle
-
-import sys
-sys.path.append('src/models/')
-from subthemes_models_functions import bigru, bigru_2, cnn
-
-
-import pandas as pd
-import numpy as np
 import os
-os.environ["KERAS_BACKEND"] = "plaidml.keras.backend"
+
 from keras.models import Sequential, Model
 from keras.layers import Dense, Concatenate
 from keras.layers import MaxPooling2D, GlobalMaxPooling1D, GRU, Bidirectional, GlobalAveragePooling1D
@@ -34,7 +26,6 @@ from keras.layers.merge import concatenate
 from keras import layers
 import tensorflow as tf
 import keras
-
 
 
 opt = docopt(__doc__)
