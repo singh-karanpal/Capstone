@@ -39,6 +39,10 @@ def main(input_dir, output_dir):
     input_dir: String
     input directory as a string where all subthemes data
     is located including padded docs and embeddings.
+
+    output_dir: String
+    output directory as a string where all subtheme models
+    will be saved after training.
     
     Return:
     ----------
