@@ -23,6 +23,7 @@ def main(input_dir, model, include_test):
 
     include_test = True if str(include_test).lower() == "true" else False
 
+    print("--- START: subthemes.py ---")
     print('\nStart: This process could take time, please be patient.')
     
     # load data
@@ -54,7 +55,7 @@ def main(input_dir, model, include_test):
     for t in themes:
         print("\nCreating embeddings and padded datasets for sub-theme: " + t)
         os.system("python src/data/embeddings.py --model='fasttext' --level='subtheme' --label_name=" + t + " --include_test='True'")
-    print('Thanks for your patience, the embedding process for all sub-themes has finished!\n')
+    print("--- END: subthemes.py ---")
 
 if __name__ == "__main__":
     main(opt["--input_dir"], opt["--model"], opt["--include_test"])

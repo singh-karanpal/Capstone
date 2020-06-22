@@ -27,6 +27,7 @@ opt = docopt(__doc__)
 def main(input_dir, output_dir):
 
     ## Ministries data
+    print("--- START: ministries_data.py ---")
     print("\nLoading ministries' data into memory.")
 
     # QUAN 2018
@@ -88,6 +89,8 @@ def main(input_dir, output_dir):
     print("Saving merged datasets.\n")
     ministries_Q1.to_excel(output_dir + "/question1_models/advance/ministries_Q1.xlsx", index=False)
     ministries_Q2.to_excel(output_dir + "/question2_models/ministries_Q2.xlsx", index=False)
+
+    print("--- END: ministries_data.py ---")
     
 if __name__ == "__main__":
     main(opt["--input_dir"], opt["--output_dir"])
