@@ -23,11 +23,11 @@ def main(input_dir, model, include_test):
 
     include_test = True if str(include_test).lower() == "true" else False
 
-    print("--- START: subthemes.py ---")
-    print('\nStart: This process could take time, please be patient.')
+    print("\n--- START: subthemes.py ---")
+    print('Start: This process could take time, please be patient')
     
     # load data
-    print('Subset: The first step is to load datasets and subsetting the data.')
+    print('Subset: The first step is to load datasets and subsetting the data')
     X_train = pd.read_excel(input_dir + 'X_train.xlsx')
     X_valid = pd.read_excel(input_dir + 'X_valid.xlsx')
 
@@ -39,7 +39,7 @@ def main(input_dir, model, include_test):
         y_test = pd.read_excel(input_dir + 'y_test.xlsx')
     
     # save the subsetting datasets
-    print('Save: saving subsetting files for Sub-themes.')
+    print('Save: saving subsetting files for Subthemes')
     sys.path.append('src/data/')
     from subset_subtheme_data import subset_data
     themes = ['CPD', 'CB', 'EWC', 'Exec', 'FWE', 'SP', 
@@ -53,9 +53,9 @@ def main(input_dir, model, include_test):
     sys.path.append('src/data/')
     # import embeddings
     for t in themes:
-        print("\nCreating embeddings and padded datasets for sub-theme: " + t)
+        print("\nCreating embeddings and padded datasets for subtheme: " + t)
         os.system("python src/data/embeddings.py --model='fasttext' --level='subtheme' --label_name=" + t + " --include_test='True'")
-    print("--- END: subthemes.py ---")
+    print("\n--- END: subthemes.py ---\n")
 
 if __name__ == "__main__":
     main(opt["--input_dir"], opt["--model"], opt["--include_test"])

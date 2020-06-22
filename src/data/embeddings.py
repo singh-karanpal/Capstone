@@ -24,11 +24,11 @@ from docopt import docopt
 opt = docopt(__doc__)
 
 def main(model, level, label_name, include_test):
-    print("--- START: embeddings.py ---")
+    print("\n--- START: embeddings.py ---")
     include_test = True if str(include_test).lower() == "true" else False
     emb = Embeddings()
     emb.make_embeddings(model=model, level=level, label_name=label_name, include_test=include_test)
-    print("--- END: embeddings.py ---")
+    print("--- END: embeddings.py ---\n")
     return
 
 class Embeddings:

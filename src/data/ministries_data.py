@@ -27,8 +27,8 @@ opt = docopt(__doc__)
 def main(input_dir, output_dir):
 
     ## Ministries data
-    print("--- START: ministries_data.py ---")
-    print("\nLoading ministries' data into memory.")
+    print("\n--- START: ministries_data.py ---")
+    print("Loading ministries' data into memory")
 
     # QUAN 2018
     quan_2018 = pd.read_excel(input_dir + "/raw/2018/WES2018 Quant and Driver Data.xlsx", 
@@ -61,7 +61,7 @@ def main(input_dir, output_dir):
 
     
     ## Question 1
-    print("Merging question 1 and ministries' data.")
+    print("Merging question 1 and ministries' data")
 
     # loading data
     data_q1 = pd.read_excel(input_dir + "/interim/question1_models/advance/labeled_data.xlsx")   ## change your path for data
@@ -77,7 +77,7 @@ def main(input_dir, output_dir):
 
 
     ## Question 2 (Unsupervised comments)
-    print("Merging question 2 and ministries' data.")
+    print("Merging question 2 and ministries' data")
 
     # loading data
     data_q2 = pd.read_excel(input_dir + "/interim/question2_models/comments_q2.xlsx")   ## change your path for data
@@ -86,11 +86,11 @@ def main(input_dir, output_dir):
     ministries_Q2 = pd.merge(left=data_q2, right=data_all, how='left', left_on='Telkey', right_on='Telkey')
 
     ## Saving Excel files
-    print("Saving merged datasets.\n")
+    print("Saving merged datasets")
     ministries_Q1.to_excel(output_dir + "/question1_models/advance/ministries_Q1.xlsx", index=False)
     ministries_Q2.to_excel(output_dir + "/question2_models/ministries_Q2.xlsx", index=False)
 
-    print("--- END: ministries_data.py ---")
+    print("--- END: ministries_data.py ---\n")
     
 if __name__ == "__main__":
     main(opt["--input_dir"], opt["--output_dir"])

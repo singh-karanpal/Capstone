@@ -26,7 +26,7 @@ opt = docopt(__doc__)
 def main(input_dir, output_dir):
     
     ## Reading data for question 1 (all four years)
-    print("--- START: Merge_split_data.py ---")
+    print("\n--- START: Merge_split_data.py ---")
 
     # Reading WES 2013, question 1 and standardizing column headers
     data_2013 = pd.read_excel(input_dir + "/2013/WES2013 1st Qual Sample - Coded.xlsx", 
@@ -162,7 +162,7 @@ def main(input_dir, output_dir):
     comments_q2 = pd.concat(frames_q2)
     
     comments_q2.to_excel(output_dir + '/question2_models/comments_q2.xlsx', index=False)
-    print("--- END: Merge_split_data.py ---")
+    print("--- END: Merge_split_data.py ---\n")
     
 if __name__ == "__main__":
     main(opt["--input_dir"], opt["--output_dir"])
