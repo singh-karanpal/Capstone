@@ -21,6 +21,22 @@ import sys
 sys.path.append('src/models/')
 from subthemes_models_functions import bigru, bigru_2, cnn
 
+
+import pandas as pd
+import numpy as np
+import os
+os.environ["KERAS_BACKEND"] = "plaidml.keras.backend"
+from keras.models import Sequential, Model
+from keras.layers import Dense, Concatenate
+from keras.layers import MaxPooling2D, GlobalMaxPooling1D, GRU, Bidirectional, GlobalAveragePooling1D
+from keras.layers import Embedding, Input
+from keras.layers.merge import concatenate
+from keras import layers
+import tensorflow as tf
+import keras
+
+
+
 opt = docopt(__doc__)
 
 def main(input_dir, output_dir):
@@ -119,15 +135,15 @@ def main(input_dir, output_dir):
     embedding_matrix_ft_vmg = np.load(input_dir + '/VMG/embedding_matrix.npy')
     y_train_vmg = np.load( input_dir + '/VMG/y_train.npy')
 
-    print('--- Creating Dictionaries ---')
 
+    print('--- Creating Dictionaries ---')
 
     cb_dict.update({
         'model':'cnn',
         'padded_docs_train':padded_docs_train_cb,
         'y_train':y_train_cb,
         'max_features':embedding_matrix_ft_cb.shape[0],
-        'maxlen':padded_docs_train_cb.shape[1],
+        'max_len':padded_docs_train_cb.shape[1],
         'n_class':y_train_cb.shape[1],
         'weight_matrix':embedding_matrix_ft_cb,
         'batch_size': 128,
@@ -143,7 +159,7 @@ def main(input_dir, output_dir):
     cpd_dict.update({
         'model':'bigru',
         'padded_docs_train':padded_docs_train_cpd,
-        'y_train_':y_train_cpd,
+        'y_train':y_train_cpd,
         'max_features':embedding_matrix_ft_cpd.shape[0],
         'max_len':padded_docs_train_cpd.shape[1],
         'n_class':y_train_cpd.shape[1],
@@ -322,7 +338,7 @@ def main(input_dir, output_dir):
     subthemes_mappings.update({'VMG':vmg_dict})
 
     print('--- Training Subthemes ---')
-    keynames = list(subthemes_mappings.keys())[1:2]
+    keynames = list(subthemes_mappings.keys())
 
     for sub_theme in keynames:
         
@@ -335,50 +351,83 @@ def main(input_dir, output_dir):
             print('**bigru training')
 
             # parameters to be passed
-            # max_features, max_len, n_class, weight_matrix, hidden_sequences, embed_size = 300
-            bigru_model = bigru(subthemes_mappings.get(sub_theme).get('max_features'), 
-                                subthemes_mappings.get(sub_theme).get('maxlen'), 
-                                subthemes_mappings.get(sub_theme).get('n_class'), 
-                                subthemes_mappings.get(sub_theme).get('weight_matrix'), 
-                                subthemes_mappings.get(sub_theme).get('hidden_sequences'), 
-                                embed_size = 300)
+            # max_features, max_len, n_class, weight_matrix, hidden_sequences, embed_size 
 
+            # dynamic params
+            max_features = subthemes_mappings.get(sub_theme).get('max_features')
+            max_len= subthemes_mappings.get(sub_theme).get('max_len')
+            embed_size = 300
+            weight_matrix = subthemes_mappings.get(sub_theme).get('weight_matrix')
+            hidden_sequences =subthemes_mappings.get(sub_theme).get('hidden_sequences')
+            n_class = subthemes_mappings.get(sub_theme).get('n_class')
+            epochs = subthemes_mappings.get(sub_theme).get('epochs')
+            batch_size = subthemes_mappings.get(sub_theme).get('batch_size')
+
+            X_train = subthemes_mappings.get(sub_theme).get('padded_docs_train')
+            y_train = subthemes_mappings.get(sub_theme).get('y_train')
+
+            # model
+            inputs1 = Input(shape=(max_len,))
+            embedding1 = Embedding(max_features, embed_size, weights=[weight_matrix], trainable=False)(inputs1)
+            bi_gru = Bidirectional(GRU(hidden_sequences, return_sequences=True))(embedding1)
+            global_pool = GlobalMaxPooling1D()(bi_gru)
+            avg_pool = GlobalAveragePooling1D()(bi_gru)
+            concat_layer = Concatenate()([global_pool, avg_pool])
+            output = Dense(n_class, activation='sigmoid')(concat_layer)
+            bigru_model=Model(inputs1, output)
+
+            # compiling
             bigru_model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy', 'categorical_accuracy'])
+            
+            print(bigru_model.summary())
 
-            bigru_model.fit(subthemes_mappings.get(sub_theme).get('padded_docs_train'), 
-                                subthemes_mappings.get(sub_theme).get('y_train'), 
-                                validation_split=0.15, 
-                                epochs=subthemes_mappings.get(sub_theme).get('epochs'), 
-                                batch_size=subthemes_mappings.get(sub_theme).get('batch_size'), 
-                                verbose=subthemes_mappings.get(sub_theme).get('verbose'))
+            print('**model fitting')
+            bigru_model.fit(X_train, y_train, validation_split=0.15, epochs=epochs, batch_size=batch_size)
 
-            bigru_model.save(output_dir + '/' + sub_theme +'_model')
+            print('\n **saving model')
+            bigru_model.save(output_dir + '/' + sub_theme.lower() +'_model')
+
 
 
         elif model_type == 'bigru_2':
 
             print('**bigru2 training')
 
-            # parameters to be passed
-            # max_features, max_len, n_class, weight_matrix, hidden_sequences, hidden_sequences_2, embed_size = 300
-            bigru_2_model = bigru_2(subthemes_mappings.get(sub_theme).get('max_features'),
-                                subthemes_mappings.get(sub_theme).get('maxlen'), 
-                                subthemes_mappings.get(sub_theme).get('n_class'), 
-                                subthemes_mappings.get(sub_theme).get('weight_matrix'), 
-                                subthemes_mappings.get(sub_theme).get('hidden_sequences'), 
-                                subthemes_mappings.get(sub_theme).get('hidden_sequences2'), 
-                                embed_size = 300)
+            # dynamic params
+            max_features = subthemes_mappings.get(sub_theme).get('max_features')
+            max_len= subthemes_mappings.get(sub_theme).get('max_len')
+            embed_size = 300
+            weight_matrix = subthemes_mappings.get(sub_theme).get('weight_matrix')
+            hidden_sequences =subthemes_mappings.get(sub_theme).get('hidden_sequences')
+            n_class = subthemes_mappings.get(sub_theme).get('n_class')
+            epochs = subthemes_mappings.get(sub_theme).get('epochs')
+            batch_size = subthemes_mappings.get(sub_theme).get('batch_size')
 
+            X_train = subthemes_mappings.get(sub_theme).get('padded_docs_train')
+            y_train = subthemes_mappings.get(sub_theme).get('y_train')
+
+            # model
+            inputs1 = tf.keras.Input(shape=(max_len,))
+            embedding1 = Embedding(max_features, embed_size, weights=[weight_matrix], trainable=False)(inputs1)
+            bi_gru = Bidirectional(GRU(hidden_sequences, return_sequences=True))(embedding1)
+            bi_gru2 = Bidirectional(GRU(hidden_sequences_2, return_sequences=True))(bi_gru)
+            global_pool = GlobalMaxPooling1D()(bi_gru2)
+            avg_pool = GlobalAveragePooling1D()(bi_gru2)
+            concat_layer = Concatenate()([global_pool, avg_pool])
+            output = Dense(n_class, activation='sigmoid')(concat_layer)
+            bigru_2_model=Model(inputs1, output)
+
+            
+            print(bigru_2_model.summary())
+            
+            # compiling
             bigru_2_model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy', 'categorical_accuracy'])
+            
+            print('**model fitting')
+            bigru_2_model.fit(X_train, y_train, validation_split=0.15, epochs=epochs, batch_size=batch_size))
 
-            bigru_2_model.fit(subthemes_mappings.get(sub_theme).get('padded_docs_train'),
-                                subthemes_mappings.get(sub_theme).get('y_train'),
-                                validation_split=0.15, 
-                                epochs=subthemes_mappings.get(sub_theme).get('epochs'), 
-                                batch_size=subthemes_mappings.get(sub_theme).get('batch_size'), 
-                                verbose=subthemes_mappings.get(sub_theme).get('verbose'))
-
-            bigru_2_model.save(output_dir + '/' + sub_theme +'_model')
+            print('\n **saving model')
+            bigru_2_model.save(output_dir + '/' + sub_theme.lower() +'_model')
 
             
 
@@ -388,27 +437,46 @@ def main(input_dir, output_dir):
 
             # parameters to be passed
             # max_features, embed_size, weight_matrix, trainable, maxlen, filters,kernel_size, hidden_dims,n_class
-            cnn_model = cnn(subthemes_mappings.get(sub_theme).get('max_features'),
-                                subthemes_mappings.get(sub_theme).get('embed_size'),
-                                subthemes_mappings.get(sub_theme).get('weight_matrix'),
-                                True,
-                                subthemes_mappings.get(sub_theme).get('maxlen'),
-                                subthemes_mappings.get(sub_theme).get('filters'),
-                                subthemes_mappings.get(sub_theme).get('kernel_size'),
-                                subthemes_mappings.get(sub_theme).get('hidden_dims'),
-                                subthemes_mappings.get(sub_theme).get('n_class')
-                                )
+            
+            # dynamic params
+            max_features = subthemes_mappings.get(sub_theme).get('max_features')
+            max_len= subthemes_mappings.get(sub_theme).get('max_len')
+            embed_size = 300
+            weight_matrix = subthemes_mappings.get(sub_theme).get('weight_matrix')
+            n_class = subthemes_mappings.get(sub_theme).get('n_class')
+            epochs = subthemes_mappings.get(sub_theme).get('epochs')
+            batch_size = subthemes_mappings.get(sub_theme).get('batch_size')
+            filters = subthemes_mappings.get(sub_theme).get('filters')
+            kernel_size = subthemes_mappings.get(sub_theme).get('kernel_size')
+            hidden_dims = subthemes_mappings.get(sub_theme).get('hidden_dims')
 
+            X_train = subthemes_mappings.get(sub_theme).get('padded_docs_train')
+            y_train = subthemes_mappings.get(sub_theme).get('y_train')
+
+            # model
+            cnn_model = Sequential()
+            cnn_model.add(Embedding(max_features, embed_size, weights=[weight_matrix], trainable=trainable, input_length=max_len))
+            cnn_model.add(Dropout(0.2))
+            cnn_model.add(Conv1D(filters, kernel_size, padding='valid', activation='relu', strides=1))
+            cnn_model.add(MaxPooling1D())
+            cnn_model.add(Conv1D(filters, kernel_size, padding='valid',activation='relu'))
+            cnn_model.add(MaxPooling1D())
+            cnn_model.add(Flatten())
+            # L2 regularization
+            cnn_model.add(Dense(hidden_dims, activation = 'relu', kernel_regularizer=tf.keras.regularizers.l2(0.001)))
+            cnn_model.add(Dense(hidden_dims, activation = 'relu', kernel_regularizer=tf.keras.regularizers.l2(0.001)))
+            cnn_model.add(Dense(n_class, activation = 'sigmoid'))
+
+            print(cnn_model.summary())
+
+            # compiling
             cnn_model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
             
-            cnn_model.fit(subthemes_mappings.get(sub_theme).get('padded_docs_train'), 
-                            subthemes_mappings.get(sub_theme).get('y_train'), 
-                            batch_size=subthemes_mappings.get(sub_theme).get('batch_size'), 
-                            epochs=subthemes_mappings.get(sub_theme).get('epochs'), 
-                            class_weight='auto', 
-                            validation_split=0.15)
+            # fitting
+            print('**model fitting')
+            cnn_model.fit(X_train, y_train, batch_size=batch_size, epochs=epochs, class_weight='auto', validation_split=0.15)
 
-            cnn_model.save(output_dir + '/' + sub_theme +'_model')
+            cnn_model.save(output_dir + '/' + sub_theme.lower() +'_model')
 
 
 if __name__ == "__main__":
