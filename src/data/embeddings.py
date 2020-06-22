@@ -82,7 +82,9 @@ class Embeddings:
 
         if level == "theme":
             self.data_q2 = pd.read_excel(self.root_q2 + 'comments_q2' + exten)['Comment'].tolist()
-        print('\nLoading: files were sucessfuly loaded.')
+            self.data_2015 = pd.read_excel(self.root + 'data_2015' + exten)['Comment'].tolist()
+
+        print('Loading: files were sucessfuly loaded')
 
         # Preprocess the data
         from preprocess import Preprocessing
@@ -90,13 +92,14 @@ class Embeddings:
         sys.path.append('src/data/')
         from preprocess import Preprocessing
 
-        print('Preprocess: this step could take time, please be patient.')
+        print('Preprocess: this step could take time, please be patient')
         self.X_train = Preprocessing().general(self.X_train)
         self.X_valid = Preprocessing().general(self.X_valid)
-        if level == "theme":
-            self.data_q2 = Preprocessing().general(self.data_q2)
         if include_test:
             self.X_test = Preprocessing().general(self.X_test)
+        if level == "theme":
+            self.data_q2 = Preprocessing().general(self.data_q2)
+            self.data_2015 = Preprocessing().general(self.data_2015)
 
         # Get parameters
         self.max_len = max(len(comment.split()) for comment in self.X_train)
@@ -138,7 +141,7 @@ class Embeddings:
         self.load_data(level, label_name, include_test)
 
         # Loading the whole embedding into memory
-        print('Load Embeddings: loading the whole embedding into memory.')
+        print('Load Embeddings: loading the whole embedding into memory')
         embeddings_index = dict()
         if model == "fasttext":
             f = codecs.open('data/fasttext/crawl-300d-2M.vec')
@@ -153,7 +156,7 @@ class Embeddings:
         f.close()
 
         # Create a weight matrix for words in training docs
-        print('Embeddings: creating a weight matrix for words using', model, "model.")
+        print('Embeddings: creating a weight matrix for words using', model, "model")
         embedding_matrix = np.zeros((self.vocab_size, 300))
         for word, i in self.vect.word_index.items():
             embedding_vector = embeddings_index.get(word)
@@ -161,17 +164,20 @@ class Embeddings:
                 embedding_matrix[i] = embedding_vector
 
         # Padding data
-        print('Padding: now is time for padding the embedding matrices.')
+        print('Padding: now is time for padding the embedding matrices')
         encoded_docs_train = self.vect.texts_to_sequences(self.X_train)
         padded_docs_train = pad_sequences(encoded_docs_train, maxlen=self.max_len, padding='post')
         encoded_docs_valid = self.vect.texts_to_sequences(self.X_valid)
         padded_docs_valid = pad_sequences(encoded_docs_valid, maxlen=self.max_len, padding='post')
-        if level == "theme":
-            encoded_question2 = self.vect.texts_to_sequences(self.data_q2)
-            padded_question2 = pad_sequences(encoded_question2, maxlen=self.max_len, padding='post')
         if include_test:
             encoded_docs_test = self.vect.texts_to_sequences(self.X_test)
             padded_docs_test = pad_sequences(encoded_docs_test, maxlen=self.max_len, padding='post')
+        if level == "theme":
+            encoded_question2 = self.vect.texts_to_sequences(self.data_q2)
+            padded_question2 = pad_sequences(encoded_question2, maxlen=self.max_len, padding='post')
+            encoded_data_2015 = self.vect.texts_to_sequences(self.data_2015)
+            padded_data_2015 = pad_sequences(encoded_data_2015, maxlen=self.max_len, padding='post')
+            
 
         # Saving the embedding matrix
         print('Save: saving files in ', self.root, ' directory.')
@@ -190,9 +196,10 @@ class Embeddings:
         if include_test:
             np.save(self.root + 'y_test', self.y_test)
 
-        # Saving the padding for question 2
+        # Saving the padding for question 2 and question 1's 2015 data
         if level == "theme":
             np.save(self.root_q2 + 'comments_q2_padded', padded_question2)
+            np.save(self.root + 'data_2015_padded', padded_data_2015)
 
         return
 
