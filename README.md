@@ -38,7 +38,7 @@ make ready
 
 3. Upload the embedding matrix and padded datasets to [Google Drive](https://www.google.ca/drive/) with termination `.npy`. This files contain a vectorial representation of the words from the preprocesed comments, so they don't show any sensitive information.
 
-**Warning:** don't upload any other file, it may contain sensitive information.
+⚠️**Warning:** don't upload any other file, it may contain sensitive information.
 
 4. Open and run the models in [Google Colab](https://colab.research.google.com/)
 
@@ -54,7 +54,7 @@ This process could take couple hours.
 
 An alternative for the previous steps is to run the following command at the command line/terminal from the root directory of this project.
 
-**Warning:** This process would run the models in your computer instead of the cloud, only uses **1 epoc** so won't return as good results, take several hours, and your computer may crash in the process:
+⚠️**Warning:** This process would run the models in your computer instead of the cloud, only uses **1 epoc** so won't return as good results, take several hours, and your computer may crash in the process:
 ```
 make all
 ```
