@@ -105,7 +105,7 @@ ready_dashboard:
 	python src/data/embeddings.py --model='fasttext' --level='theme' --label_name='' --include_test='True'
 	python src/models/predict_theme.py --input_file='theme_question2' --output_dir=data/output/theme_predictions/    
 	python src/models/predict_theme.py --input_file='theme_question1_2015' --output_dir=data/output/theme_predictions/
-	python src/data/merge_ministry_pred.py --input_dir=data/interim --output_dir=data/interim/
+	python src/data/merge_ministry_pred.py --input_dir=data/ --output_dir=data/interim/
 
 ## Load the App
 dashboard:

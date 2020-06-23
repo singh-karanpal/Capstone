@@ -4,7 +4,7 @@ subtitle: "Text Analytics: Quantifying the Responses to Open-Ended Survey Questi
 author: 
 - "Team Members: Carlina Kim, Karanpal Singh, Sukriti Trehan, Victor Cuspinera"
 - "Partner: BC Stats | Mentor: Varada Kolhatkar"
-date: '2020-06-20'
+date: '2020-06-23'
 output: pdf_document
 urlcolor: blue
 ---
@@ -43,16 +43,18 @@ The responses have been manually encoded by BC Stats into various themes and sub
 **Our Objectives**
 
 1) Build a model to automate multi-label text classification that:
-- Predicts label(s) for Question 1 and 2’s main themes
-- Predicts label(s) for Question 1’s subthemes
+    - Predicts label(s) for Question 1 and 2’s main themes
+    - Predicts label(s) for Question 1’s subthemes
 
 2) Build an app for visualizations of text data:
-- Identify and compare common words used for each question
-- Identify trends on concerns (from Question 1 responses) and appreciations (from Question 2 responses) in BC ministries workplaces over the given years. 
+    - Identify and compare common words used for each question
+    - Identify trends on concerns (from Question 1 responses) and appreciations (from Question 2 responses) in BC ministries workplaces over the given years. 
 
 **Data**
 
 There are +31,000 labelled comments (2013, 2018, 2020) and +12,000 additional unlabelled comments (2015) for Question 1. Question 2 has +6,000 labelled comments (2018) and +9,000 additional unlabelled comments (2015, 2020). The 12 themes and 63 subthemes used in Question 1 have been used in the past and deemed reliable by BC Stats, whereas Question 2’s themes needed to be further analyzed.
+
+\newpage
 
 ## Data Science Methodology
 
@@ -68,7 +70,7 @@ For our baseline approach, we used a multi-labelling method called [Classifier C
 
 **Advanced Models: Pre-trained Embeddings + Deep Learning Models**
 
-Several pre-trained embeddings including [GloVe](https://nlp.stanford.edu/projects/glove/), [FastText](https://fasttext.cc/) and [Universal Sentence Encoder](https://tfhub.dev/google/universal-sentence-encoder/4) were explored allowing us to leverage in-depth semantic meaning and useful vector representation of the words in the comments. These were used to build embedding matrixes and padded data to fit into the embeddings sizes. This was important as it allowed us to upload our sensitive data onto public cloud services (Google Gollab) to apply more computationally expensive deep learning models. The advanced models we explored were [Multi-channel CNNs](https://machinelearningmastery.com/develop-n-gram-multichannel-convolutional-neural-network-sentiment-analysis/), [CNNs](https://en.wikipedia.org/wiki/Convolutional_neural_network), and [Bidirectional GRUs](https://medium.com/@felixs_76053/bidirectional-gru-for-text-classification-by-relevance-to-sdg-3-indicators-2e5fd99cc341#:~:text=Bidirectional%20GRU's%20are%20a%20type,predictions%20about%20the%20current%20state.&text=Gated%20Recurrent%20Unit%20(GRU)%20for%20Emotion%20Classification%20from%20Noisy%20Speech.) or Bi-GRUs. 
+Several pre-trained embeddings including [GloVe](https://nlp.stanford.edu/projects/glove/), [FastText](https://fasttext.cc/) and [Universal Sentence Encoder](https://tfhub.dev/google/universal-sentence-encoder/4) were explored allowing us to leverage in-depth semantic meaning and useful vector representation of the words in the comments. These were used to build embedding matrixes and padded data to fit into the embeddings sizes. This was important as it allowed us to upload our sensitive data onto public cloud services (Google Colab) to apply more computationally expensive deep learning models. The advanced models we explored were [Multi-channel CNNs](https://machinelearningmastery.com/develop-n-gram-multichannel-convolutional-neural-network-sentiment-analysis/), [CNNs](https://en.wikipedia.org/wiki/Convolutional_neural_network), and [Bidirectional GRUs](https://medium.com/@felixs_76053/bidirectional-gru-for-text-classification-by-relevance-to-sdg-3-indicators-2e5fd99cc341#:~:text=Bidirectional%20GRU's%20are%20a%20type,predictions%20about%20the%20current%20state.&text=Gated%20Recurrent%20Unit%20(GRU)%20for%20Emotion%20Classification%20from%20Noisy%20Speech.) or Bi-GRUs. 
 
 Multi-channel CNNs are multiple versions of standard CNN models. We have used different kernel sizes for each channel. Specifically, we have defined a model with 3 input channels for kernel sizes 4, 6, and 8. 
 
@@ -86,7 +88,7 @@ The GRU part of Bi-GRUs are similar to LSTMs, with the major difference being th
 
 Question 2 posed several challenges as the themes initially created for this question were deemed unreliable to cover the full scope of the problem. Additionally, BC Stats wanted these themes to align with themes from Question 1. To address this, we compared the words used and the frequency of these words in the responses for both questions. 
 
-The plot below (Figure 2) shows a linear trend in the frequency of common words between Question 1 and Question 2. For example, the word “communication” would appear 1 out of 100 words read in the comments for both questions. The similarity in the vocabulary and frequency of words supported our decision to use our theme model developed using Question 1's themes for Question 2's predictions. 
+The plot below (Figure 2) shows a linear trend in the frequency of common words between Question 1 and Question 2. For example, the word “communication” would appear approximately 1 out of 100 words read in the comments for both questions. The similarity in the vocabulary and frequency of words supported our decision to use our theme model developed using Question 1's themes for Question 2's predictions. 
 
 <p>
 ![](figures/frequency_words.png){width=90%}
@@ -112,7 +114,7 @@ Figure 3: Precision recall curve showing results at various thresholds of our de
 
 <br>
 
-The table shows the results of the BiGRU + FastText being evaluated at various thresholds on the validation set. 
+The table below shows the results of the BiGRU + FastText being evaluated at various thresholds on the validation set. 
 
 Table 1: Evaluation of Bi-GRU + FastText model at various thresholds.
 ```{r, echo = FALSE}
@@ -144,7 +146,7 @@ Figure 4: Comparison bar charts of our model's and [last year's capstone group's
 baseline <- read.csv("tables/baseline_results.csv")
 
 kable(baseline[1,] %>%
-        select(Class, Test.Accuracy, Test.Recall,
+        select(Model, Test.Accuracy, Test.Recall,
                Test.Precision, Test.F1))
 
 advanced <- read.csv("tables/theme_tables/theme_pred_test_results.csv")
@@ -181,7 +183,7 @@ The precision recall curve shows the test results for all of the subtheme models
 ![](figures/precision_recall_subthemes.png){width=90%}
 </p>
 
-Figure 4: Precision recall curve for best performing subtheme models which all passes BC Stat's satisfaction condition (> 0.5).  
+Figure 5: Precision recall curve for best performing subtheme models which all passes BC Stat's satisfaction condition (> 0.5).  
 
 <br>
 
@@ -210,7 +212,7 @@ We evaluated Question 2’s labelling with Question 1’s themes using a sample 
 ![](figures/model_performance.png){width=90%}
 </p>
 
-Figure 5: The bar graph compares how the main theme model performed predicting for both Question 1 and Question 2. 
+Figure 6: The bar graph compares how the main theme model performed predicting for both Question 1 and Question 2. 
 
 <br>
 
@@ -222,7 +224,7 @@ The dashboard provides a way for BC Stats to explore the summarized text data. T
 ![](figures/dashboard.png){width=80%}
 </p>
 
-Figure 6: First page of our dashboard
+Figure 7: First page of our dashboard
 
 <br>
 
@@ -260,5 +262,4 @@ We also recommend creating embeddings and padded data on sensitive data so it ca
 
 - [Silwimba F. (October, 2018) Bidirectional GRU for Text classification by relevance to SDG#3 indicators.](https://medium.com/@felixs_76053/bidirectional-gru-for-text-classification-by-relevance-to-sdg-3-indicators-2e5fd99cc341#:~:text=Bidirectional%20GRU's%20are%20a%20type,predictions%20about%20the%20current%20state.&text=Gated%20Recurrent%20Unit%20(GRU)%20for%20Emotion%20Classification%20from%20Noisy%20Speech.)
 
-## Appendix-A
 
