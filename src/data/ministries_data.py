@@ -64,7 +64,7 @@ def main(input_dir, output_dir):
     print("Merging question 1 and ministries' data")
 
     # loading data
-    data_q1 = pd.read_excel(input_dir + "/interim/question1_models/advance/labeled_data.xlsx")   ## change your path for data
+    data_q1 = pd.read_excel(input_dir + "/interim/question1_models/advance/labeled_data.xlsx")
 
     #remove - in Telkey
     data_q1['Telkey']= data_q1['Telkey'].astype(str)
@@ -76,6 +76,14 @@ def main(input_dir, output_dir):
     ministries_Q1 = pd.merge(left=data_q1, right=data_all, how='left', left_on='Telkey', right_on='Telkey')
 
 
+    ## Question 1 unlabeled data 2015
+
+    data_2015 = pd.read_excel(input_dir + "/interim/question1_models/advance/data_2015.xlsx")   ## change your path for data
+
+    # Left Joining - Question 1's 2015 data + Ministries
+    ministries_2015 = pd.merge(left=data_2015, right=data_all, how='left', left_on='Telkey', right_on='Telkey')
+
+
     ## Question 2 (Unsupervised comments)
     print("Merging question 2 and ministries' data")
 
@@ -85,9 +93,11 @@ def main(input_dir, output_dir):
     #Left join
     ministries_Q2 = pd.merge(left=data_q2, right=data_all, how='left', left_on='Telkey', right_on='Telkey')
 
+
     ## Saving Excel files
     print("Saving merged datasets")
     ministries_Q1.to_excel(output_dir + "/question1_models/advance/ministries_Q1.xlsx", index=False)
+    ministries_2015.to_excel(output_dir + "/question1_models/advance/ministries_2015.xlsx", index=False)
     ministries_Q2.to_excel(output_dir + "/question2_models/ministries_Q2.xlsx", index=False)
 
     print("--- END: ministries_data.py ---\n")
