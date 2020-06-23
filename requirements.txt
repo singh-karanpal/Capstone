@@ -7,7 +7,6 @@ Keras-Applications
 Keras-Preprocessing
 Markdown
 matplotlib
-nlpsummarize
 nltk
 numpy
 numpydoc
