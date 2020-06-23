@@ -540,7 +540,7 @@ server <- function(input, output, comments, session) {
             trends_df <- data_df_comp
             
             ### Data Preparation Question 1
-            q1_subset <- data_df_q1[, c(1:14, 78:80)]
+            q1_subset <- data_df_q1#[, c(1:14, 78:80)]
             q1_subset['Question'] = 1
             
             ### Question 2 cleaning and data formatting
@@ -552,8 +552,6 @@ server <- function(input, output, comments, session) {
             trends_df['Question'] = 2
             trend_data <-
                 rbind(trends_df, q1_subset) # creating a unified dataframe
-            
-            
             
             
             # observing events as per selected ministry for comparison
@@ -602,8 +600,8 @@ server <- function(input, output, comments, session) {
                 updateSelectizeInput(
                     session,
                     'pick_label',
-                    choices = labels[3:14],
-                    selected = labels[3],
+                    choices = labels[6:17],
+                    selected = labels[6],
                     server = TRUE
                 )
                 
@@ -633,9 +631,8 @@ server <- function(input, output, comments, session) {
                     
                     ### Question 1 cleaning and data formatting
                     sumdata_q1 <-
-                        data.frame(value = apply(comments_q1_year[, c(3:14)], 2, sum))
+                        data.frame(value = apply(comments_q1_year[, c(6:17)], 2, sum))
                     sumdata_q1$key = rownames(sumdata_q1)
-                    
                     
                     # plots by Theme
                     total_comments_q1 <- dim(comments_q1_year)[1]
