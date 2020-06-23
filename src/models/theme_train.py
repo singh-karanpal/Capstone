@@ -40,7 +40,7 @@ def main(input_dir, output_dir):
     Takes padded documents and embedding matrix from specified input_dir, trains biGRU 
     model and saves the trained model in specified output_dir
     """
-    print("----START: theme_train.py----\n")
+    print("--- START: theme_train.py ---\n")
     print("**Reading the embedding matrix and padded documents**")
     ## Reading the embedding matrix (.npy file)
     embedding_matrix = np.load(input_dir + '/embedding_matrix.npy')
@@ -58,7 +58,7 @@ def main(input_dir, output_dir):
     embed_size = 300
     n_class = y_train.shape[1]
 
-    epochs = 1
+    epochs = 12
     batch_size = 100
 
     def define_model(length, max_features):
@@ -75,7 +75,7 @@ def main(input_dir, output_dir):
         Tensorflow model
         """
         inputs1 = Input(shape=(length,))
-        embedding1 = Embedding(max_features, 300, weights=[embedding_matrix], trainable=False)(inputs1)
+        embedding1 = Embedding(max_features, embed_size, weights=[embedding_matrix], trainable=False)(inputs1)
 
         bi_gru = Bidirectional(GRU(278, return_sequences=True))(embedding1)
 
@@ -99,10 +99,10 @@ def main(input_dir, output_dir):
     model_bigru.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
     model_bigru.fit(padded_doc_train, y_train, epochs=epochs, batch_size=batch_size, verbose=1)
 
-    print("**Model has been successfully trained! Saving the trained model now. Thanks for your patience!**)
+    print("**Model has been successfully trained! Saving the trained model now. Thanks for your patience!**")
     model_bigru.save(output_dir + '/theme_model')
 
-    print("----END: theme_train.py----")
+    print("--- END: theme_train.py ---")
 
 if __name__ == "__main__":
     main(opt["--input_dir"], opt["--output_dir"])

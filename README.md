@@ -17,12 +17,52 @@ BC-Stats conducts the Work Environment Survey (WES) on BC Public Service’s min
 The final report is available [here]().
 
 ## Dependencies
-- Python XXXXX and Python packages:
-   - pandas==ZZZZZ
-   - numpy== ZZZZ
+- Python packages:
+   - altair
+   - altair-transform
+   - docopt
+   - Keras
+   - Keras-Applications
+   - Keras-Preprocessing
+   - Markdown
+   - matplotlib
+   - nltk
+   - numpy
+   - numpydoc
+   - pandas
+   - pyLDAvis
+   - requests
+   - scikit-learn
+   - spacy
+   - tensorflow
+   - tensorflow-estimator
+   - tensorflow-hub
+   - textblob
+   - tokenizers
 
-- R version XXXXX and R packages:
-   - tidyverse==ZZZZZ
+- R packages:
+   - shiny
+   - shinydashboard
+   - RColorBrewer
+   - shinycssloaders
+   - shinyBS
+   - tidyverse
+   - wordcloud
+   - SnowballC
+   - tm
+   - readxl
+   - tidytext
+   - textdata
+   - tidyr
+   - tokenizers
+   - igraph
+   - ggraph
+   - magrittr
+   - stringr
+   - data.table
+   - Hmisc
+   - sentimentr
+   - rlang
 
 ## Usage
 

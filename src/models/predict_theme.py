@@ -66,7 +66,7 @@ class make_predictions:
             self.padded_docs = np.load('data/interim/question1_models/advance/data_2015_padded.npy')
             self.output_name = 'theme_question1_2015'
         else:
-            self.padded_docs = np.load('data/interim/question2_models/advance/comments_q2_padded.npy')
+            self.padded_docs = np.load('data/interim/question2_models/comments_q2_padded.npy')
             self.output_name = 'theme_question2'
         print('\nLoading: files were sucessfuly loaded.')
 

@@ -35,12 +35,13 @@ opt = docopt(__doc__)
 
 def main(input_dir, output_dir):
     
-    print("\n--START: baseline_model.py--")
+    print("\n--- START: baseline_model.py ---")
+    print("Baseline Model Started")
     
     # Reading in y datasets                           
-    y_train_Q1 = pd.read_excel(input_dir + "y_train.xlsx") 
-    y_valid_Q1 = pd.read_excel(input_dir + "y_valid.xlsx")
-    y_test_Q1 = pd.read_excel(input_dir + "y_test.xlsx")
+    y_train_Q1 = pd.read_excel(input_dir + "/advance/y_train.xlsx") 
+    y_valid_Q1 = pd.read_excel(input_dir + "/advance/y_valid.xlsx")
+    y_test_Q1 = pd.read_excel(input_dir + "/advance/y_test.xlsx")
     
     #Read in tfidf vectorizers for X
     X_train = scipy.sparse.load_npz('data/interim/question1_models/basic/tfidf_X_train.npz')
@@ -109,19 +110,20 @@ def main(input_dir, output_dir):
     
     #Theme model
     model1 = Classifier_Chain(themes_ytrain, themes_yvalid, themes_ytest, LinearSVC())
-    print("--Theme baseline model success--")
 
+    print("Theme baseline model success")
+    
     #Save results in dataframe
     df = pd.DataFrame(results_dict)
     df.to_csv('reports/tables/baseline_results.csv')
-    print("--Results table saved in reports/tables directory--")
+    print("Results table saved in reports/tables directory")
     
     #Saving models as pickle
     with open(output_dir + 'baseline_theme.pkl', 'wb') as f:
         pickle.dump(model1, f)
     print("Baseline Model saved")
 
-    print("--END: baseline_model.py--\n")
+    print("--- END: baseline_model.py ---\n")
     
 if __name__ == "__main__":
     main(opt["--input_dir"], opt["--output_dir"])

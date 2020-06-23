@@ -69,16 +69,19 @@ ui <- dashboardPage(
                 
                 fluidRow(
                     #Total Records
-                    valueBoxOutput('total_records', width = 3)  %>% withSpinner(color =
+                    valueBoxOutput('total_records', width = 4)  %>% withSpinner(color =
                                                                                     "skyblue"),
                     # 2013
-                    valueBoxOutput('records_2k13', width = 3),
+                    valueBoxOutput('records_2k13', width = 2),
+                    
+                    # 2015
+                    valueBoxOutput('records_2k15', width = 2),
                     
                     # 2018
-                    valueBoxOutput('records_2k18', width = 3),
+                    valueBoxOutput('records_2k18', width = 2),
                     
                     # 2020
-                    valueBoxOutput('records_2k20', width = 3)
+                    valueBoxOutput('records_2k20', width = 2)
                 ),
                 
                 fluidRow(
@@ -180,8 +183,9 @@ ui <- dashboardPage(
                     #Total Records
                     valueBoxOutput('total_records_q2', width = 3)  %>% withSpinner(color =
                                                                                        "skyblue"),
-                    # 2013
-                    valueBoxOutput('records_2k13_q2', width = 3),
+                    
+                    # 2015
+                    valueBoxOutput('records_2k15_q2', width = 3),
                     
                     # 2018
                     valueBoxOutput('records_2k18_q2', width = 3),
@@ -348,3 +352,4 @@ ui <- dashboardPage(
         )
     )
 )
+

@@ -38,7 +38,7 @@ server <- function(input, output, comments, session) {
     
     # loading raw data for Concerns
     data_df_q1 <-
-        read_excel('../../data/interim/question1_models/ministries_Q1.xlsx')
+        read_excel('../../data/interim/question1_models/advance/ministries_Q1_all.xlsx')
     
     # loading raw data for Appreciations
     data_df_q2 <-
@@ -108,9 +108,17 @@ server <- function(input, output, comments, session) {
                              color = "orange")
                 })
                 
+                # 2015 Records
+                output$records_2k15 <- renderValueBox({
+                    valueBox(smry$count[2],
+                             "2015",
+                             icon = icon("users"),
+                             color = "orange")
+                })
+                
                 # 2018 Records
                 output$records_2k18 <- renderValueBox({
-                    valueBox(smry$count[2],
+                    valueBox(smry$count[3],
                              "2018",
                              icon = icon("users"),
                              color = "yellow")
@@ -118,7 +126,7 @@ server <- function(input, output, comments, session) {
                 
                 # 2020 Records
                 output$records_2k20 <- renderValueBox({
-                    valueBox(smry$count[3],
+                    valueBox(smry$count[4],
                              "2020",
                              icon = icon("users"),
                              color = "aqua")
@@ -328,10 +336,10 @@ server <- function(input, output, comments, session) {
                 })
                 
                 
-                # 2013 Records
-                output$records_2k13_q2 <- renderValueBox({
+                # 2015 Records
+                output$records_2k15_q2 <- renderValueBox({
                     valueBox(smry$count[1],
-                             "2013",
+                             "2015",
                              icon = icon("users"),
                              color = "orange")
                 })
@@ -691,4 +699,3 @@ server <- function(input, output, comments, session) {
     
     
 }
-#shinyApp(ui, server)
