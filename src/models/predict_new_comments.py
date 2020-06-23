@@ -37,7 +37,7 @@ opt = docopt(__doc__)
 def main(input_dir, output_dir):
     """
     This function loads files from input_dir, makes theme and subtheme predictions
-    based on the saved models and saved an excel file with predictions in the output_dir
+    based on the saved models and saves an excel file with predictions in the output_dir
     """
     print("----START: predict_new_comment.py----\n")
 
@@ -46,10 +46,10 @@ def main(input_dir, output_dir):
     new_comments = pd.read_excel(input_dir + '/new_comments.xlsx')
 
     ## Load training data
-    X_train = pd.read_excel('data/interim/question1_models/X_train.xlsx')
+    X_train = pd.read_excel('data/interim/question1_models/advance/X_train.xlsx')
 
     ## Load y_train and extract column names for themes and subthemes
-    y_train = pd.read_excel('data/interim/question1_models/y_train.xlsx')
+    y_train = pd.read_excel('data/interim/question1_models/advance/y_train.xlsx')
     theme_names = y_train.rename(columns={'FEW':'FWE'}).iloc[:,:12].columns
     subthemes = y_train.iloc[:,12:-1].columns
 

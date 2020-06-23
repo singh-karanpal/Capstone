@@ -30,25 +30,43 @@ from docopt import docopt
 opt = docopt(__doc__)
 
 def main(input_file, output_dir):
+    """
+    Takes the input_file and calls make_predictions class with 
+    output_dir as arguments
+    """
+    print("----START: predict_theme.py----")
     mp = make_predictions()
     mp.predict(input_file=input_file, output_dir=output_dir)
     print('Thanks for your patience, the predictions have been saved!\n')
+    print("----END: predict_theme.py----")
     return
 
 class make_predictions:
     def load_data(self, input_file="theme_question1_test"):
+        """
+        Loads data according to input_file argument
+
+        Parameters
+        ----------
+        input_file: (str) (theme_question2, theme_question1_2015, default value: theme_question1_test)
+
+        Returns
+        -------
+        numpy array/ pandas dataframe
+
+        """
         if input_file == 'theme_question1_test':
-            self.padded_docs = np.load('data/interim/question1_models/X_test_padded.npy')
+            self.padded_docs = np.load('data/interim/question1_models/advance/X_test_padded.npy')
             self.output_name = 'theme_question1_test'
-            self.y_test = pd.read_excel('data/interim/question1_models/y_test.xlsx')
+            self.y_test = pd.read_excel('data/interim/question1_models/advance/y_test.xlsx')
             self.y_test = self.y_test.iloc[:,:12]
-            self.y_train = pd.read_excel('data/interim/question1_models/y_train.xlsx')
+            self.y_train = pd.read_excel('data/interim/question1_models/advance/y_train.xlsx')
             self.y_train = self.y_train.iloc[:,:12]
         elif (input_file == 'theme_question1_2015'):
-            self.padded_docs = np.load('data/interim/question1_models/padded_docs_question1_2015.npy') #### CHECK NAMING
+            self.padded_docs = np.load('data/interim/question1_models/advance/data_2015_padded.npy')
             self.output_name = 'theme_question1_2015'
         else:
-            self.padded_docs = np.load('data/interim/question2_models/comments_q2_padded.npy')
+            self.padded_docs = np.load('data/interim/question2_models/advance/comments_q2_padded.npy')
             self.output_name = 'theme_question2'
         print('\nLoading: files were sucessfuly loaded.')
 
@@ -94,14 +112,19 @@ class make_predictions:
         return theme_results
 
     def predict(self, input_file, output_dir):
-	# Loading padded document for prediction
+        """
+        Predicts the themes depending on the input_file and saved results using the 
+        output_dir
+        """
+        "Predicts the theme for comments based on input file"
+	    # Loading padded document for prediction
         self.load_data(input_file)
 	
-	#Loading the model
+	    #Loading the model
         theme_model = tf.keras.models.load_model('models/Theme_Model/theme_model')
 	
-	#Predictions
-        print("Making the predictions")
+	    #Predictions
+        print("**Making the predictions**")
         pred = theme_model.predict(self.padded_docs)
         pred = (pred > 0.4)*1
 
@@ -115,15 +138,15 @@ class make_predictions:
             f1 = f1_score(self.y_test, pred, average='micro')
             
             results = pd.DataFrame(data={'Accuracy':accuracy, 'Precision':precision, 'Recall':recall, 'F1 Score':f1}, index=['theme_test_results'])
-            results.to_csv('reports/tables/theme_pred_test_results.csv', index=False)
-            print("Results of test set theme prediction on test set are saved in reports/tables")
+            results.to_csv('reports/tables/theme_tables/theme_pred_test_results.csv', index=False)
+            print("**Results of test set theme prediction on test set are saved in reports/tables**")
 
             theme_results = self.themewise_results(self.y_test, pred, self.y_train)
-            theme_results.to_csv('reports/tables/themewise_test_pr.csv', index=False)
-            print("Theme wise precision, recall metrics for main label model are saved in reports/tables")
+            theme_results.to_csv('reports/tables/theme_tables/themewise_test_pr.csv', index=False)
+            print("**Theme wise precision, recall metrics for main label model are saved in reports/tables**")
 	
-	#Saving predictions
-        print("Now saving the predictions")
+	    #Saving predictions
+        print("**Now saving the predictions**")
         np.save(output_dir + self.output_name, pred)
 
 if __name__ == "__main__":

@@ -1,15 +1,3 @@
-# evaluate saved main theme model on validation set (generate threshold table; with accuracy, precision, recall, and f1) [DONE in this script]
-# make validation set PR curve [DONE in this script]
-
-# add label wise pr, recall, accuracy, f1 table for test set of main theme model
-# add 12 precision-recall curve subtheme model graphs on test set for valid_subtheme (the one in Google Collab) [DOUBT-- MAY GET COMPLICATED]
-
-# evaluate saved subtheme models on validation set (generate threshold table) [DONE in this script]
-
-# input: saved theme model, padded_docs_valid, y_valid
-# input: saved subtheme model, padded_docs_valid_subthemes, y_valid_subthemes
-# output: report/ (tables and figures)
-
 # author: Carlina Kim, Karanpal Singh, Sukriti Trehan, Victor Cuspinera
 # date: 2020-06-21
 
@@ -41,18 +29,40 @@ tf.disable_v2_behavior()
 
 opt = docopt(__doc__)
 
-print("-----START: model_evaluate.py-----")
+print("-----START: model_evaluate.py-----\n")
 
 def main(level, output_dir):
+    """
+    Takes the input level and calls model_evaluate class with 
+    output_dir as argument 
+    """
     me = model_evaluate()
     me.get_evaluations(level=level, output_dir=output_dir)
     print('Thanks for your patience, the evaluation process has finished!\n')
+    print('----END: model_evaluate.py----')
     return
 
 class model_evaluate:
-    # Loads data and evaluated model
+    # Loads data and evaluates saved theme model and subtheme models on validation set
     
     def eval_metrics(self, model_name, x_valid, y_valid, level='theme'):
+        """
+        Evaluates model results on different threshold levels and produces data table/
+        precision recall curves
+
+        Parameters
+        -----------
+        model_name: (TensforFlow Saved model)
+        x_valid: (pandas dataframe) dataframe with validation comments
+        y_valid: (numpy array) array with labels
+        level: (string) Takes value 'theme' or 'subtheme' to evaluate accordingly
+
+        Returns
+        -------
+        Pandas DataFrame or matplotlib plot
+        dataframe with evaluation metrics including precision, recall, f1 score at
+        different threshold values
+        """
         pred_values = model_name.predict(x_valid)
 
         if level == 'theme':
@@ -104,25 +114,26 @@ class model_evaluate:
         return pd.DataFrame(predictions_results)
     
     def get_evaluations(self, level, output_dir):
+        """
+        Evaluates models by using eval_metrics function
+        """
         if level == 'theme':
             print("**Loading data**")
-            x_valid = np.load('data/interim/question1_models/X_valid_padded.npy')
-            y_valid = np.load('data/interim/question1_models/y_valid.npy')
+            x_valid = np.load('data/interim/question1_models/advance/X_valid_padded.npy')
+            y_valid = np.load('data/interim/question1_models/advance/y_valid.npy')
             print("**Loading the saved theme model**")
             model = tf.keras.models.load_model('models/Theme_Model/theme_model')
             print("**Predicting on validation set using saved model and evaluating metrics**")
             results = self.eval_metrics(model_name = model, x_valid = x_valid, y_valid = y_valid)
             print("**Saving results**")
-            results.to_csv(output_dir + '/tables/theme_valid_eval.csv')
+            results.to_csv(output_dir + '/tables/theme_tables/theme_valid_eval.csv')
             print("Evaluations saved to reports/")
 
         else:
             print("Loading data and evaluating the subthemes model on validation set")
             themes = ['CPD', 'CB', 'EWC', 'Exec', 'FWE',
             'SP', 'RE', 'Sup', 'SW', 'TEPE', 'VMG', 'OTH']
-            # x_valids = []
-            # models = []
-            # y_valids = []
+
             for label in themes:
                 print("****Label:", label, "****")
                 print("**Loading data**")
@@ -136,7 +147,7 @@ class model_evaluate:
                 print("**Predicting on validation set using saved model and evaluating metrics**")
                 results = self.eval_metrics(model_name = model, x_valid = x_valid, y_valid = y_valid, level = 'subtheme')
                 print("**Saving results**")
-                results.to_csv(output_dir + '/tables/' + str(label).lower() + '_valid_eval.csv')
+                results.to_csv(output_dir + '/tables/subtheme_tables' + str(label).lower() + '_valid_eval.csv')
                 print("Process of subtheme", label, "model completed\n")
             print("Evaluations saved to reports/tables")
 
