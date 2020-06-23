@@ -540,7 +540,7 @@ server <- function(input, output, comments, session) {
             trends_df <- data_df_comp
             
             ### Data Preparation Question 1
-            q1_subset <- data_df_q1#[, c(1:14, 78:80)]
+            q1_subset <- data_df_q1
             q1_subset['Question'] = 1
             
             ### Question 2 cleaning and data formatting
