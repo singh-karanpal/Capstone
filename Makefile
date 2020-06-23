@@ -13,11 +13,26 @@
 # usage: make all
 #						to run all the analysis
 #
-# usage: make ready
+# usage: make ready_model
 #						to prepare data for the models
+#
+# usage: make ready_dashboard
+#						to prepare data for the dashboard
 #
 # usage: make dashboard
 #						to run Dashboard using R as a server
+#
+# usage: baseline_model
+#						to run the baseline model TF-IDF + LinearSVC
+#
+# usage: advance_model
+# 						to run the Deep Learning models with pre-trained embeddings
+#
+# usage: advance_evaluation
+#						to run the evaluation with the advance model
+#
+# usage: new_prediction
+#						prediction of new comments
 #
 # usage: make clean
 #						to clean up all the intermediate files
@@ -72,20 +87,51 @@ requirements:
 	$ Rscript -e 'install.packages("rlang", repos="http://cran.us.r-project.org")'
 	
 
-
 ## Make Dataset
 data: requirements
 	$(PYTHON_INTERPRETER) src/data/make_dataset.py data/raw data/processed
 
 ## Prepare data for the models
-ready:
+ready_model:
 	python src/data/merge_split_data.py --input_dir=data/raw/ --output_dir=data/interim/
 	python src/data/ministries_data.py --input_dir=data/ --output_dir=data/interim/
 	python src/data/embeddings.py --model='fasttext' --level='theme' --label_name='' --include_test='True'
 	python src/data/subthemes.py --input_dir='data/interim/question1_models/advance/' --model='fasttext' --include_test='True'
 
+## Prepare the data for the App
+ready_dashboard:
+	python src/data/merge_split_data.py --input_dir=data/raw/ --output_dir=data/interim/
+	python src/data/ministries_data.py --input_dir=data/ --output_dir=data/interim/
+	python src/data/embeddings.py --model='fasttext' --level='theme' --label_name='' --include_test='True'
+	python src/models/predict_theme.py --input_file='theme_question2' --output_dir=data/output/theme_predictions/    
+	python src/models/predict_theme.py --input_file='theme_question1_2015' --output_dir=data/output/theme_predictions/
+	python src/data/merge_ministry_pred.py --input_dir=data/interim --output_dir=data/interim/
+
+## Load the App
 dashboard:
 	R -e "shiny::runApp('src/visualization/', launch.browser=TRUE)"
+
+## Runs the baseline model
+baseline_model:
+	python src/features/tf-idf_vectorizer.py --input_dir=data/interim/question1_models/ --output_dir=data/interim/question1_models/basic/
+	python src/models/baseline_model.py --input_dir=data/interim/question1_models/ --output_dir=models/
+
+## Runs the advance model
+advance_model:
+	python src/models/theme_train.py --input_dir=data/interim/question1_models/advance --output_dir=models/Theme_Model/
+	python src/models/subtheme_models.py --input_dir=data/interim/subthemes --output_dir=models/Subtheme_Models/
+
+## Runs the evaluations for the advance model
+advance_evaluation:
+	python src/models/model_evaluate.py --level='theme' --output_dir=reports/    
+	python src/models/model_evaluate.py --level='subtheme' --output_dir=reports/
+	python src/models/predict_theme.py --input_file='theme_question1_test' --output_dir=data/output/theme_predictions/
+	python src/models/predict_subtheme.py --input_dir=data/ --output_dir=reports/tables/subtheme_tables/
+	Rscript -e "library(rmarkdown);render('reports/Final_Report.Rmd', output_format = 'pdf_document')"
+
+## Returns prediction of new comments
+new_prediction:
+	python src/models/predict_new_comments.py --input_dir=data/new_data/ --output_dir=data/new_data/
 
 ## Delete all compiled Python files
 clean:
@@ -93,9 +139,6 @@ clean:
 	rm -r data/interim/question1_models/advance/*
 	rm -r data/interim/question2_models/*
 	find data/interim/subthemes/. -mindepth 1 ! -name *.pickle -delete
-
-	# find . -type f -name "*.py[co]" -delete
-	# find . -type d -name "__pycache__" -delete
 
 ## Delete all confidential files
 clean_confidential:
