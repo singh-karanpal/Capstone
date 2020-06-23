@@ -32,14 +32,14 @@ opt = docopt(__doc__)
 
 def main(input_dir, output_dir):
 
-    print("--Preparing TF-IDF Vectorizers--")
+    print("\n--- START: tf-idf_vectorizer.py ---")
         
     # Reading in datasets 
-    X_train_Q1 = pd.read_excel(input_dir + "X_train.xlsx") 
-    X_valid_Q1 = pd.read_excel(input_dir + "X_valid.xlsx")
-    X_test_Q1 = pd.read_excel(input_dir + "X_test.xlsx")                           
+    X_train_Q1 = pd.read_excel(input_dir + "/advance/X_train.xlsx") 
+    X_valid_Q1 = pd.read_excel(input_dir + "/advance/X_valid.xlsx")
+    X_test_Q1 = pd.read_excel(input_dir + "/advance/X_test.xlsx")                           
  
-    print("--Preprocessor started--")
+    print("Preprocessor started")
 
     # Preprocess train, valid, and train sets
     X_train_Q1['preprocessed_comments'] = Preprocessing().general(X_train_Q1['Comment'])
@@ -71,8 +71,8 @@ def main(input_dir, output_dir):
     scipy.sparse.save_npz(output_dir + '/tfidf_X_valid', X_valid)
     scipy.sparse.save_npz(output_dir + '/tfidf_X_test', X_test)
 
-    print("--TF-IDF matrixes created and saved in output directory--")
-    print('\n')
+    print("TF-IDF matrixes created and saved in output directory")
+    print("--- END: tf-idf_vectorizer.py ---\n")
 
 if __name__ == "__main__":
     main(opt["--input_dir"], opt["--output_dir"])

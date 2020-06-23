@@ -8,7 +8,7 @@ Trained models will be saved as pickel files.
 Usage: subthemes_model_mappings.py --input_dir=<input_dirl> --output_dir=<output_dir>
 
 Example:
-    python src/models/subtheme_models.py --input_dir=data/interim/subthemes --output_dir=data/models/Subtheme_Models
+    python src/models/subtheme_models.py --input_dir=data/interim/subthemes --output_dir=models/Subtheme_Models/
 '''
 
 import requests
@@ -66,10 +66,10 @@ def main(input_dir, output_dir):
     tepe_dict = dict()
     vmg_dict = dict()
 
-
+    print("\n--- START: subtheme_models.py ---")
 
     # loading data files for subthemes to compute hyper-parameters
-    print('\n--- Loading Paddings ---')
+    print('Loading Paddings')
     # CB
     padded_docs_train_cb = np.load(input_dir + '/CB/X_train_padded.npy')
     embedding_matrix_ft_cb = np.load(input_dir + '/CB/embedding_matrix.npy')
@@ -131,7 +131,7 @@ def main(input_dir, output_dir):
     y_train_vmg = np.load( input_dir + '/VMG/y_train.npy')
 
 
-    print('--- Creating Dictionaries ---')
+    print('Creating Dictionaries')
 
     cb_dict.update({
         'model':'cnn',
@@ -332,12 +332,12 @@ def main(input_dir, output_dir):
 
     subthemes_mappings.update({'VMG':vmg_dict})
 
-    print('--- Training Subthemes ---')
+    print('Training Subthemes')
     keynames = list(subthemes_mappings.keys())
 
     for sub_theme in keynames:
         
-        print('\n--- Training for '+sub_theme+' ---')
+        print('\nTraining for '+sub_theme+'')
 
         model_type = subthemes_mappings.get(sub_theme).get('model')
 
@@ -379,7 +379,7 @@ def main(input_dir, output_dir):
             print('**model fitting')
             bigru_model.fit(X_train, y_train, validation_split=0.15, epochs=epochs, batch_size=batch_size)
 
-            print('\n **saving model')
+            print('**saving model')
             bigru_model.save(output_dir + '/' + sub_theme.lower() +'_model')
 
 
@@ -421,7 +421,7 @@ def main(input_dir, output_dir):
             print('**model fitting')
             bigru_2_model.fit(X_train, y_train, validation_split=0.15, epochs=epochs, batch_size=batch_size))
 
-            print('\n **saving model')
+            print('**saving model')
             bigru_2_model.save(output_dir + '/' + sub_theme.lower() +'_model')
 
             
@@ -472,6 +472,8 @@ def main(input_dir, output_dir):
             cnn_model.fit(X_train, y_train, batch_size=batch_size, epochs=epochs, class_weight='auto', validation_split=0.15)
 
             cnn_model.save(output_dir + '/' + sub_theme.lower() +'_model')
+
+        print("--- END: subtheme_models.py ---\n")
 
 
 if __name__ == "__main__":
