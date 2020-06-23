@@ -64,6 +64,7 @@ The final report is available [here]().
    - sentimentr
    - rlang
 
+
 ## Usage
 
 ### Running recipe (recommended)
@@ -73,7 +74,7 @@ To replicate the analysis, clone this GitHub repository, install the [dependenci
 
 2. Run the following command at the command line/terminal from the root directory of this project to prepare data for the models
 ```
-make ready
+make model_ready
 ```
 
 3. Upload the embedding matrix and padded datasets to [Google Drive](https://www.google.ca/drive/) with termination `.npy`. This files contain a vectorial representation of the words from the preprocesed comments, so they don't show any sensitive information.
@@ -98,6 +99,20 @@ An alternative for the previous steps is to run the following command at the com
 ```
 make all
 ```
+### Running Rshiny App
+
+To run just the RShiny App, execute the following commands at the command line/terminal from the root directory of this project :
+
+1. Run the following to prepare the data for the dashboard
+```
+make ready_dashboard
+```
+2. Run the following to launch the dashboard
+```
+make dashboard
+```
+
+**Note**: In case the raw data and model remain unchanged, executing `make ready_dashboard` once is enough. In order to launch the dashboard again, only running `make dashboard` will suffice.
 
 ### Cleaning the repository
 
