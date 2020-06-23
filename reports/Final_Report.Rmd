@@ -204,11 +204,13 @@ Despite OTH having the best precision and recall curve shown in Figure 4, we hav
 
 **Predicting Themes for Question 2**
 
-We evaluated Question 2’s labelling with Question 1’s themes using a sample data of annotated comments provided by BC Stats using 2020 data.
+We evaluated Question 2’s labelling with Question 1’s themes using a sample data of annotated comments provided by BC Stats using 2020 survey responses. The comparison of the results are close in range and hence appropriate to use the main theme model for Question 2 as well. 
 
 <p>
-![](figures/precision_recall_subthemes.png){width=90%}
+![](figures/model_performance.png){width=90%}
 </p>
+
+Figure 5: The bar graph compares how the main theme model performed predicting for both Question 1 and Question 2. 
 
 <br>
 
@@ -220,7 +222,7 @@ The dashboard provides a way for BC Stats to explore the summarized text data. T
 ![](figures/dashboard.png){width=80%}
 </p>
 
-Figure 5: First page of our dashboard
+Figure 6: First page of our dashboard
 
 <br>
 
@@ -235,6 +237,7 @@ Our subthemes model, although had promising results during training, faced the c
 
 We also recommend creating embeddings and padded data on sensitive data so it can be uploaded into public cloud services (Google Gollab, AWS). This can allow more complex machine learning algorithms to be incorporated to improving the model.
 
+\newpage
 
 
 ## References
