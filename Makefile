@@ -16,6 +16,9 @@
 # usage: make ready
 #						to prepare data for the models
 #
+# usage: make dashboard
+#						to run Dashboard using R as a server
+#
 # usage: make clean
 #						to clean up all the intermediate files
 #
@@ -81,6 +84,9 @@ ready:
 	python src/data/ministries_data.py --input_dir=data/ --output_dir=data/interim/
 	python src/data/embeddings.py --model='fasttext' --level='theme' --label_name='' --include_test='True'
 	python src/data/subthemes.py --input_dir='data/interim/question1_models/advance/' --model='fasttext' --include_test='True'
+
+dashboard:
+	R -e "shiny::runApp('src/visualization/', launch.browser=TRUE)"
 
 ## Delete all compiled Python files
 clean:
