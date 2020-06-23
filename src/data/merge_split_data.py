@@ -25,8 +25,11 @@ opt = docopt(__doc__)
 
 def main(input_dir, output_dir):
     
-    ## Reading data for question 1 (all four years)
-    
+    print("\n--- START: Merge_split_data.py ---")
+
+    ### Reading data for question 1 (all four years) ###
+    print("Loading datasets for question 1")
+
     # Reading WES 2013, question 1 and standardizing column headers
     data_2013 = pd.read_excel(input_dir + "/2013/WES2013 1st Qual Sample - Coded.xlsx", 
                          sheet_name='2013 1st Qual Sample',
@@ -78,7 +81,6 @@ def main(input_dir, output_dir):
         'VMG_Keep_politics_out_of_work':'VMG_Remove_political_influence'
         }, inplace=True)
     
-    
     # Concatenating data and basic cleaning for 2013, 2018, 2020 for question 1
     frames = [data_2020, data_2018, data_2013]
     data_all = pd.concat(frames)
@@ -87,34 +89,39 @@ def main(input_dir, output_dir):
     data_all.fillna(0, inplace=True)
     
     # Splitting into training, validation and test sets for question 1
+    print("Splitting datasets in test-validation-test for question 1")
     X = data_all['Comment']
     y = data_all.drop(['Telkey', 'Comment', 'Year'], axis=1)
     
     X_trainvalid, X_test, y_trainvalid, y_test = train_test_split(X, y, test_size=0.20, random_state=42)
     X_train, X_valid, y_train, y_valid = train_test_split(X_trainvalid, y_trainvalid, test_size=0.20, random_state=42)
 
-    
     # Writing split files to output directory for question 1
-    data_all.to_excel(output_dir + '/question1_models/labeled_data.xlsx', index=False)
+    print("Saving data for question 1")
+    data_all.to_excel(output_dir + '/question1_models/advance/labeled_data.xlsx', index=False)
     
-    X_train.to_excel(output_dir + '/question1_models/X_train.xlsx', index=False)
-    y_train.to_excel(output_dir + '/question1_models/y_train.xlsx', index=False)
+    X_train.to_excel(output_dir + '/question1_models/advance/X_train.xlsx', index=False)
+    y_train.to_excel(output_dir + '/question1_models/advance/y_train.xlsx', index=False)
     
-    X_valid.to_excel(output_dir + '/question1_models/X_valid.xlsx', index=False)
-    y_valid.to_excel(output_dir + '/question1_models/y_valid.xlsx', index=False)
+    X_valid.to_excel(output_dir + '/question1_models/advance/X_valid.xlsx', index=False)
+    y_valid.to_excel(output_dir + '/question1_models/advance/y_valid.xlsx', index=False)
     
-    X_test.to_excel(output_dir + '/question1_models/X_test.xlsx', index=False)
-    y_test.to_excel(output_dir + '/question1_models/y_test.xlsx', index=False)
+    X_test.to_excel(output_dir + '/question1_models/advance/X_test.xlsx', index=False)
+    y_test.to_excel(output_dir + '/question1_models/advance/y_test.xlsx', index=False)
     
     # Concatenating unlabled data for question 1 for app
     frames_unlabeled = [data_all[['Telkey', 'Comment', 'Year']], data_2015]
     comments_q1 = pd.concat(frames_unlabeled)
     
-    comments_q1.to_excel(output_dir + '/question1_models/comments_q1.xlsx', index=False)
+    comments_q1.to_excel(output_dir + '/question1_models/advance/comments_q1.xlsx', index=False)
+
+    # Saving unlabeled data from 2015's question 1 for predictions
+    data_2015.to_excel(output_dir + '/question1_models/advance/data_2015.xlsx', index=False)
     
-    ## Reading data for question 2 (all years)
+    ### Reading data for question 2 (all years) ###
     
     # Reading WES 2015, question 2 (has unlabeled data only)
+    print("Loading datasets for question 2")
     data_2015_2 = pd.read_excel(input_dir + "/2015/WES2015 2nd Qual UNCODED.xlsx")
     data_2015_2.rename(columns={'telkey':'Telkey',
                           'Q4981_11':'Comment'}, inplace=True)
@@ -139,28 +146,31 @@ def main(input_dir, output_dir):
     data_2018_2.fillna(0, inplace=True)
     data_2015_2.drop(index=np.where(data_2015_2['Comment'].isna())[0], inplace=True)
     
-    # Splitting labelled data for question 2
-    X_2 = data_2018_2['Comment']
-    y_2 = data_2018_2.drop(['Telkey', 'Comment', '# of codes'], axis=1)
+    # # Splitting labelled data for question 2
+    # X_2 = data_2018_2['Comment']
+    # y_2 = data_2018_2.drop(['Telkey', 'Comment', '# of codes'], axis=1)
     
-    X_trainvalid_2, X_test_2, y_trainvalid_2, y_test_2 = train_test_split(X_2, y_2, test_size=0.20, random_state=42)
-    X_train_2, X_valid_2, y_train_2, y_valid_2 = train_test_split(X_trainvalid_2, y_trainvalid_2, test_size=0.20, random_state=42)
+    # X_trainvalid_2, X_test_2, y_trainvalid_2, y_test_2 = train_test_split(X_2, y_2, test_size=0.20, random_state=42)
+    # X_train_2, X_valid_2, y_train_2, y_valid_2 = train_test_split(X_trainvalid_2, y_trainvalid_2, test_size=0.20, random_state=42)
     
-    # Writing split files to output directory for question 2
-    X_train_2.to_excel(output_dir + '/question2_models/X_train_2.xlsx', index=False)
-    y_train_2.to_excel(output_dir + '/question2_models/y_train_2.xlsx', index=False)
+    # # Writing split files to output directory for question 2
+    # X_train_2.to_excel(output_dir + '/question2_models/X_train_2.xlsx', index=False)
+    # y_train_2.to_excel(output_dir + '/question2_models/y_train_2.xlsx', index=False)
     
-    X_valid_2.to_excel(output_dir + '/question2_models/X_valid_2.xlsx', index=False)
-    y_valid_2.to_excel(output_dir + '/question2_models/y_valid_2.xlsx', index=False)
+    # X_valid_2.to_excel(output_dir + '/question2_models/X_valid_2.xlsx', index=False)
+    # y_valid_2.to_excel(output_dir + '/question2_models/y_valid_2.xlsx', index=False)
     
-    X_test_2.to_excel(output_dir + '/question2_models/X_test_2.xlsx', index=False)
-    y_test_2.to_excel(output_dir + '/question2_models/y_test_2.xlsx', index=False)
+    # X_test_2.to_excel(output_dir + '/question2_models/X_test_2.xlsx', index=False)
+    # y_test_2.to_excel(output_dir + '/question2_models/y_test_2.xlsx', index=False)
     
     # Concatenating unlabled data for question 2 for app
+    print("Saving dataset for question 2")
     frames_q2 = [data_2015_2[['Telkey', 'Comment', 'Year']], data_2018_2[['Telkey', 'Comment', 'Year']], data_2020_2[['Telkey', 'Comment', 'Year']]]
     comments_q2 = pd.concat(frames_q2)
     
     comments_q2.to_excel(output_dir + '/question2_models/comments_q2.xlsx', index=False)
+    
+    print("--- END: Merge_split_data.py ---\n")
     
 if __name__ == "__main__":
     main(opt["--input_dir"], opt["--output_dir"])

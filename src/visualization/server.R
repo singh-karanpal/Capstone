@@ -14,8 +14,6 @@ library("tm")
 library("readxl")
 library("tidytext")
 library("textdata")
-library("wordcloud")
-library("readxl")
 library("tidyverse")
 library("tidyr")
 library("tokenizers")
@@ -693,4 +691,3 @@ server <- function(input, output, comments, session) {
     
     
 }
-#shinyApp(ui, server)
