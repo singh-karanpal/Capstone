@@ -81,9 +81,11 @@ make model_ready
 
 ⚠️**Warning:** don't upload any other file, it may contain sensitive information.
 
-4. Open and run the models in [Google Colab](https://colab.research.google.com/)
+4. Open and run the models in [Google Colab](https://colab.research.google.com/). You can upload [this](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/notebooks/final_model.ipynb) notebook to Colab for training the main theme model and [this](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/notebooks/Subtheme_Models.ipynb) notebook to train the subtheme models.
 
-5. Run the following command at the command line/terminal from the root directory of this project to make predictions on the validation and test set and render the final report.
+5. Follow the instructions in the notebooks specified in previous step to run and save the models. Make sure to download the saved model(s) from your Google Drive and replace the trained models in `models/Theme_Model/` and `models/Subtheme_Models` directories.
+
+6. Run the following command at the command line/terminal from the root directory of this project to make predictions on the validation and test set and render the final report.
 ```
 make advance_evaluation
 ```
@@ -95,7 +97,7 @@ This process could take couple hours.
 
 An alternative for the previous steps is to run the following command at the command line/terminal from the root directory of this project.
 
-⚠️**Warning:** This process would run the models in your computer instead of the cloud, only uses **1 epoc** so won't return as good results, take several hours, and your computer may crash in the process:
+⚠️**Warning:** This process would run the models on your local system instead of the cloud, will take several hours, and your computer may crash in the process:
 ```
 make all
 ```
@@ -158,16 +160,18 @@ make clean_confidential
     ├── data
     │   ├── fasttext       <- Data from third party sources.
     │   ├── glove          <- Data from third party sources.
-    │   ├── interim        <- Intermediate data that has been transformed.
-    │   └── raw            <- The original, immutable data dump.
+    │   ├── interim        <- Intermediate data that has been formed from raw data.
+    │   ├── raw            <- The original, immutable data dump.
+    │   ├── new_data       <- New data for theme and subtheme predictions
+    │   └── output         <- Theme predictions for test set, Question 2 comments saved     
     │
     ├── docs               <- A default Sphinx project; see sphinx-doc.org for details
     │
-    ├── models             <- Trained and serialized models, model predictions, or model summaries
+    ├── models
+    │   ├── Subtheme_Models <- Trained and serialized subtheme models.
+    │   ├── Theme_Model     <- Trained and serialized theme model.
     │
-    ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-    │                         the creator's initials, and a short `-` delimited description, e.g.
-    │                         `1.0-jqp-initial-data-exploration`.
+    ├── notebooks          <- Jupyter notebooks.                         
     │
     ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
     │
@@ -179,22 +183,42 @@ make clean_confidential
     │                         generated with `pip freeze > requirements.txt`
     │
     ├── setup.py           <- makes project pip installable (pip install -e .) so src can be imported
+    │
+    ├── Makefile           <- Makes project reproducible.
+    │
     ├── src                <- Source code for use in this project.
     │   ├── __init__.py    <- Makes src a Python module
     │   │
-    │   ├── data           <- Scripts to download or generate data
-    │   │   └── make_dataset.py
+    │   ├── data           <- Scripts to generate training, validation and test data for models and App (More details in directory's README)
+    │   │   └── merge_split_data.py
+    │   │   ├── subset_subtheme_data.py
+    │   │   ├── preprocess.py
+    │   │   ├── embeddings.py
+    │   │   ├── subtheme.py
+    │   │   ├── ministries_data.py
+    │   │   └── merge_ministry_pred.py
     │   │
-    │   ├── features       <- Scripts to turn raw data into features for modeling
-    │   │   └── build_features.py
+    │   ├── features       <- Scripts to turn raw data into features for modeling (More details in directory's README)
+    │   │   └── tf-idf_vectorizer.py
     │   │
     │   ├── models         <- Scripts to train models and then use trained models to make
-    │   │   │                 predictions
-    │   │   ├── predict_model.py
-    │   │   └── train_model.py
+    │   │   │                 predictions (More details in directory's README)
+    │   │   ├── baseline_model.py
+    │   │   ├── theme_train.py
+    │   │   ├── subtheme_models.py
+    │   │   ├── model_evaluate.py
+    │   │   ├── predict_theme.py
+    │   │   ├── predict_subtheme.py
+    │   │   └── predict_new_comments.py
     │   │
-    │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
-    │       └── visualize.py
+    │   └── visualization  <- Scripts to create exploratory and results oriented visualizations for the RShiny App
+    │   │   └── custom_functions.R
+    │   │   ├── eda_plots.Rmd
+    │   │   ├── eda_wordcloud.Rmd
+    │   │   ├── server.R
+    │   │   ├── ui.R
+    │   │   ├── data_dictionary.md
+    │   │   └── dummy.html
     │
     └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
 
