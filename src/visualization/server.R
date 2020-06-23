@@ -38,7 +38,7 @@ server <- function(input, output, comments, session) {
     
     # loading raw data for Concerns
     data_df_q1 <-
-        read_excel('../../data/interim/question1_models/ministries_Q1_all.xlsx')
+        read_excel('../../data/interim/question1_models/advance/ministries_Q1_all.xlsx')
     
     # loading raw data for Appreciations
     data_df_q2 <-
