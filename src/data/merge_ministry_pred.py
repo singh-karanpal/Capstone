@@ -8,7 +8,7 @@ There are 2 parameters Input and Output Path where you want to write this data.
 Usage: merge_ministry_pred.py --input_dir=<input_dir_path> --output_dir=<destination_dir_path>
 
 Example:
-    python src/data/merge_ministry_pred.py --input_dir=data/interim --output_dir=data/interim/
+    python src/data/merge_ministry_pred.py --input_dir=data/ --output_dir=data/interim/
 
 Options:
 --input_dir=<input_dir_path> Location of data Directory
@@ -32,9 +32,9 @@ def main(input_dir, output_dir):
     print("Loading Q1 ministries' data and predictions into memory.")
 
     # QUAN 2015
-    ministries_q1 = pd.read_excel(input_dir + "/question1_models/advance/ministries_Q1.xlsx")
-    ministries_2015 = pd.read_excel(input_dir + "/question1_models/advance/ministries_2015.xlsx")
-    pred_2015 = np.load(input_dir + "/question1_models/advance/theme_question1_2015.npy")
+    ministries_q1 = pd.read_excel(input_dir + "/interim/question1_models/advance/ministries_Q1.xlsx")
+    ministries_2015 = pd.read_excel(input_dir + "/interim/question1_models/advance/ministries_2015.xlsx")
+    pred_2015 = np.load(input_dir + "/output/theme_predictions/theme_question1_2015.npy")
 
     
     columns_basic = ['Telkey', 'Comment', 'Year', 'Ministry', 'Ministry_id']
@@ -55,13 +55,13 @@ def main(input_dir, output_dir):
     print("Loading Q2 ministries' data and predictions into memory.")
 
     # QUAN 2018
-    ministries_q2 = pd.read_excel(input_dir + "/question2_models/ministries_Q2.xlsx")
-    pred_ministries = np.load(input_dir + "/question2_models/pred_ministries.npy")
+    ministries_q2 = pd.read_excel(input_dir + "/interim/question2_models/ministries_Q2.xlsx")
+    theme_question2 = np.load(input_dir + "/output/theme_predictions/theme_question2.npy")
 
-    pred_ministries = pd.DataFrame(pred_ministries, columns=['CPD', 'CB', 'EWC', 'Exec', 'FEW', 'SP', 'RE', 'Sup', 'SW', 'TEPE', 'VMG', 'OTH'])
+    theme_question2 = pd.DataFrame(theme_question2, columns=['CPD', 'CB', 'EWC', 'Exec', 'FEW', 'SP', 'RE', 'Sup', 'SW', 'TEPE', 'VMG', 'OTH'])
     
     print("Merging the dataframes")
-    ministries_pred_q2 = pd.concat([ministries_q2, pred_ministries], axis=1)
+    ministries_pred_q2 = pd.concat([ministries_q2, theme_question2], axis=1)
     
     ## Saving Excel files
     print("Saving merged datasets")
