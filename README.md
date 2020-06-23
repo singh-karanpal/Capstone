@@ -11,10 +11,10 @@ MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.or
 **Partner**: [BC Stats](https://www2.gov.bc.ca/gov/content/data/about-data-management/bc-stats)
 
 ## About
-BC-Stats conducts the Work Environment Survey (WES) on BC Public Service’s ministries with the goal of identifying areas for improvement and understanding employee’s experiences in the working environment. Currently, the comments to the open-ended questions have been manually encoded. Given a large number of employees across their 26 ministries, hand-labelling comments is expensive and time-consuming. In this project we propose using natural language processing and machine learning classification techniques to automate the labelling of text responses with the goals of build an useful model to automate multi-label text classification and gather insight on trends by themes across ministries.
+BC-Stats conducts the Work Environment Survey (WES) on BC Public Service’s ministries with the goal of identifying areas for improvement and understanding employee’s experiences in the working environment. Currently, the comments to the open-ended questions have been manually encoded. Given a large number of employees across their 26 ministries, hand-labelling comments is expensive and time-consuming. In this project we propose using natural language processing and machine learning classification techniques to automate the labelling of text responses with the goals of build an useful model to automate multi-label text classification and gather insight on trends by themes across Ministries.
 
 ## Report
-The final report is available [here]().
+The final report is available [here](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/reports/Final_Report.pdf).
 
 ## Dependencies
 - Python packages:
@@ -68,13 +68,13 @@ The final report is available [here]().
 ## Usage
 
 ### Running recipe (recommended)
-To replicate the analysis, clone this GitHub repository, install the [dependencies](#dependencies) listed below, follow the next steps:
+To replicate the analysis, clone this GitHub repository, install the [dependencies](#dependencies) listed above, and follow the next steps:
 
-1. Add a copy of the sensitive data in the `data/raw` folder, and download the Fasttext pre-trained embeddings file `crawl-300d-2M.vec.zip` in `data/fasttext`
+1. Add a copy of the sensitive data in the `data/raw` folder, and [download the Fasttext pre-trained embeddings](https://fasttext.cc/docs/en/english-vectors.html) file `crawl-300d-2M.vec.zip` saving it in `data/fasttext`.
 
 2. Run the following command at the command line/terminal from the root directory of this project to prepare data for the models
 ```
-make model_ready
+make ready_model
 ```
 
 3. Upload the embedding matrix and padded datasets to [Google Drive](https://www.google.ca/drive/) with termination `.npy`. This files contain a vectorial representation of the words from the preprocesed comments, so they don't show any sensitive information.
@@ -101,6 +101,7 @@ An alternative for the previous steps is to run the following command at the com
 ```
 make all
 ```
+
 ### Running Rshiny App
 
 To run just the RShiny App, clone this GitHub repository, install the [dependencies](#dependencies) listed below, follow the next steps and execute the following commands at the command line/terminal from the root directory of this project :
@@ -109,6 +110,7 @@ To run just the RShiny App, clone this GitHub repository, install the [dependenc
 ```
 make ready_dashboard
 ```
+
 2. Run the following to launch the dashboard
 ```
 make dashboard
@@ -124,6 +126,7 @@ In order to predict the themes and subthemes for new comments, clone this GitHub
 ```
 make ready_model
 ```
+
 2. In directory `data/new_data`, save an excel (.xlsx) file by the name `new_comments.xlsx` with the following format:
 
 | Comment |
@@ -138,7 +141,7 @@ make ready_model
 ```
 make new_prediction
 ```
-The predicted themes and subthemes will be saved in *src/model/predict_new_comments.py*
+The predicted themes and subthemes will be saved in *data/new_data/predictions.xlsx*
 
 ### Cleaning the repository
 
@@ -155,42 +158,43 @@ make clean_confidential
 ## Project Organization    
 
     ├── LICENSE
-    ├── Makefile           <- Makefile with commands like `make data` or `make train`
+    ├── Makefile           <- Makefile with make commands make like `make dashboard`.
     ├── README.md          <- The top-level README for developers using this project.
     ├── data
     │   ├── fasttext       <- Data from third party sources.
     │   ├── glove          <- Data from third party sources.
     │   ├── interim        <- Intermediate data that has been formed from raw data.
     │   ├── raw            <- The original, immutable data dump.
-    │   ├── new_data       <- New data for theme and subtheme predictions
-    │   └── output         <- Theme predictions for test set, Question 2 comments saved     
+    │   ├── new_data       <- New data for theme and subtheme predictions.
+    │   └── output         <- Theme predictions for test set, Question 2 comments saved.
     │
-    ├── docs               <- A default Sphinx project; see sphinx-doc.org for details
+    ├── docs               <- A default Sphinx project; see sphinx-doc.org for details.
     │
     ├── models
     │   ├── Subtheme_Models <- Trained and serialized subtheme models.
-    │   ├── Theme_Model     <- Trained and serialized theme model.
+    │   └── Theme_Model    <- Trained and serialized theme model.
     │
     ├── notebooks          <- Jupyter notebooks.                         
     │
     ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
     │
     ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
-    │   ├── figures        <- Generated graphics and figures to be used in reporting
+    │   ├── figures        <- Generated graphics and figures to be used in reporting.
     │   └── tables         <- General .csv files used for the report and presentation.
     │
     ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-    │                         generated with `pip freeze > requirements.txt`
+    │                         generated with `pip freeze > requirements.txt`.
     │
-    ├── setup.py           <- makes project pip installable (pip install -e .) so src can be imported
+    ├── setup.py           <- makes project pip installable (pip install -e .) so src can be imported.
     │
     ├── Makefile           <- Makes project reproducible.
     │
     ├── src                <- Source code for use in this project.
-    │   ├── __init__.py    <- Makes src a Python module
+    │   ├── __init__.py    <- Makes src a Python module.
     │   │
-    │   ├── data           <- Scripts to generate training, validation and test data for models and App (More details in directory's README)
-    │   │   └── merge_split_data.py
+    │   ├── data           <- Scripts to generate training, validation and test data for models and 
+    │   |   |                 App (More details in directory's README).
+    │   │   ├── merge_split_data.py
     │   │   ├── subset_subtheme_data.py
     │   │   ├── preprocess.py
     │   │   ├── embeddings.py
@@ -198,11 +202,12 @@ make clean_confidential
     │   │   ├── ministries_data.py
     │   │   └── merge_ministry_pred.py
     │   │
-    │   ├── features       <- Scripts to turn raw data into features for modeling (More details in directory's README)
+    │   ├── features       <- Scripts to turn raw data into features for modeling (more details
+    │   |   │                 in directory's README).
     │   │   └── tf-idf_vectorizer.py
     │   │
     │   ├── models         <- Scripts to train models and then use trained models to make
-    │   │   │                 predictions (More details in directory's README)
+    │   │   │                 predictions (more details in directory's README).
     │   │   ├── baseline_model.py
     │   │   ├── theme_train.py
     │   │   ├── subtheme_models.py
@@ -211,14 +216,15 @@ make clean_confidential
     │   │   ├── predict_subtheme.py
     │   │   └── predict_new_comments.py
     │   │
-    │   └── visualization  <- Scripts to create exploratory and results oriented visualizations for the RShiny App
-    │   │   └── custom_functions.R
-    │   │   ├── eda_plots.Rmd
-    │   │   ├── eda_wordcloud.Rmd
-    │   │   ├── server.R
-    │   │   ├── ui.R
-    │   │   ├── data_dictionary.md
-    │   │   └── dummy.html
+    │   └── visualization  <- Scripts to create exploratory and results oriented visualizations 
+    │       │                 for the RShiny App.
+    │       ├── custom_functions.R
+    │       ├── eda_plots.Rmd
+    │       ├── eda_wordcloud.Rmd
+    │       ├── server.R
+    │       ├── ui.R
+    │       ├── data_dictionary.md
+    │       └── dummy.html
     │
     └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
 
