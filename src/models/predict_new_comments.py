@@ -39,7 +39,7 @@ def main(input_dir, output_dir):
     This function loads files from input_dir, makes theme and subtheme predictions
     based on the saved models and saves an excel file with predictions in the output_dir
     """
-    print("----START: predict_new_comment.py----\n")
+    print("\n--- START: predict_new_comment.py ---\n")
 
     print("**Loading the data**")
     ## Reading new comments data
@@ -158,7 +158,7 @@ def main(input_dir, output_dir):
     final_pred = pd.concat([pd.Series(new_comments['Comment']), pred_themes, subtheme_pred], axis=1)
     final_pred.to_excel(output_dir + '/predictions.xlsx')
     print("**Predictions have been saved to", output_dir, "**\n")
-    print("----END: predict_new_comments.py----")
+    print("--- END: predict_new_comments.py ---\n")
 
     return
 
