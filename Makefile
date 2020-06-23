@@ -64,7 +64,6 @@ requirements:
 	$ Rscript -e 'install.packages("tokenizers", repos="http://cran.us.r-project.org")'
 	$ Rscript -e 'install.packages("igraph", repos="http://cran.us.r-project.org")'
 	$ Rscript -e 'install.packages("ggraph", repos="http://cran.us.r-project.org")'
-	$ Rscript -e 'install.packages("shinycssloaders", repos="http://cran.us.r-project.org")'
 	$ Rscript -e 'install.packages("magrittr", repos="http://cran.us.r-project.org")'
 	$ Rscript -e 'install.packages("stringr", repos="http://cran.us.r-project.org")'
 	$ Rscript -e 'install.packages("data.table", repos="http://cran.us.r-project.org")'
