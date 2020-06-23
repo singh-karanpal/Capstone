@@ -93,14 +93,9 @@ def main(input_dir, output_dir):
         recall_test = recall_score(np.array(ytest), predictions_test, average = 'micro') 
         precision_test = precision_score(np.array(ytest), predictions_test, average = 'micro') 
         f1_test = f1_score(np.array(ytest), predictions_test, average = 'micro')
-            
-        if ytrain.shape[1] == 62: 
-            class_name = 'Subtheme'
-        else:
-            class_name = 'Theme'
         
         #All rounded to 3 decimal place
-        case = {'Class': class_name,
+        case = {'Model': "TF-IDF + LinearSVC",
             'Train Accuracy': round(train, 3),
             'Validation Accuracy': round(valid, 3),
             'Test Accuracy': round(test, 3),
@@ -115,12 +110,9 @@ def main(input_dir, output_dir):
     
     #Theme model
     model1 = Classifier_Chain(themes_ytrain, themes_yvalid, themes_ytest, LinearSVC())
+
     print("Theme baseline model success")
     
-    #Subtheme model
-    # model2 = Classifier_Chain(subthemes_ytrain, subthemes_yvalid, subthemes_ytest, LinearSVC())
-    # print("--Subtheme baseline model success--")
-
     #Save results in dataframe
     df = pd.DataFrame(results_dict)
     df.to_csv('reports/tables/baseline_results.csv')
@@ -129,11 +121,8 @@ def main(input_dir, output_dir):
     #Saving models as pickle
     with open(output_dir + 'baseline_theme.pkl', 'wb') as f:
         pickle.dump(model1, f)
+    print("Baseline Model saved")
 
-    # with open(output_dir + 'baseline_subtheme.pkl', 'wb') as f:
-    #     pickle.dump(model2, f)
-
-    print("Baseline models saved")
     print("--- END: baseline_model.py ---\n")
     
 if __name__ == "__main__":
