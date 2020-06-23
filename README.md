@@ -83,9 +83,9 @@ make model_ready
 
 4. Open and run the models in [Google Colab](https://colab.research.google.com/)
 
-5. Run the following command at the command line/terminal from the root directory of this project to make predictions and the final report.
+5. Run the following command at the command line/terminal from the root directory of this project to make predictions on the validation and test set and render the final report.
 ```
-make results
+make advance_evaluation
 ```
 
 This process could take couple hours.
@@ -101,7 +101,7 @@ make all
 ```
 ### Running Rshiny App
 
-To run just the RShiny App, execute the following commands at the command line/terminal from the root directory of this project :
+To run just the RShiny App, clone this GitHub repository, install the [dependencies](#dependencies) listed below, follow the next steps and execute the following commands at the command line/terminal from the root directory of this project :
 
 1. Run the following to prepare the data for the dashboard
 ```
@@ -113,6 +113,30 @@ make dashboard
 ```
 
 **Note**: In case the raw data and model remain unchanged, executing `make ready_dashboard` once is enough. In order to launch the dashboard again, only running `make dashboard` will suffice.
+
+### Predicting themes and subthemes for new comments
+
+In order to predict the themes and subthemes for new comments, clone this GitHub repository, install the [dependencies](#dependencies) listed below, follow the next steps and do as follows:
+
+1. Run the following command from the root of the project repository to prepare the required data:
+```
+make ready_model
+```
+2. In directory `data/new_data`, save an excel (.xlsx) file by the name `new_comments.xlsx` with the following format:
+
+| Comment |
+|----------|
+|*comment_1*|
+|*comment_2*|
+|*comment_3*|
+|*comment_4*|
+|*comment_5*|
+
+3. Run the following command from the root of the project repository:
+```
+make new_prediction
+```
+The predicted themes and subthemes will be saved in *src/model/predict_new_comments.py*
 
 ### Cleaning the repository
 
