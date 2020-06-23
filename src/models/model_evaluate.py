@@ -29,7 +29,7 @@ tf.disable_v2_behavior()
 
 opt = docopt(__doc__)
 
-print("-----START: model_evaluate.py-----\n")
+print("\n-----START: model_evaluate.py-----\n")
 
 def main(level, output_dir):
     """
@@ -39,7 +39,7 @@ def main(level, output_dir):
     me = model_evaluate()
     me.get_evaluations(level=level, output_dir=output_dir)
     print('Thanks for your patience, the evaluation process has finished!\n')
-    print('----END: model_evaluate.py----')
+    print('----END: model_evaluate.py----\n')
     return
 
 class model_evaluate:

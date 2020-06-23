@@ -8,7 +8,7 @@ Trained models will be saved as pickel files.
 Usage: subthemes_model_mappings.py --input_dir=<input_dirl> --output_dir=<output_dir>
 
 Example:
-    python src/models/subtheme_models.py --input_dir=data/interim/subthemes --output_dir=data/models/Subtheme_Models
+    python src/models/subtheme_models.py --input_dir=data/interim/subthemes --output_dir=models/Subtheme_Models/
 '''
 
 import requests
@@ -18,13 +18,14 @@ import numpy as np
 import pickle
 import os
 
-from keras.models import Sequential, Model
-from keras.layers import Dense, Concatenate
-from keras.layers import MaxPooling2D, GlobalMaxPooling1D, GRU, Bidirectional, GlobalAveragePooling1D
-from keras.layers import Embedding, Input
+from tensorflow.keras.models import Sequential, Model
+from tensorflow.keras.layers import Dense, Concatenate, Dropout, Conv1D, MaxPooling1D, Flatten
+from tensorflow.keras.layers import GlobalMaxPooling1D, GRU, Bidirectional, GlobalAveragePooling1D
+from tensorflow.keras.layers import Embedding, Input
 from keras.layers.merge import concatenate
 from keras import layers
 import tensorflow as tf
+
 import keras
 
 
@@ -66,10 +67,10 @@ def main(input_dir, output_dir):
     tepe_dict = dict()
     vmg_dict = dict()
 
-
+    print("\n--- START: subtheme_models.py ---")
 
     # loading data files for subthemes to compute hyper-parameters
-    print('\n--- Loading Paddings ---')
+    print('Loading Paddings')
     # CB
     padded_docs_train_cb = np.load(input_dir + '/CB/X_train_padded.npy')
     embedding_matrix_ft_cb = np.load(input_dir + '/CB/embedding_matrix.npy')
@@ -131,7 +132,23 @@ def main(input_dir, output_dir):
     y_train_vmg = np.load( input_dir + '/VMG/y_train.npy')
 
 
-    print('--- Creating Dictionaries ---')
+    print('Creating Dictionaries')
+
+    cpd_dict.update({
+        'model':'bigru',
+        'padded_docs_train':padded_docs_train_cpd,
+        'y_train':y_train_cpd,
+        'max_features':embedding_matrix_ft_cpd.shape[0],
+        'max_len':padded_docs_train_cpd.shape[1],
+        'n_class':y_train_cpd.shape[1],
+        'weight_matrix':embedding_matrix_ft_cpd, 
+        'hidden_sequences':100,
+        'epochs':6, 
+        'batch_size':100, 
+        'verbose':1
+    })
+
+    subthemes_mappings.update({'CPD': cpd_dict})
 
     cb_dict.update({
         'model':'cnn',
@@ -150,22 +167,6 @@ def main(input_dir, output_dir):
     })
 
     subthemes_mappings.update({'CB':cb_dict})
-
-    cpd_dict.update({
-        'model':'bigru',
-        'padded_docs_train':padded_docs_train_cpd,
-        'y_train':y_train_cpd,
-        'max_features':embedding_matrix_ft_cpd.shape[0],
-        'max_len':padded_docs_train_cpd.shape[1],
-        'n_class':y_train_cpd.shape[1],
-        'weight_matrix':embedding_matrix_ft_cpd, 
-        'hidden_sequences':100,
-        'epochs':6, 
-        'batch_size':100, 
-        'verbose':1
-    })
-
-    subthemes_mappings.update({'CPD': cpd_dict})
 
     ewc_dict.update({
         'model':'bigru',
@@ -332,12 +333,12 @@ def main(input_dir, output_dir):
 
     subthemes_mappings.update({'VMG':vmg_dict})
 
-    print('--- Training Subthemes ---')
+    print('Training Subthemes')
     keynames = list(subthemes_mappings.keys())
 
     for sub_theme in keynames:
         
-        print('\n--- Training for '+sub_theme+' ---')
+        print('\nTraining for '+sub_theme+'')
 
         model_type = subthemes_mappings.get(sub_theme).get('model')
 
@@ -379,8 +380,8 @@ def main(input_dir, output_dir):
             print('**model fitting')
             bigru_model.fit(X_train, y_train, validation_split=0.15, epochs=epochs, batch_size=batch_size)
 
-            print('\n **saving model')
-            bigru_model.save(output_dir + '/' + sub_theme.lower() +'_model')
+            print('**saving model')
+            bigru_model.save(output_dir + sub_theme.lower() +'_model')
 
 
 
@@ -393,7 +394,8 @@ def main(input_dir, output_dir):
             max_len= subthemes_mappings.get(sub_theme).get('max_len')
             embed_size = 300
             weight_matrix = subthemes_mappings.get(sub_theme).get('weight_matrix')
-            hidden_sequences =subthemes_mappings.get(sub_theme).get('hidden_sequences')
+            hidden_sequences = subthemes_mappings.get(sub_theme).get('hidden_sequences')
+            hidden_sequences_2 = subthemes_mappings.get(sub_theme).get('hidden_sequences_2')
             n_class = subthemes_mappings.get(sub_theme).get('n_class')
             epochs = subthemes_mappings.get(sub_theme).get('epochs')
             batch_size = subthemes_mappings.get(sub_theme).get('batch_size')
@@ -419,10 +421,10 @@ def main(input_dir, output_dir):
             bigru_2_model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy', 'categorical_accuracy'])
             
             print('**model fitting')
-            bigru_2_model.fit(X_train, y_train, validation_split=0.15, epochs=epochs, batch_size=batch_size))
+            bigru_2_model.fit(X_train, y_train, validation_split=0.15, epochs=epochs, batch_size=batch_size)
 
-            print('\n **saving model')
-            bigru_2_model.save(output_dir + '/' + sub_theme.lower() +'_model')
+            print('**saving model')
+            bigru_2_model.save(output_dir + sub_theme.lower() +'_model')
 
             
 
@@ -450,13 +452,14 @@ def main(input_dir, output_dir):
 
             # model
             cnn_model = Sequential()
-            cnn_model.add(Embedding(max_features, embed_size, weights=[weight_matrix], trainable=trainable, input_length=max_len))
+            cnn_model.add(Embedding(max_features, embed_size, weights=[weight_matrix], trainable=True, input_length=max_len))
             cnn_model.add(Dropout(0.2))
             cnn_model.add(Conv1D(filters, kernel_size, padding='valid', activation='relu', strides=1))
             cnn_model.add(MaxPooling1D())
             cnn_model.add(Conv1D(filters, kernel_size, padding='valid',activation='relu'))
             cnn_model.add(MaxPooling1D())
             cnn_model.add(Flatten())
+            
             # L2 regularization
             cnn_model.add(Dense(hidden_dims, activation = 'relu', kernel_regularizer=tf.keras.regularizers.l2(0.001)))
             cnn_model.add(Dense(hidden_dims, activation = 'relu', kernel_regularizer=tf.keras.regularizers.l2(0.001)))
@@ -471,7 +474,9 @@ def main(input_dir, output_dir):
             print('**model fitting')
             cnn_model.fit(X_train, y_train, batch_size=batch_size, epochs=epochs, class_weight='auto', validation_split=0.15)
 
-            cnn_model.save(output_dir + '/' + sub_theme.lower() +'_model')
+            cnn_model.save(output_dir + sub_theme.lower() +'_model')
+
+        print("--- END: subtheme_models.py ---\n")
 
 
 if __name__ == "__main__":
