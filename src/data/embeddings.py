@@ -191,10 +191,10 @@ class Embeddings:
             np.save(self.root + 'X_test_padded', padded_docs_test)
 
         # Saving the padding y's datafiles
-        np.save(self.root + 'y_train', self.y_train)
-        np.save(self.root + 'y_valid', self.y_valid)
+        np.save(self.root + 'y_train', self.y_train.iloc[:,:12])
+        np.save(self.root + 'y_valid', self.y_valid.iloc[:,:12])
         if include_test:
-            np.save(self.root + 'y_test', self.y_test)
+            np.save(self.root + 'y_test', self.y_test.iloc[:,:12])
 
         # Saving the padding for question 2 and question 1's 2015 data
         if level == "theme":
