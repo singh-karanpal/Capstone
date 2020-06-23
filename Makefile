@@ -6,6 +6,9 @@
 # 
 # This driver script split the data, create the embedding matrix and padded 
 # files, run the models, and clean the repo. This script takes no arguments. 
+#
+# usage: make requirements
+#						to install all Python and R pacakges for Analysis
 # 
 # usage: make all
 #						to run all the analysis
@@ -42,6 +45,31 @@ endif
 requirements: 
 	$(PYTHON_INTERPRETER) -m pip install -U pip setuptools wheel
 	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
+	$ Rscript -e 'install.packages("shiny", repos="http://cran.us.r-project.org")'
+	$ Rscript -e 'install.packages("shinydashboard", repos="http://cran.us.r-project.org")'
+	$ Rscript -e 'install.packages("RColorBrewer", repos="http://cran.us.r-project.org")'
+	$ Rscript -e 'install.packages("shinycssloaders", repos="http://cran.us.r-project.org")'
+	$ Rscript -e 'install.packages("shinyBS", repos="http://cran.us.r-project.org")'
+	$ Rscript -e 'install.packages("tidyverse", repos="http://cran.us.r-project.org")'
+	$ Rscript -e 'install.packages("wordcloud", repos="http://cran.us.r-project.org")'
+	$ Rscript -e 'install.packages("SnowballC", repos="http://cran.us.r-project.org")'
+	$ Rscript -e 'install.packages("tm", repos="http://cran.us.r-project.org")'
+	$ Rscript -e 'install.packages("readxl", repos="http://cran.us.r-project.org")'
+	$ Rscript -e 'install.packages("tidytext", repos="http://cran.us.r-project.org")'
+	$ Rscript -e 'install.packages("textdata", repos="http://cran.us.r-project.org")'
+	$ Rscript -e 'install.packages("tidyr", repos="http://cran.us.r-project.org")'
+	$ Rscript -e 'install.packages("tokenizers", repos="http://cran.us.r-project.org")'
+	$ Rscript -e 'install.packages("igraph", repos="http://cran.us.r-project.org")'
+	$ Rscript -e 'install.packages("ggraph", repos="http://cran.us.r-project.org")'
+	$ Rscript -e 'install.packages("shinycssloaders", repos="http://cran.us.r-project.org")'
+	$ Rscript -e 'install.packages("magrittr", repos="http://cran.us.r-project.org")'
+	$ Rscript -e 'install.packages("stringr", repos="http://cran.us.r-project.org")'
+	$ Rscript -e 'install.packages("data.table", repos="http://cran.us.r-project.org")'
+	$ Rscript -e 'install.packages("Hmisc", repos="http://cran.us.r-project.org")'
+	$ Rscript -e 'install.packages("sentimentr", repos="http://cran.us.r-project.org")'
+	$ Rscript -e 'install.packages("rlang", repos="http://cran.us.r-project.org")'
+	
+
 
 ## Make Dataset
 data: requirements
