@@ -1,3 +1,4 @@
+<img src="reports/figures/logo.png" width="150" align = "right">
 
 BC Stats Capstone project 2020
 -----------------------------
