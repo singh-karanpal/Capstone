@@ -20,6 +20,12 @@ from keras.preprocessing.sequence import pad_sequences
 import codecs
 from docopt import docopt
 
+# Preprocess the data
+from preprocess import Preprocessing
+import sys
+sys.path.append('src/data/')
+from preprocess import Preprocessing
+
 
 opt = docopt(__doc__)
 
@@ -86,11 +92,12 @@ class Embeddings:
 
         print('Loading: files were sucessfuly loaded')
 
-        # Preprocess the data
-        from preprocess import Preprocessing
-        import sys
-        sys.path.append('src/data/')
-        from preprocess import Preprocessing
+        # checking loaded data is not empty
+        assert len(self.X_train) > 0, 'no records in X_train'
+        assert len(self.X_valid) > 0, 'no records in X_valid'
+        assert len(self.y_train) > 0, 'no records in y_train'
+        assert len(self.y_valid) > 0, 'no records in y_valid'
+
 
         print('Preprocess: this step could take time, please be patient')
         self.X_train = Preprocessing().general(self.X_train)
