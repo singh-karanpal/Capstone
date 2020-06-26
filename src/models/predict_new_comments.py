@@ -43,7 +43,12 @@ def main(input_dir, output_dir):
 
     print("**Loading the data**")
     ## Reading new comments data
-    new_comments = pd.read_excel(input_dir + '/new_comments.xlsx')
+    try:
+        new_comments = pd.read_excel(input_dir + '/new_comments.xlsx')
+    except:
+        print("File new_comments.xlsx not found.\n")
+        print("--- END: predict_new_comments.py ---\n")
+        return
 
     ## Load training data
     X_train = pd.read_excel('data/interim/question1_models/advance/X_train.xlsx')
@@ -143,12 +148,14 @@ def main(input_dir, output_dir):
 
 	    # Predictions
         print("**Predicting subthemes for comments**")
-        pred = model.predict(padded_docs_comments)
-        pred = (pred > pred_thresh[i])*1
-
-        pred_subthemes[i] = pred
-        for j in range(pred_subthemes[i].shape[0]):
-            zero_arrays[ind_dict[i][j], subtheme_pos[i]] += pred_subthemes[i][j]  
+        try:
+            pred = model.predict(padded_docs_comments)
+            pred = (pred > pred_thresh[i])*1
+            pred_subthemes[i] = pred
+            for j in range(pred_subthemes[i].shape[0]):
+                zero_arrays[ind_dict[i][j], subtheme_pos[i]] += pred_subthemes[i][j]
+        except:
+            next
         print("Predictions for subthemes of ", theme_dict[i], "are completed!")
         print('-----------------------------------')
 
