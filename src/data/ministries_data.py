@@ -93,12 +93,26 @@ def main(input_dir, output_dir):
     #Left join
     ministries_Q2 = pd.merge(left=data_q2, right=data_all, how='left', left_on='Telkey', right_on='Telkey')
 
+    # checking required columns in files before writing them
+    assert 'Comment' in ministries_Q1.columns, 'Required column Comment is not present in ministries_Q1'
+    assert 'Year' in ministries_Q1.columns, 'Required column Year is not present in ministries_Q1'
+    assert 'Ministry' in ministries_Q1.columns, 'Required Columns are not present in ministries_Q1'
+    
+    assert 'Comment' in ministries_2015.columns, 'Required column Comment is not present in ministries_2015'
+    assert 'Year' in ministries_2015.columns, 'Required column Year is not present in ministries_2015'
+    assert 'Ministry' in ministries_2015.columns, 'Required Columns are not present in ministries_2015'
+
+    assert 'Comment' in ministries_Q2.columns, 'Required column Comment is not present in ministries_Q2'
+    assert 'Year' in ministries_Q2.columns, 'Required column Year is not present in ministries_Q2'
+    assert 'Ministry' in ministries_Q2.columns, 'Required Columns are not present in ministries_Q2'
+
 
     ## Saving Excel files
     print("Saving merged datasets")
     ministries_Q1.to_excel(output_dir + "/question1_models/advance/ministries_Q1.xlsx", index=False)
     ministries_2015.to_excel(output_dir + "/question1_models/advance/ministries_2015.xlsx", index=False)
     ministries_Q2.to_excel(output_dir + "/question2_models/ministries_Q2.xlsx", index=False)
+    
 
     print("--- END: ministries_data.py ---\n")
     
