@@ -142,16 +142,15 @@ Below are our results for the baseline and deep learning model. We compared our 
 Figure 4: Comparison bar charts of our model's and [last year's capstone group's](https://github.com/aaronquinton/mds-capstone-bcstats/blob/master/reports/BCStats_Final_Report.pdf) model's performance on their precision, recall and F1 scores. 
 
 
-```{r, echo = FALSE, include=FALSE}
+```{r, evaluate=FALSE, include=FALSE}
 baseline <- read.csv("tables/baseline_results.csv")
 
 kable(baseline[1,] %>%
-        select(Model, Test.Accuracy, Test.Recall,
+        select(Class, Test.Accuracy, Test.Recall,
                Test.Precision, Test.F1))
 
 advanced <- read.csv("tables/theme_tables/theme_pred_test_results.csv")
 
-advanced
 ```
 
 <br> 
