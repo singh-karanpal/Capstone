@@ -78,7 +78,7 @@ To replicate the analysis, clone this GitHub repository, install the [dependenci
 make ready_model
 ```
 
-3. Upload the embedding matrix and padded datasets to [Google Drive](https://www.google.ca/drive/) with termination `.npy`. This files contain a vectorial representation of the words from the preprocesed comments, so they don't show any sensitive information.
+3. Upload the embedding matrix and padded datasets with termination `.npy` saved in `data/interim/question1_models/advance` ([link](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/tree/report_visualizations/data/interim/question1_models/advance)) to [Google Drive](https://www.google.ca/drive/). These files contain a vectorial representation of the words from the preprocesed comments, so they don't show any sensitive information.
 
 ⚠️**Warning:** don't upload any other file, it may contain sensitive information.
 
@@ -93,6 +93,7 @@ make advance_evaluation
 
 This process could take couple hours.
 
+**Note**: Embedding matrix, padded documents and saved theme and subtheme models are also shared in this repository. 
 
 ### Running all model from one command (not recommended)
 

@@ -1,5 +1,5 @@
 # GloVe
-In order to run the model we developed, you should download the GloVe embeddings file `crawl-300d-2M.vec.zip`, that is a 2 million word vectors trained on Common Crawl (600B tokens).
+In order to run the model we developed, you should download the GloVe embeddings file `glove.6B.zip`, that is a 2 million word vectors trained on Common Crawl (600B tokens).
 
 You can download it [manually here](https://nlp.stanford.edu/projects/glove/), or using `wget`^[To run this command, you should install previusly `wget`.] command running the next code from the main directory of this repository.
 
