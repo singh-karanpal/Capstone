@@ -31,21 +31,21 @@ def main(input_dir, output_dir):
     print("Loading ministries' data into memory")
 
     # QUAN 2018
-    quan_2018 = pd.read_excel(input_dir + "/raw/2018/WES2018 Quant and Driver Data.xlsx", 
+    quan_2018 = pd.read_excel(input_dir + "/raw/2018/WES2018 Quant and Driver data.xlsx", 
                         sheet_name='2018 Quant and Driver data')
     quan_2018.rename(columns={'telkey':'Telkey'}, inplace=True)
     quan_2018['Year'] = 2018
     quan_2018 =  quan_2018[['Telkey','ORGANIZATION', 'ORGID']]
 
     # QUAN 2015
-    quan_2015 = pd.read_excel(input_dir + "/raw/2015/WES2015 Quant and Driver Data.xlsx", 
+    quan_2015 = pd.read_excel(input_dir + "/raw/2015/WES2015 Quant and Driver data.xlsx", 
                         sheet_name='2015 Quant and Driver data')   ## change your path for data
     quan_2015.rename(columns={'telkey':'Telkey'}, inplace=True)
     quan_2015['Year'] = 2015
     quan_2015 =  quan_2015[['Telkey','ORGANIZATION', 'ORGID']]
 
     # QUAN 2020
-    quan_2020 = pd.read_excel(input_dir + "/raw/2020/WES2020 Quant and Driver Data.xlsx", 
+    quan_2020 = pd.read_excel(input_dir + "/raw/2020/WES2020 Quant and Driver data.xlsx", 
                         sheet_name='2020 Quant and Driver data')   ## change your path for data
     quan_2020.rename(columns={'telkey':'Telkey',
                             'ORGANIZATION20': 'ORGANIZATION',
