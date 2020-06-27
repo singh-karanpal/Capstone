@@ -30,6 +30,25 @@ from preprocess import Preprocessing
 opt = docopt(__doc__)
 
 def main(model, level, label_name, include_test):
+    # tests
+    subthemes = ['CPD', 'CB', 'EWC', 'Exec', 'FWE',
+        'SP', 'RE', 'Sup', 'SW', 'TEPE', 'VMG', 'OTH']
+    
+    if model not in ["fasttext", "glove"]:
+        raise TypeError("The model options are 'fasttext' or 'glove'.\n")
+
+    if level not in ["theme", "subtheme"]:
+        raise TypeError("The level options are 'theme' or 'subtheme'.\n")
+    
+    if (level == "subtheme" and label_name not in subthemes):
+        raise TypeError('Use one theme among next options:\n' + str(subthemes) + '\n')
+    
+    assert str(include_test).lower() in ["true", "false"] , "Select 'True' or 'False' for include_test.\n"
+
+    if (level == "theme" and label_name != ''):
+        print("\n⚠️  Warning: Runing themes, but receive a label_name different from ''.")
+
+    # running the embeddings    
     print("\n--- START: embeddings.py ---")
     include_test = True if str(include_test).lower() == "true" else False
     emb = Embeddings()
@@ -66,9 +85,7 @@ class Embeddings:
         model = Embeddings()
         model.load_data(level="subtheme", label_name="FWE")
         """
-        subthemes = ['CPD', 'CB', 'EWC', 'Exec', 'FWE',
-            'SP', 'RE', 'Sup', 'SW', 'TEPE', 'VMG', 'OTH']
-            
+        # load data
         if level == "theme":
             self.root = 'data/interim/question1_models/advance/'
             self.root_q2 = 'data/interim/question2_models/'
@@ -92,7 +109,7 @@ class Embeddings:
 
         print('Loading: files were sucessfuly loaded')
 
-        # checking loaded data is not empty
+        # # checking loaded data is not empty
         assert len(self.X_train) > 0, 'no records in X_train'
         assert len(self.X_valid) > 0, 'no records in X_valid'
         assert len(self.y_train) > 0, 'no records in y_train'
