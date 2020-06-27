@@ -21,7 +21,6 @@ import codecs
 from docopt import docopt
 
 # Preprocess the data
-from preprocess import Preprocessing
 import sys
 sys.path.append('src/data/')
 from preprocess import Preprocessing
