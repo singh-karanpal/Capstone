@@ -147,6 +147,7 @@ clean:
 	find data/new_data/. -mindepth 1 ! -name *.md -delete
 	find reports/tables/ -name "*.csv" -type f -delete
 	find data/interim/subthemes/ -mindepth 1 -maxdepth 1 -type d -exec rm -r {} \;
+	rm reports/Final_Report.pdf
 
 ## Delete all confidential files
 clean_confidential:
