@@ -138,11 +138,15 @@ new_prediction:
 	python src/models/predict_new_comments.py --input_dir=data/new_data/ --output_dir=data/new_data/
 
 ## Delete all compiled Python files
-clean:
+clean:	
 	rm -r data/interim/question1_models/basic/*
 	rm -r data/interim/question1_models/advance/*
 	rm -r data/interim/question2_models/*
-	find data/interim/subthemes/. -mindepth 1 ! -name *.pickle -delete
+	rm -r reports/tables/subtheme_tables/*
+	rm -r reports/tables/theme_tables/*
+	find data/new_data/. -mindepth 1 ! -name *.md -delete
+	find reports/tables/ -name "*.csv" -type f -delete
+	find data/interim/subthemes/ -mindepth 1 -maxdepth 1 -type d -exec rm -r {} \;
 
 ## Delete all confidential files
 clean_confidential:
