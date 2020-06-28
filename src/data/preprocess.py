@@ -49,7 +49,11 @@ class Preprocessing:
         result = []
         others = ["'s", "the", "that", "this", "to", "-PRON-"]
         # comment: "-PRON-" is a lemma for "my", "your", etc.
-        
+
+        # tests
+        assert isinstance(text, list), "Error, you should pass a list of comments."
+
+        # function
         for sent in text:
             sent = str(sent).lower()
             sent = re.sub(r"facebook", "social media", sent)
@@ -112,6 +116,10 @@ class Preprocessing:
         """
         result = []
         
+        # tests
+        assert isinstance(text, list), "Error, you should pass a list of comments."
+
+        # function
         for sent in text:
             sent = str(sent).lower()
             sent = re.sub(r"facebook", "social media", sent)
