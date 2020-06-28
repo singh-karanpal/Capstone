@@ -88,7 +88,7 @@ The GRU part of Bi-GRUs are similar to LSTMs, with the major difference being th
 
 Question 2 posed several challenges as the inital themes for this question were deemed unreliable to cover the full scope of the problem. Additionally, BC Stats wanted Question 2's themes to align better with themes from Question 1. To address this, we compared the words used and the frequency of these words in the responses for both questions. 
 
-The plot below (Figure 2) shows a linear trend in the frequency of common words between Question 1 and Question 2. For example, the word “communication” would appear approximately 1 out of 100 words read in the comments for both questions. We also assume concern and appreication within the workforce focus on similar topics. The similarity in the vocabulary and frequency of words supported our decision to use our theme model developed using Question 1's themes for Question 2's predictions. 
+The plot below (Figure 2) shows a linear trend in the frequency of common words between Question 1 and Question 2. For example, the word “communication” would appear approximately 1 out of 100 words read in the comments for both questions. We also assume concern and appreciation within the workforce focus on similar topics. The similarity in the vocabulary and frequency of words supported our decision to use our theme model developed using Question 1's themes for Question 2's predictions. 
 
 <p>
 ![](figures/frequency_words.png){width=90%}
@@ -240,7 +240,7 @@ Figure 7: First page of our dashboard
 We've built several models to help the process of manually labelling survey questions. Although we haven't fully achieved a perfect model, it would make the manual labeling process easier and faster. Specifically, comments can be automatically encoded into themes
 **CB, TEPE, CPD, SP,** and **FWE** as they had precision and recall values ranging between 0.73-0.90 in the main theme model. 
 
-Our subthemes model, although had promising results during training, faced the consequences of the errors prior in the main theme model step. However, they were all able to perform higher than the minimum requirement desired by BC Stats. Particularly for subthemes models that performed low, such as OTH, we expect better results with more data. 
+Our subtheme model, although had promising results during training, faced the consequences of the errors prior in the main theme model step. However, they were all able to perform higher than the minimum requirement desired by BC Stats. Particularly for subthemes models that performed low, such as OTH, we expect better results with more data. 
 
 We also recommend creating embeddings and padded data on sensitive data so it can be uploaded into public cloud services (Google Gollab, AWS). This can allow more complex machine learning algorithms to be incorporated to improve the model.
 
