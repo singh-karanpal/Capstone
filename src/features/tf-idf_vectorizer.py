@@ -32,13 +32,20 @@ opt = docopt(__doc__)
 
 def main(input_dir, output_dir):
 
+    assert os.path.exists(input_dir), "The path entered for input_dir does not exist. Make sure to enter correct path \n"
+    assert os.path.exists(output_dir), "The path entered for output_dir does not exist. Make sure to enter correct path \n"
+
     print("\n--- START: tf-idf_vectorizer.py ---")
         
     # Reading in datasets 
     X_train_Q1 = pd.read_excel(input_dir + "/advance/X_train.xlsx") 
     X_valid_Q1 = pd.read_excel(input_dir + "/advance/X_valid.xlsx")
-    X_test_Q1 = pd.read_excel(input_dir + "/advance/X_test.xlsx")                           
- 
+    X_test_Q1 = pd.read_excel(input_dir + "/advance/X_test.xlsx")   
+
+    assert len(X_train_Q1) > 0, 'no records of X_train.xlsx'
+    assert len(X_valid_Q1) > 0, 'no records of X_valid.xlsx'
+    assert len(X_test_Q1) > 0, 'no records of X_test.xlsx'
+
     print("Preprocessor started")
 
     # Preprocess train, valid, and train sets

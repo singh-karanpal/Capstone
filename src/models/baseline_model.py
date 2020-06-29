@@ -34,6 +34,9 @@ from docopt import docopt
 opt = docopt(__doc__)
 
 def main(input_dir, output_dir):
+
+    assert os.path.exists(input_dir), "The path entered for input_dir does not exist. Make sure to enter correct path \n"
+    assert os.path.exists(output_dir), "The path entered for output_dir does not exist. Make sure to enter correct path \n"
     
     print("\n--- START: baseline_model.py ---")
     print("Baseline Model Started")
@@ -42,6 +45,11 @@ def main(input_dir, output_dir):
     y_train_Q1 = pd.read_excel(input_dir + "/advance/y_train.xlsx") 
     y_valid_Q1 = pd.read_excel(input_dir + "/advance/y_valid.xlsx")
     y_test_Q1 = pd.read_excel(input_dir + "/advance/y_test.xlsx")
+
+    assert len(y_train_Q1) > 0, 'no records in y_train.xlsx'
+    assert len(y_valid_Q1) > 0, 'no records in y_valid.xlsx'
+    assert len(y_test_Q1) > 0, 'no records in y_test.xlsx'
+
     
     #Read in tfidf vectorizers for X
     X_train = scipy.sparse.load_npz('data/interim/question1_models/basic/tfidf_X_train.npz')
