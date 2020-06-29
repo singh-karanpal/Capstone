@@ -206,8 +206,6 @@ What one thing would you like your organization to focus on to improve your work
 
 - Built embedding matrixes & transformed comments to padded sequential data to fit into embedding size. 
 
-- Embeddings allowed usage of public cloud services as data contains sensitive information.
-
 
 ## Deep Learning Models
 
@@ -339,7 +337,7 @@ What one thing would you like your organization to focus on to improve your work
 ## Subtheme models results 
 
 <center>
-<img src="figures/f1_subthemes.png" width="70%"/>
+<img src="figures/f1_subthemes.png" width="85%"/>
 </center>
 
 - $F1 = 2 * \dfrac{precision * recall}{precision + recall}$
@@ -388,10 +386,6 @@ What one thing would you like your organization to focus on to improve your work
 
 - Expected to observe better results with **more data** 
     - will improve results for subthemes using hierarchical approach
-
-<br>
-
-- Create embeddings and padded data on sensitive data **public cloud services** (Google Gollab, AWS) to apply complex machine learning algorithms on sensitive data 
 
 <br>
 
