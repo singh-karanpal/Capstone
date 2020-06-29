@@ -40,6 +40,15 @@ def subset_data(label_name, X, y, dataset_type = "train"):
         subset_data(t, X_test, y_test, 'test')
     """
     label = str(label_name)
+
+    # tests
+    subthemes = ['CPD', 'CB', 'EWC', 'Exec', 'FWE',
+        'SP', 'RE', 'Sup', 'SW', 'TEPE', 'VMG', 'OTH']
+        
+    if (label not in subthemes):
+        raise TypeError('Use one theme among next options:\n' + str(subthemes) + '\n')
+
+    # function
     try:
         dir_name = os.mkdir('data/interim/subthemes/' + label)
     except:
