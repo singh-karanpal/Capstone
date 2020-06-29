@@ -18,84 +18,65 @@ BC Stats conducts the Work Environment Survey (WES) on BC Public Service’s min
 The final report is available [here](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/reports/Final_Report.pdf).
 
 ## Dependencies
-- Python packages:
-   - altair
-   - altair-transform
-   - docopt
-   - Keras
-   - Keras-Applications
-   - Keras-Preprocessing
-   - Markdown
-   - matplotlib
-   - nltk
-   - numpy
-   - numpydoc
-   - pandas
-   - pyLDAvis
-   - requests
-   - scikit-learn
-   - spacy
-   - tensorflow
-   - tensorflow-estimator
-   - tensorflow-hub
-   - textblob
-   - tokenizers
 
-- R packages:
-   - shiny
-   - shinydashboard
-   - RColorBrewer
-   - shinycssloaders
-   - shinyBS
-   - tidyverse
-   - wordcloud
-   - SnowballC
-   - tm
-   - readxl
-   - tidytext
-   - textdata
-   - tidyr
-   - tokenizers
-   - igraph
-   - ggraph
-   - magrittr
-   - stringr
-   - data.table
-   - Hmisc
-   - sentimentr
-   - rlang
+|Python packages|R packages|
+|--------|--------|
+|altair|shiny|
+|altair-transform|shinydashboard|
+|docopt|RColorBrewer|
+|Keras|shinyBS|
+|Keras-Applications|tidyverse|
+|Keras-Preprocessing|wordcloud|
+|Markdown|SnowballC|
+|matplotlib|tm|
+|nltk|readxl|
+|numpy|tidytext|
+|numpydoc|textdata|
+|pandas|tidyr|
+|pyLDAvis|tokenizers|
+|requests|igraph|
+|scikit-learn|ggraph|
+|spacy|magrittr|
+|tensorflow|stringr|
+|tensorflow-estimator|data.table|
+|tensorflow-hub|Hmisc|
+|textblob|sentimentr|
+|tokenizers|rlang|
+||shinycssloaders|
 
+## **Usage**
 
-## Usage
+### **Running recipe (recommended)**
+To replicate the analysis, clone this GitHub repository, and follow the next steps:
 
-### Running recipe (recommended)
-To replicate the analysis, clone this GitHub repository, install the [dependencies](#dependencies) listed above, and follow the next steps:
+1. Install the [dependencies](#dependencies) listed above. You can do so by running the following command from your terminal with this cloned project repository set as the root.
+```
+make requirements
+```
 
-1. Add a copy of the sensitive data in the `data/raw` folder, and [download the Fasttext pre-trained embeddings](https://fasttext.cc/docs/en/english-vectors.html) file `crawl-300d-2M.vec.zip` saving it in `data/fasttext`.
+2. Add a copy of the sensitive data in the `data/raw` folder, and [download the Fasttext pre-trained embeddings](https://fasttext.cc/docs/en/english-vectors.html) file `crawl-300d-2M.vec.zip`. Save the extracted embeddings file in `data/fasttext`.
 
-2. Run the following command at the command line/terminal from the root directory of this project to prepare data for the models
+3. Run the following command at the command line/terminal from the root directory of this project to prepare data for the models.
 ```
 make ready_model
 ```
 
-3. Upload the embedding matrix and padded datasets with termination `.npy` saved in `data/interim/question1_models/advance` ([link](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/tree/report_visualizations/data/interim/question1_models/advance)) to [Google Drive](https://www.google.ca/drive/). These files contain a vectorial representation of the words from the preprocesed comments, so they don't show any sensitive information.
+4. Upload the embedding matrix and padded datasets with termination `.npy` saved in `data/interim/question1_models/advance` ([link](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/tree/report_visualizations/data/interim/question1_models/advance)) to [Google Drive](https://www.google.ca/drive/). These files contain a vectorial representation of the words from the preprocesed comments, so they don't show any sensitive information.
 
 ⚠️**Warning:** don't upload any other file, it may contain sensitive information.
 
-4. Open and run the models in [Google Colab](https://colab.research.google.com/). You can upload [this](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/notebooks/final_model.ipynb) notebook to Colab for training the main theme model and [this](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/notebooks/Subtheme_Models.ipynb) notebook to train the subtheme models.
+5. Open and run the models in [Google Colab](https://colab.research.google.com/). You can upload [this](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/notebooks/final_model.ipynb) notebook to Colab for training the main theme model and [this](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/notebooks/Subtheme_Models.ipynb) notebook to train the subtheme models.
 
-5. Follow the instructions in the notebooks specified in previous step to run and save the models. Make sure to download the saved model(s) from your Google Drive and replace the trained models in `models/Theme_Model/` and `models/Subtheme_Models` directories.
+6. Follow the instructions in the notebooks specified in previous step to run and save the models. Make sure to download the saved model(s) from your Google Drive and replace the trained models in `models/Theme_Model/` and `models/Subtheme_Models` directories.
 
-6. Run the following command at the command line/terminal from the root directory of this project to make predictions on the validation and test set and render the final report.
+7. Run the following command at the command line/terminal from the root directory of this project to make predictions on the validation and test set and render the final report.
 ```
 make advance_evaluation
 ```
 
-This process could take couple hours.
+This entire process could take a couple of hours.
 
-**Note**: Embedding matrix, padded documents and saved theme and subtheme models are also shared in this repository. 
-
-### Running all model from one command (not recommended)
+### **Running all model from one command (not recommended)**
 
 An alternative for the previous steps is to run the following command at the command line/terminal from the root directory of this project.
 
@@ -104,32 +85,41 @@ An alternative for the previous steps is to run the following command at the com
 make all
 ```
 
-### Running Rshiny App
+### **Running Rshiny App**
 
-To run just the RShiny App, clone this GitHub repository, install the [dependencies](#dependencies) listed below, follow the next steps and execute the following commands at the command line/terminal from the root directory of this project :
+To only run the RShiny App, clone this GitHub repository, and run the following steps at the command line/terminal from the root directory of this project:
 
-1. Run the following to prepare the data for the dashboard
+1. Install the [dependencies](#dependencies) by running 
+```
+make requirements
+```
+
+2. Run the following to prepare the data for the dashboard
 ```
 make ready_dashboard
 ```
 
-2. Run the following to launch the dashboard
+3. Run the following to launch the dashboard
 ```
 make dashboard
 ```
 
 **Note**: In case the raw data and model remain unchanged, executing `make ready_dashboard` once is enough. In order to launch the dashboard again, only running `make dashboard` will suffice.
 
-### Predicting themes and subthemes for new comments
+### **Predicting themes and subthemes for new comments**
 
-In order to predict the themes and subthemes for new comments, clone this GitHub repository, install the [dependencies](#dependencies) listed below, follow the next steps and do as follows:
+In order to predict the themes and subthemes for new comments, clone this GitHub repository, and run the following steps at the command line/terminal from the root directory of this project:
 
-1. Run the following command from the root of the project repository to prepare the required data:
+1. Install the [dependencies](#dependencies) by running 
+```
+make requirements
+```
+2. Run the following command to prepare the required data:
 ```
 make ready_model
 ```
 
-2. In directory `data/new_data`, save an excel (.xlsx) file by the name `new_comments.xlsx` with the following format:
+3. In the directory `data/new_data`, save an excel (.xlsx) file by the name `new_comments.xlsx` with the following format:
 
 | Comment |
 |----------|
@@ -139,13 +129,13 @@ make ready_model
 |*comment_4*|
 |*comment_5*|
 
-3. Run the following command from the root of the project repository:
+4. Run the following command from the root of the project repository:
 ```
 make new_prediction
 ```
 The predicted themes and subthemes will be saved in *data/new_data/predictions.xlsx*
 
-### Cleaning the repository
+### **Cleaning the repository**
 
 To reset the repository to a clean state, with no intermediate or results files, run the following command at the command line/terminal from the root directory of this project:
 ```
@@ -156,6 +146,23 @@ To delete all sensitive data and pre-trained embeddings, run the following comma
 ```
 make clean_confidential
 ```
+
+### **Expected Run Times**
+
+We have run the previous commands and following are the approximate expected run time:
+
+|Command|Expected time|
+|:----------|:--------------|
+|`make ready_mode` | 45-60 min. |
+|`make advance_evaluation`| 10-20 min. |
+|`make ready_dashboard`| 20-30 min.|
+|`make ready_dashboard`| 10 sec.|
+|`make baseline_model`| 7 min. |
+|`make new_prediction`|10-15 min for 10,000 comments|
+|`make clean`|1 sec. |
+|`make clean_confidential`|1 sec.|
+|`make advance_model` |⚠️ Did not execute|
+|`make clean_confidential`|⚠️ Did not execute|
 
 ## Project Organization    
 
