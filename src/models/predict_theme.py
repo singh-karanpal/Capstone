@@ -34,6 +34,11 @@ def main(input_file, output_dir):
     Takes the input_file and calls make_predictions class with 
     output_dir as arguments
     """
+    if input_file not in ["theme_question1_test", "theme_question2", "theme_question1_2015"]:
+        raise TypeError("The input_file options are 'theme_question1_test', 'theme_question2' or 'theme_question1_2015.\n")
+
+    assert os.path.exists(output_dir), "The path entered for output_dir does not exist. Make sure to enter correct path \n"
+
     print("----START: predict_theme.py----")
     mp = make_predictions()
     mp.predict(input_file=input_file, output_dir=output_dir)
@@ -59,8 +64,10 @@ class make_predictions:
             self.padded_docs = np.load('data/interim/question1_models/advance/X_test_padded.npy')
             self.output_name = 'theme_question1_test'
             self.y_test = pd.read_excel('data/interim/question1_models/advance/y_test.xlsx')
+            assert len(self.y_test) > 0, 'no records in y_test'
             self.y_test = self.y_test.iloc[:,:12]
             self.y_train = pd.read_excel('data/interim/question1_models/advance/y_train.xlsx')
+            assert len(self.y_train) > 0, 'no records in y_train'
             self.y_train = self.y_train.iloc[:,:12]
         elif (input_file == 'theme_question1_2015'):
             self.padded_docs = np.load('data/interim/question1_models/advance/data_2015_padded.npy')

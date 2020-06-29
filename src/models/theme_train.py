@@ -40,6 +40,10 @@ def main(input_dir, output_dir):
     Takes padded documents and embedding matrix from specified input_dir, trains biGRU 
     model and saves the trained model in specified output_dir
     """
+
+    assert os.path.exists(input_dir), "The path entered for input_dir does not exist. Make sure to enter correct path \n"
+    assert os.path.exists(output_dir), "The path entered for output_dir does not exist. Make sure to enter correct path \n"
+    
     print("--- START: theme_train.py ---\n")
     print("**Reading the embedding matrix and padded documents**")
     ## Reading the embedding matrix (.npy file)
