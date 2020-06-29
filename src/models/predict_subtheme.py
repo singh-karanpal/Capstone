@@ -40,6 +40,9 @@ def main(input_dir, output_dir):
     This function loads files from input_dir, makes subtheme predictions based on the saved models
     and saves an evaluations on test set in the output_dir
     """
+    assert os.path.exists(input_dir), "The path entered for input_dir does not exist. Make sure to enter correct path \n"
+    assert os.path.exists(output_dir), "The path entered for output_dir does not exist. Make sure to enter correct path \n"
+
     print("----START: predict_subtheme.py----\n")
     print("**Loading data and generating necessary dictionaries**")
     ## Reading the comment prediction (.npy file)
@@ -47,9 +50,12 @@ def main(input_dir, output_dir):
 
     ## Reading in the input comments
     X_test = pd.read_excel(input_dir + 'interim/question1_models/advance/X_test.xlsx')
+    assert len(X_test) > 0, 'no records in X_test.xlsx'
 
     ## Reading y_test
     y_test = pd.read_excel(input_dir + 'interim/question1_models/advance/y_test.xlsx')
+    assert len(y_test) > 0, 'no records in y_test.xlsx'
+
     y_test_subthemes = y_test.iloc[:,12:-1]
     
     ## Creating dictionary with theme indices as keys predicted comment indices as values
