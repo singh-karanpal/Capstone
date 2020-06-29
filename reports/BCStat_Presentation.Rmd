@@ -391,10 +391,6 @@ What one thing would you like your organization to focus on to improve your work
 
 <br>
 
-- Create embeddings and padded data on sensitive data **public cloud services** (Google Gollab, AWS) to apply complex machine learning algorithms on sensitive data 
-
-<br>
-
 - Use model to automate labelling on themes and subthemes with high precision and recall 
     - **CB, TEPE, CPD, SP,** and **FWE** (for theme model)
     - manually encode or verify model's results on other comments 
