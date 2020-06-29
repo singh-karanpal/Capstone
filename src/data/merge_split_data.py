@@ -17,6 +17,7 @@ Options:
 
 import numpy as np
 import pandas as pd
+import os
 from sklearn.model_selection import train_test_split
 
 from docopt import docopt
@@ -24,6 +25,9 @@ from docopt import docopt
 opt = docopt(__doc__)
 
 def main(input_dir, output_dir):
+
+    assert os.path.exists(input_dir), "The path entered for input_dir does not exist. Make sure to enter correct path \n"
+    assert os.path.exists(output_dir), "The path entered for output_dir does not exist. Make sure to enter correct path \n"
     
     print("\n--- START: Merge_split_data.py ---")
 
@@ -34,12 +38,17 @@ def main(input_dir, output_dir):
     data_2013 = pd.read_excel(input_dir + "/2013/WES2013 1st Qual Sample - Coded.xlsx", 
                          sheet_name='2013 1st Qual Sample',
                          skiprows=1)
+
+    assert len(data_2013) > 0, 'no records in 2013/WES2013 1st Qual Sample - Coded.xlsx'
+
     data_2013.rename(columns={'_telkey':'Telkey',
                               'AQ3345_13':'Comment'}, inplace=True)
     data_2013['Year'] = 2013
     
     # Reading WES 2015, question 1 (has unlabeled data only)
     data_2015 = pd.read_excel(input_dir + "/2015/WES2015 1st Qual UNCODED.xlsx")
+    assert len(data_2015) > 0, 'no records in 2013/WES2015 1st Qual UNCODED.xlsx'
+
     data_2015.rename(columns={'_telkey':'Telkey',
                           'Q3345_13':'Comment'}, inplace=True)
     data_2015['Year'] = 2015
@@ -48,6 +57,7 @@ def main(input_dir, output_dir):
     data_2018 = pd.read_excel(input_dir + "/2018/WES2018 1st Qual Coded - Final Comments and Codes.xlsx", 
                          sheet_name='2018 1st Qual',
                          skiprows=1)   ## change your path for data
+    assert len(data_2018) > 0, 'no records in 2013/WES2018 1st Qual Coded - Final Comments and Codes.xlsx'
     data_2018.rename(columns={'_telkey':'Telkey',
                               'Q3345_13':'Comment'}, inplace=True)
     data_2018['Year'] = 2018
@@ -56,6 +66,7 @@ def main(input_dir, output_dir):
     data_2020 = pd.read_excel(input_dir + "/2020/WES2020 1st Qual Coded - Final Comments and Codes.xlsx", 
                          sheet_name='2020 1st Qual',
                          skiprows=1)
+    assert len(data_2018) > 0, 'no records in 2013/WES2020 1st Qual Coded - Final Comments and Codes.xlsx'
     data_2020.rename(columns={'Q3345_13:   What one thing would you like your organization to focus on to improve your work environment?':'Comment'}, inplace=True)
     data_2020['Year'] = 2020
     
@@ -125,11 +136,13 @@ def main(input_dir, output_dir):
     data_2015_2 = pd.read_excel(input_dir + "/2015/WES2015 2nd Qual UNCODED.xlsx")
     data_2015_2.rename(columns={'telkey':'Telkey',
                           'Q4981_11':'Comment'}, inplace=True)
+    assert len(data_2015_2) > 0, 'no records in 2015/WES2015 2nd Qual UNCODED.xlsx'
     data_2015_2['Year'] = 2015
     
     # Reading WES 2018, question 2
     data_2018_2 = pd.read_excel(input_dir + '/2018/WES2018 2nd Qual Coded - Final Comments and Codes.xlsx', 
                      sheet_name='2018 2nd Qual Coded (All)')
+    assert len(data_2018_2) > 0, 'no records in 2015/WES2018 2nd Qual Coded - Final Comments and Codes.xlsx'
     data_2018_2.rename(columns={'Q4981_11':'Comment'}, inplace=True)
     data_2018_2['Year'] = 2018
     
@@ -138,6 +151,7 @@ def main(input_dir, output_dir):
                              sheet_name='WES2020 Q4981_11 UNCODED')
     data_2020_2.rename(columns={'_telkey':'Telkey',
                           'AQ4981_11':'Comment'}, inplace=True)
+    assert len(data_2020_2) > 0, 'no records in 2020/WES2020 2nd Qual UNCODED.xlsx'
     data_2020_2['Year'] = 2020
     
     # Basic Cleaning for question 2

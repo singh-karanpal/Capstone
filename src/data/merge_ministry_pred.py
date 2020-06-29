@@ -17,12 +17,16 @@ Options:
 
 import numpy as np
 import pandas as pd
+import os
 
 from docopt import docopt
 
 opt = docopt(__doc__)
 
 def main(input_dir, output_dir):
+
+    assert os.path.exists(input_dir), "The path entered for input_dir does not exist. Make sure to enter correct path \n"
+    assert os.path.exists(output_dir), "The path entered for output_dir does not exist. Make sure to enter correct path \n"
 
     print("\n--- START: merge_ministry_pred.py ---")
     
@@ -36,7 +40,9 @@ def main(input_dir, output_dir):
     ministries_2015 = pd.read_excel(input_dir + "/interim/question1_models/advance/ministries_2015.xlsx")
     pred_2015 = np.load(input_dir + "/output/theme_predictions/theme_question1_2015.npy")
 
-    
+    assert len(ministries_q1) > 0, 'no records in ministries_q1.xlsx'
+    assert len(ministries_2015) > 0, 'no records in ministries_2015.xlsx'
+
     columns_basic = ['Telkey', 'Comment', 'Year', 'Ministry', 'Ministry_id']
     columns_labels = ['CPD', 'CB', 'EWC', 'Exec', 'FEW', 'SP', 'RE', 'Sup', 
                      'SW', 'TEPE', 'VMG', 'OTH']
@@ -57,6 +63,8 @@ def main(input_dir, output_dir):
     # QUAN 2018
     ministries_q2 = pd.read_excel(input_dir + "/interim/question2_models/ministries_Q2.xlsx")
     theme_question2 = np.load(input_dir + "/output/theme_predictions/theme_question2.npy")
+
+    assert len(ministries_q2) > 0, 'no records in ministries_Q2.xlsx'
 
     theme_question2 = pd.DataFrame(theme_question2, columns=['CPD', 'CB', 'EWC', 'Exec', 'FEW', 'SP', 'RE', 'Sup', 'SW', 'TEPE', 'VMG', 'OTH'])
     
