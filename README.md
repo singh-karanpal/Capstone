@@ -153,16 +153,16 @@ We have run the previous commands and following are the approximate expected run
 
 |Command|Expected time|
 |:----------|:--------------|
-|`make ready_mode` | 45-60 min. |
+|`make ready_model` | 45-60 min. |
 |`make advance_evaluation`| 10-20 min. |
 |`make ready_dashboard`| 20-30 min.|
-|`make ready_dashboard`| 10 sec.|
+|`make dashboard`| 10 sec.|
 |`make baseline_model`| 7 min. |
 |`make new_prediction`|10-15 min for 10,000 comments|
 |`make clean`|1 sec. |
 |`make clean_confidential`|1 sec.|
 |`make advance_model` |⚠️ Did not execute|
-|`make clean_confidential`|⚠️ Did not execute|
+|`make all`|⚠️ Did not execute|
 
 ## Project Organization    
 
