@@ -51,7 +51,7 @@ class Preprocessing:
         # comment: "-PRON-" is a lemma for "my", "your", etc.
 
         # tests
-        assert isinstance(text, list), "Error, you should pass a list of comments."
+        # assert isinstance(text, list), "Error, you should pass a list of comments."
 
         # function
         for sent in text:
@@ -117,7 +117,7 @@ class Preprocessing:
         result = []
         
         # tests
-        assert isinstance(text, list), "Error, you should pass a list of comments."
+        # assert isinstance(text, list), "Error, you should pass a list of comments."
 
         # function
         for sent in text:
