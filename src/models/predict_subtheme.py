@@ -31,6 +31,7 @@ import sys
 sys.path.append('src/data/')
 from preprocess import Preprocessing
 
+import os
 from docopt import docopt
 
 opt = docopt(__doc__)
