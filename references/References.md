@@ -14,12 +14,12 @@ Partner: BC Stats | Mentor: Varada Kolhatkar
 ### Reports and presentations (2020)
 - [Main Repo](https://github.com/aaronquinton/mds-capstone-bcstats/blob/master/reports/BCStats_Final_Report.pdf)
 - Proposal:
-    - [Proposal Presentation](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/reports/BCStats_Proposal.pdf)
-    - [Proposal Report](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/reports/BCStats_Proposal_Report.pdf)
+    - [Presentation](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/reports/BCStats_Proposal.pdf)
+    - [Report](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/reports/BCStats_Proposal_Report.pdf)
 - Final:
-    - [Final Presentation (UBC-MDS)](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/reports/Final_Presentation.pdf)
-    - [Final Presentation (BC Stats)](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/reports/BCStats_Presentation.pdf)
-    - [Final Report](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/reports/Final_Report.pdf)
+    - [Presentation to UBC-MDS](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/reports/Final_Presentation.pdf)
+    - [Presentation to BC Stats](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/reports/BCStats_Presentation.pdf)
+    - [Report](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/reports/Final_Report.pdf)
 
 ### Models
 - Baseline model:
