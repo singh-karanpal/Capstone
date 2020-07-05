@@ -11,8 +11,8 @@ Partner: BC Stats | Mentor: Varada Kolhatkar
     - [Survey Guide of Themes](https://www2.gov.bc.ca/assets/gov/data/statistics/government/wes/wes2018_driver_guide.pdf)
     - [Dashboard of 2018 Quantitative Report by Ministries](https://securesurveys.gov.bc.ca/ERAP/workforce-profiles)
 
-### Reports and presentations (2020)
-- [Main Repo](https://github.com/aaronquinton/mds-capstone-bcstats/blob/master/reports/BCStats_Final_Report.pdf)
+### Reports and presentations of the capstone project
+- [Main Repo](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds)
 - Proposal:
     - [Presentation](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/reports/BCStats_Proposal.pdf)
     - [Report](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/reports/BCStats_Proposal_Report.pdf)
@@ -48,12 +48,13 @@ Partner: BC Stats | Mentor: Varada Kolhatkar
     - [FastText](https://fasttext.cc)
     - [Glove (Global Vectors for Word Representation)](https://nlp.stanford.edu/projects/glove/)
     - Universal Sentence Encoder:
-        - [Universal Sentence Encoder](https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/46808.pdf) by Google Research team, paper 2018
-        - [Universal Sentence Encoder](https://tfhub.dev/google/universal-sentence-encoder/4) by TensorFlow Hub
+        - [Original paper](https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/46808.pdf) by Google Research team, 2018
+        - [Text embedding](https://tfhub.dev/google/universal-sentence-encoder/4) by TensorFlow Hub
         - [Keras meets Universal Sentence Encoder](https://www.dlology.com/blog/keras-meets-universal-sentence-encoder-transfer-learning-for-text-data/)
         - [Tutorial of classification for Universal Sentence Encoder](https://github.com/kvarada/Tutorials/blob/master/notebooks/text-classification/1_0_vk_classification_universal_sentence_encoding.ipynb) by [Varada Kolhatkar](https://kvarada.github.io)
     - BERT:
-        - [BERT](https://ai.googleblog.com/2018/11/open-sourcing-bert-state-of-art-pre.html) by Google AI
+        - [Original paper](https://arxiv.org/pdf/1810.04805.pdf) by Google AI Language
+        - [Announcement as State-of-the-Art Pre-training for NLP](https://ai.googleblog.com/2018/11/open-sourcing-bert-state-of-art-pre.html) by Google AI
         - [BERT fine-tuning tutorial](http://mccormickml.com/2019/07/22/BERT-fine-tuning/) by Chris McCormick
         - [Multilabel classification using BERT](https://medium.com/huggingface/multi-label-text-classification-using-bert-the-mighty-transformer-69714fa3fb3d) in Medium
 - Evaluation:
