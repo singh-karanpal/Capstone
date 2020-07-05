@@ -1,19 +1,17 @@
-# Relevant and Useful Resources
+# References
+__Relevant and Useful Resources__  
 
-### MDS Capstone Expectatives
-- [General Information and dates](https://github.ubc.ca/MDS-2019-20/DSCI_591_capstone-proj_students)
-- Deliverables:
-    - [Project Proposal](https://github.ubc.ca/MDS-2019-20/DSCI_591_capstone-proj_students/blob/master/deliverables/prop/prop.md)
-    - [Final](https://github.ubc.ca/MDS-2019-20/DSCI_591_capstone-proj_students/blob/master/deliverables/final/final.md)
+Author: Carlina Kim, Karanpal Singh, Sukriti Trehan, Victor Cuspinera  
+Partner: BC Stats | Mentor: Varada Kolhatkar  
 
 ### BC Stats
-- [Proposal of Capstone Partner](https://github.ubc.ca/MDS-2019-20/DSCI_591_capstone-proj_students/blob/master/mds-v-capstone-proposals/proposals/Text_Analytics:_Quantifying_the_Responses_to_Open-Ended_Survey_Questions.md)
+- [Proposal of Capstone Partner](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/references/BC-Stats_proposal_Text_Analytics.md)
 - Work Environment Survey (WES):
     - [General information](https://www2.gov.bc.ca/gov/content/data/statistics/government/employee-research/wes/) (official site)
     - [Survey Guide of Themes](https://www2.gov.bc.ca/assets/gov/data/statistics/government/wes/wes2018_driver_guide.pdf)
     - [Dashboard of 2018 Quantitative Report by Ministries](https://securesurveys.gov.bc.ca/ERAP/workforce-profiles)
 
-### Our project (2020) by Carlina, Karanpal, Sukriti and Victor
+### Reports and presentations (2020)
 - [Main Repo](https://github.com/aaronquinton/mds-capstone-bcstats/blob/master/reports/BCStats_Final_Report.pdf)
 - Proposal:
     - [Proposal Presentation](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/reports/BCStats_Proposal.pdf)
@@ -22,11 +20,6 @@
     - [Final Presentation (UBC-MDS)](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/reports/Final_Presentation.pdf)
     - [Final Presentation (BC Stats)](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/reports/BCStats_Presentation.pdf)
     - [Final Report](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/reports/Final_Report.pdf)
-
-### Project of last year (2019) by Aaron, Ayla and Fan
-- [Main Repo](https://github.com/aaronquinton/mds-capstone-bcstats)
-- [Proposal Presentation](https://github.com/aaronquinton/mds-capstone-bcstats/blob/master/reports/proposal_presentation.pdf)
-- [Final Report](https://github.com/aaronquinton/mds-capstone-bcstats/blob/master/reports/BCStats_Final_Report.pdf)
 
 ### Models
 - Baseline model:
@@ -74,8 +67,12 @@
     - [Cookie cutter](http://drivendata.github.io/cookiecutter-data-science/)
     - [GPU-Accelerated Machine Learning on MacOS](https://towardsdatascience.com/gpu-accelerated-machine-learning-on-macos-48d53ef1b545)
 
+### Project of last year (2019) by Aaron, Ayla and Fan
+- [Main Repo](https://github.com/aaronquinton/mds-capstone-bcstats)
+- [Proposal Presentation](https://github.com/aaronquinton/mds-capstone-bcstats/blob/master/reports/proposal_presentation.pdf)
+- [Final Report](https://github.com/aaronquinton/mds-capstone-bcstats/blob/master/reports/BCStats_Final_Report.pdf)
+
 ### Additional Resources
-- [Seminar Series](https://github.ubc.ca/MDS-2019-20/DSCI_591_capstone-proj_students/blob/master/seminar_series.md)
 - [Working with Bigger Data](https://ttimbers.github.io/starting_to_work_with_bigger_data/presentation/starting_to_work_with_big_data.html#/) by Tiffany Timbers
 - [MDS Required Packages](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/references/MDS_Required_Packages.md) compiled by Anny Chih
 - [Git commands](https://github.com/UBC-MDS/591_capstone_2020_bc-stats-mds/blob/master/references/Git_commands.md) compiled by Victor Cuspinera
